@@ -2,6 +2,7 @@ import React from 'react'
 import { Eye, EyeSlash } from 'react-bootstrap-icons'
 import { useLogin } from '../../hooks/useLogin'
 import '../../styles/LoginPage.scss'
+import { Link } from 'react-router-dom'
 
 const LoginPage = () => {
   const {
@@ -61,9 +62,11 @@ const LoginPage = () => {
             {error && <p className='error-message'>{error}</p>}
 
             <div className='options'>
-              <a href='#' className='forgot-password'>
-                Quên mật khẩu?
-              </a>
+              <p>
+                <Link className='forgot-password' to='/ForgotPassword'>
+                  Quên mật khẩu
+                </Link>
+              </p>
             </div>
 
             <button type='submit' className='submit-button' disabled={isLoading}>
