@@ -1,7 +1,7 @@
 import React from 'react'
 import { Eye, EyeSlash } from 'react-bootstrap-icons'
 import { useLogin } from '../../hooks/useLogin'
-import '../../styles/LoginPage.scss'
+import './LoginPage.scss'
 import { Link } from 'react-router-dom'
 
 const LoginPage = () => {
@@ -52,6 +52,8 @@ const LoginPage = () => {
                   placeholder='Nhập mật khẩu'
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  required
+                  disabled={isLoading}
                 />
                 <span onClick={togglePassword} className='toggle-icon'>
                   {passwordShow ? <EyeSlash size={20} /> : <Eye size={20} />}
@@ -70,7 +72,7 @@ const LoginPage = () => {
             </div>
 
             <button type='submit' className='submit-button' disabled={isLoading}>
-              {isLoading ? 'Đang xử lý...' : 'Join Now'}
+              {isLoading ? 'Đang xử lý...' : 'Đăng nhập'}
             </button>
           </form>
         </div>

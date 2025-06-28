@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import '../../styles/ForgotPasswordPage.scss'
+import './ForgotPasswordPage.scss'
 import useForgotPassword from '../../hooks/useForgotPassword'
 
 const ForgotPasswordPage = () => {
@@ -37,7 +37,7 @@ const ForgotPasswordPage = () => {
               </p>
             )}
             <button type='submit' className='find-account-button' disabled={loading}>
-              {loading ? 'Đang gửi...' : 'Tìm tài khoản'}
+              {loading ? 'Đang gửi...' : 'Gửi mật khẩu mới'}
             </button>
           </form>
           <div className='login-link'>
