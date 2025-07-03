@@ -1,7 +1,7 @@
 @use "../../styles//index" as style;
 
 .admin{
-    &__header{
+    &__header{ 
         color: style.$secondary-color;
         font-weight: 700;
         font-size: 18px;

@@ -1,89 +1,85 @@
-@use "../../../styles//index" as style;
+@use '../../../styles//index' as style;
 .members-page {
-    h2 {
-        margin-bottom: 20px;
-        color: style.$secondary-color;
+  h2 {
+    margin-bottom: 20px;
+    font-weight: bold;
+    font-size: 28px;
+    color: style.$secondary-color;
+    color: style.$secondary-color;
+  }
+
+  .members-toolbar {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+
+    &__search input {
+      padding: 12px 20px;
+      width: 350px;
+      border: 1px solid style.$secondary-color;
+      outline: none;
+      border-radius: 4px;
+      &::placeholder {
+        color: rgba(128, 128, 128, 0.359);
+      }
     }
-
-    .members-toolbar {
-        display: flex;
-        gap: 20px;
-        margin-bottom: 20px;
-
-        &__search input {
-            padding: 12px 20px;
-            width: 350px;
-            border: 1px solid style.$secondary-color;
-            outline: none;
+    &__actions {
+      display: flex;
+      gap: 10px;
+      .button {
+        cursor: pointer;
+        padding: 12px;
+        width: 100px;
+        border-radius: 4px;
+        color: white;
+        font-weight: bold;
+        font-size: 14px;
+        border: none;
+        &--search {
+          background-color: style.$secondary-color;
         }
-        &__actions{
-            display: flex;
-            gap: 10px;
-            .button {
-                cursor: pointer;
-                padding: 12px;
-                width: 100px;
-                border-radius: 4px;
-                color: white;
-                font-weight: bold;
-                font-size: 14px;
-                border: none;
-                &--search {
-                    background-color: style.$secondary-color;
-                }
 
-                &--add {
-                    background-color: style.$secondary-color;
-                }
-
-                &--import {
-                    background-color: style.$secondary-color;
-                }
-            }
+        &--add {
+          background-color: style.$secondary-color;
         }
+
+        &--import {
+          background-color: style.$secondary-color;
+        }
+        &:hover {
+          background-color: #f57c00;
+        }
+      }
     }
-
-    .members-table {
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-
-            th,
-            td {
-                border: 1px solid #ccc;
-                padding: 10px 10px;
-                text-align: center;
-            }
-        }
-
-        &__actions {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            .button{
-                border: none;
-                padding: 10px;
-                border-radius: 4px;
-                cursor: pointer;
-            }
-            .button--edit {
-                color: #00B69B;
-                background-color: #CCDAC9;
-                &:hover{
-                    background-color: #00B69B;
-                    color: white;
-                }
-            }
-
-            .button--delete {
-                color: #EF3826;
-                background-color: #FCC1B1;
-                &:hover {
-                    background-color: #f15b4e;
-                    color: white;
-                }
-            }
-        }
+  }
+  .button {
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .button--edit {
+    background-color: #1dcba8;
+    transition: 0.2s ease;
+    color: white;
+    &:hover {
+      background-color: #00b69b;
     }
+  }
+
+  .button--delete {
+    background-color: #f77a6c;
+    margin-left: 20px;
+    transition: 0.2s ease;
+    color: white;
+    &:hover {
+      background-color: #ed4232;
+    }
+  }
+  .ant-table-tbody > tr > td {
+    padding: 6px 8px;
+  }
+  .ant-pagination {
+    font-size: 14px;
+  }
 }

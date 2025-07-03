@@ -1,5 +1,6 @@
 import React from 'react'
 import './LayoutAdmin.scss'
+import { Outlet } from 'react-router-dom'
 import Sidebar from '../Sidebar/Sidebar'
 import HeaderAdmin from '../../../common/admin/HeaderAdmin'
 
@@ -11,8 +12,11 @@ function LayoutAdmin({children}) {
                 <Sidebar/>
             </div>
             <div className='admin__right'>
-                <HeaderAdmin/>
-                {children}
+                <HeaderAdmin className="admin__header"/>
+                <div className='children-layout'>
+                  <Outlet/>
+                </div>
+                
             </div>
         </div>
     </div>

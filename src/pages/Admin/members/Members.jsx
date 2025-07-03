@@ -2,9 +2,11 @@ import React, { useState } from 'react'
 import "./Members.scss"
 import LayoutAdmin from '../../../layouts/admin/LayoutAdmin/LayoutAdmin'
 import data1 from '../data/data';
-import { CiSearch } from "react-icons/ci";
-import { useNavigate } from 'react-router-dom';
-import DeleteMember from '../../../components/admin/member/DeleteMember';
+import { CiSearch } from "react-icons/ci"
+import { useNavigate} from 'react-router-dom';
+import { Table } from 'antd';
+import DeleteMember from '../../../components/admin/delete/DeleteMember';
+
 function Members() {
 const navigate = useNavigate()
 const [member, setMember] = useState(data1)
@@ -20,21 +22,68 @@ const newData = () => ({
     matkhau: ""
 })
 const handleAdd = () =>{
-    // setMember(newData)
-    // setCheckType("add")
-    // setShowModal("true")
     navigate("/admin/members/create")
 } 
 const handleEdit = (id) => {
     navigate(`/admin/members/edit/${id}`)
-}
+} 
 const handleDelete = (id) => {
     setShowModal(true)
     setId(id)
 }
+
+const columns = [
+    {
+      title: 'STT',
+      dataIndex: 'stt',
+      key: 'stt',
+    },
+    {
+      title: 'Họ tên',
+      dataIndex: 'hoten',
+      key: 'hoten',
+    },
+    {
+      title: 'Giới tính',
+      dataIndex: 'gioitinh',
+      key: 'gioitinh',
+    },
+    {
+      title: 'Ngày sinh',
+      dataIndex: 'ngaysinh',
+      key: 'ngaysinh',
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+    },
+    {
+      title: 'Tài khoản',
+      dataIndex: 'tentaikhoan',
+      key: 'tentaikhoan',
+    },
+    {
+      title: 'Mật khẩu',
+      dataIndex: 'matkhau',
+      key: 'matkhau',
+    },
+    {
+        title: "Hành động",
+        dataIndex: "",
+        key: "x",
+        render: (_,record) => (
+            <div>
+                <button className="button button--edit" onClick={() => handleEdit(record.stt)}>Sửa</button>
+                <button className="button button--delete" onClick={() => handleDelete(record.stt)}>Xóa</button>
+            </div>
+        )
+    }
+  ];
+
   return (
-    <LayoutAdmin>
-        <div className="members-page">
+    <>
+    <div className="members-page">
             <h2>Danh sách thành viên</h2>
             <div className="members-toolbar">
                 <div className="members-toolbar__search">
@@ -46,49 +95,18 @@ const handleDelete = (id) => {
                     <button className="button button--import">Import</button>
                 </div>
             </div>
-
-            <div className="members-table">
-                <table>
-                    <thead>
-                        <tr>
-                        <th>STT</th>
-                        <th>Họ tên</th>
-                        <th>Giới tính</th>
-                        <th>Ngày Sinh</th>
-                        <th>Email</th>
-                        <th>Tên tài khoản</th>
-                        <th>Mật khẩu</th>
-                        <th>Hành động</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                        member.map((item) => (
-                            <tr key={item.stt}>
-                                <td>{item.stt}</td>
-                                <td>{item.hoten}</td>
-                                <td>{item.gioitinh}</td>
-                                <td>{item.ngaysinh}</td>
-                                <td>{item.email}</td>
-                                <td>{item.tentaikhoan}</td>
-                                <td>{item.matkhau}</td>
-                                <td className="members-table__actions">
-                                    <button className="button button--edit" onClick={() => handleEdit(item.stt)}>Sửa</button>
-                                    <button className="button button--delete" onClick={() => handleDelete(item.stt)}>Xóa</button>
-                                </td>
-                            </tr>
-                        ))
-                        }
-                    </tbody>
-                </table>
-            </div>  
+            <Table
+            columns={columns}
+            dataSource={data1}
+            rowKey="stt" 
+            pagination ={{ pageSize: 5}}
+            />
         </div>
         <div>
              {showmodal && (<DeleteMember deleteId={id} member = {member} setMember = {setMember} setShowModal={setShowModal}/>)}
-        </div>
-        {/* {showmodal && (<DeleteMember deleteId={id} member = {member} setMember = {setMember}/>)} */}
-        
-    </LayoutAdmin>
+        </div>  
+    </>
+              
   )
 }
 

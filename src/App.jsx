@@ -1,8 +1,9 @@
 import { useRoutes, Navigate } from "react-router-dom";
 import "./App.scss";
 import Dashboard from "./pages/Admin/dashboard/Dashboard";
-import Members from "./pages/Admin/Members/Members";
 import MemberForm from "./components/admin/member/MemberForm";
+import Members from "./pages/Admin/members/Members";
+import LayoutAdmin from "./layouts/admin/LayoutAdmin/LayoutAdmin";
 
 
 function App() {
@@ -12,21 +13,29 @@ function App() {
       element: <Navigate to="/admin/dashboard" />
     },
     {
-      path: "/admin/dashboard",
-      element: <Dashboard/>
-    },
-    {
-      path: "/admin/members",
-      element: <Members/>
-    },
-    {
-      path: "/admin/members/create",
-      element: <MemberForm modal="add"/>
-    },
-    {
-      path: "/admin/members/edit/:id",
-      element: <MemberForm modal="edit"/>
+      path: "/admin",
+      element: <LayoutAdmin/>,
+      children: [
+        {
+          path: "dashboard",
+          element: <Dashboard/>
+        },
+        {
+          path: "members",
+          element: <Members/>,  
+        },
+        {
+          path: "members/create",
+          element: <MemberForm modal="add"/>
+        },
+        {
+          path: "members/edit/:id",
+          element: <MemberForm modal="edit"/>
+        }
+        
+      ]
     }
+    
 
   ])
   return (
