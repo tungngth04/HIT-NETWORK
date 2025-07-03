@@ -1,71 +1,111 @@
 import React, { useEffect, useState } from 'react'
-import LayoutAdmin from '../../../layouts/admin/LayoutAdmin/LayoutAdmin'
 import { useNavigate, useParams } from 'react-router-dom'
-import data1 from '../../../pages/Admin/data/data'
-import { HiH2 } from 'react-icons/hi2'
-
-function MemberForm({modal}) {
+import { Form, Input, Button, Radio, DatePicker, Space } from 'antd'
+import './MemberForm.scss'
+function MemberForm({ modal }) {
   const navigate = useNavigate()
-  const {id} = useParams()
-  console.log(typeof(id))
+  const { id } = useParams()
+  console.log(typeof id)
   const [data, setData] = useState({
-    hoten: "",
-    gioitinh: "",
+    hoten: '',
+    gioitinh: '',
     ngaysinh: null,
-    email: "",
-    tentaikhoan: "",
-    matkhau: ""
+    email: '',
+    tentaikhoan: '',
+    matkhau: '',
   })
   const handleChange = (e) => {
-    const {name, value} = e.target
-    setData(prev => ({...prev, [name]:value}))
+    const { name, value } = e.target
+    setData((prev) => ({ ...prev, [name]: value }))
   }
-  useEffect(() => {
-    if (modal === "edit" && id){
-      setData(data1.find((member)=> member.stt === parseInt(id) ))
-    }
-  })
- 
+  const onFinish = (values) => {
+    console.log('Dữ liệu:', values)
+  }
   return (
-    <LayoutAdmin>
-      {
-        modal === "add" ? 
-        (<h2>Tạo tài khoản thành viên </h2>) : (<h2>Sửa tài khoản thành viên</h2>)
-      }
-        <div>
-          <div className="label label-name">*Họ và tên</div>
-          <div><input type="text" placeholder='Họ và tên' onChange={handleChange} value={data.hoten} name='hoten'/></div>
-        </div>
-        <div>
-          <div className="label label-gender">*Giới tính</div>
-          <div><input type="radio" name="gioitinh" id="" checked = {data.gioitinh === "Nam"}  onChange={handleChange}  value="Nam"/>Male</div>
-          <div><input type="radio" name="gioitinh" id="" checked = {data.gioitinh === "Nữ"}  onChange={handleChange} value="Nữ" />Female</div>
-          <div><input type="radio" name="gioitinh" id="" checked = {data.gioitinh === "Khác"}  onChange={handleChange} value="Khác"/>Other</div>
-        </div>
-        <div>
-          <div className="label label.dob">*Ngày sinh</div>
-          <div><input type="date" placeholder='dd/mm/yy'  onChange={handleChange} value={data.ngaysinh} name='ngaysinh' /></div>
-        </div>
-        <div>
-          <div className="label label-email">*Email</div>
-          <div><input type="email" placeholder='Email' onChange={handleChange} value={data.email} name="email"/></div>
-        </div>
-        <div>
-          <div className='label label-user'>*Tên tài khoản</div>
-          <div><input type="text" placeholder='Tên tài khoản'  onChange={handleChange} value={data.tentaikhoan} name="tentaikhoan"/></div>
-        </div>
-        <div>
-          <div className='label label-pass'>*Mật khẩu</div>
-          <div>
-            <input type="password" placeholder='***********'  onChange={handleChange} value={data.matkhau} name='matkhau'/>
-            <button className='btn-rundome'>Rundome</button>
-          </div>
-        </div>
-        <div>
-          <button className='btn-save'>Lưu</button>
-          <button className='btn-cancel'>Hủy</button>
-        </div>
-    </LayoutAdmin>
+    <div>
+      <div className='member-form__wrapper'>
+        {modal === 'add' ? <h2>Tạo tài khoản thành viên </h2> : <h2>Sửa tài khoản thành viên</h2>}
+        <Form onFinish={onFinish} className='member-form' layout="horizontal"
+        labelCol={{ span: 6 }}
+        wrapperCol={{ span: 18 }}
+        labelAlign="left"
+        initialValues={{
+        hoten: '',
+        gioitinh: 'nam',
+        ngaysinh: null,
+        email: '',
+        tentaikhoan: '',
+        matkhau: '',
+      }}>
+          <Form.Item
+            label='Họ và tên'
+            name='hoten'
+            rules={[{ required: true, message: 'Hãy nhập họ và tên!' }]}
+            >
+            <Input placeholder='Nhập họ và tên' onChange={handleChange}/>
+          </Form.Item>
+
+          <Form.Item label='Giới tính' name='gioitinh' rules={[{required: true}]}>
+            <Radio.Group>
+              <Radio value='nam' onChange={handleChange}>Nam</Radio>
+              <Radio value='nu' onChange={handleChange}> Nữ </Radio>
+              <Radio value='khac' onChange={handleChange}>Khác</Radio>
+            </Radio.Group>
+          </Form.Item>
+
+          <Form.Item
+            label='Ngày sinh'
+            name='ngaysinh'
+            rules={[{ required: true, message: 'Hãy chọn ngày sinh!' }]}>
+            <DatePicker className='datetime' placeholder='Chọn ngày sinh' onChange={handleChange} />
+          </Form.Item>
+
+          <Form.Item
+            name='email'
+            label='Email'
+            rules={[
+              { required: true, message: 'Hãy nhập email' },
+              { type: 'email', message: 'Giá trị email không hợp lệ' },
+            ]}>
+            <Input placeholder='Nhập email' onChange={handleChange}/>
+          </Form.Item>
+
+          <Form.Item
+            label='Tên tài khoản'
+            name='tentaikhoan'
+            rules={[{ required: true, message: 'Hãy nhập tên tài khoản!' }]}>
+            <Input placeholder='Nhập tên tài khoản' onChange={handleChange}/>
+          </Form.Item>
+
+          <Form.Item
+            label="Mật khẩu"
+            name="matkhau"
+            rules={[{ required: true, message: 'Hãy nhập mật khẩu hoặc nhấn Rundome' }]}
+            style={{ marginBottom: 8 }}
+          >
+            <Space.Compact style={{ width: '100%' }}>
+              <Input.Password placeholder="Rundome mật khẩu" onChange={handleChange} />
+              <Button className='btnSubmit'>
+                Rundome
+              </Button>
+            </Space.Compact>
+          </Form.Item>
+
+          <Space style={{width: '100%', display: 'flex', flexDirection: 'row', gap: '32px', justifyContent: 'center', marginTop: '40px'}}>
+            <Form.Item>
+              <Button htmlType='submit' className="btnSubmit">
+                Gửi
+              </Button>
+          </Form.Item>
+          <Form.Item>
+            <Button htmlType='button' className="btnCancel">
+              Hủy
+            </Button>
+          </Form.Item>
+          </Space>
+        </Form>
+      </div> 
+    </div>
   )
 }
 
