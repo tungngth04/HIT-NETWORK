@@ -31,8 +31,7 @@ function App() {
         {
           path: "members/edit/:id",
           element: <MemberForm modal="edit"/>
-        }
-        
+        },
       ]
     }
     
@@ -41,7 +40,6 @@ function App() {
   return (
     <>
       {elements}
-      {/* <DeleteMember/> */}
     </>
   );
 }

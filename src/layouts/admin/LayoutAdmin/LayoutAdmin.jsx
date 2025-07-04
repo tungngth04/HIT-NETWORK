@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom'
 import Sidebar from '../Sidebar/Sidebar'
 import HeaderAdmin from '../../../common/admin/HeaderAdmin'
 
-function LayoutAdmin({children}) {
+function LayoutAdmin() {
   return (
     <div className='admin__container'>
         <div className='admin__content'>
