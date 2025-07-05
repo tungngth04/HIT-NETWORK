@@ -1,18 +1,37 @@
 import React, { useState } from 'react'
 import './Members.scss'
-import LayoutAdmin from '../../../layouts/admin/LayoutAdmin/LayoutAdmin'
 import data1 from '../data/data'
 import { CiSearch } from 'react-icons/ci'
 import { useNavigate } from 'react-router-dom'
 import { Table } from 'antd'
-import DeleteMember from '../../../components/admin/delete/DeleteMember'
+import Delete from '../../../components/admin/delete/Delete'
+import Import from '../../../components/admin/import/Import'
 
 function Members() {
   const navigate = useNavigate()
-  const [member, setMember] = useState(data1)
-  const [checktype, setCheckType] = useState('add')
-  const [showmodal, setShowModal] = useState(false) // show add hoac edit
+  const [data, setData] = useState(data1)
   const [id, setId] = useState()
+  const [deletePopup, setDeletePopup] = useState({
+    open: false,
+    type: '', // 'user' hoặc 'event'
+  })
+  const [importPopup, setImportPopup] = useState({
+    open: false,
+    type: '', // 'user' hoặc 'event'
+  });
+  const handleDelete = (id) => {
+    setId(id)
+    setDeletePopup({
+      open: true,
+      type: 'user',
+    })
+  }
+  const handleImport = () => {
+    setImportPopup({
+      open: true,
+      type: 'user',
+    })
+  }
   const newData = () => ({
     hoten: '',
     gioitinh: '',
@@ -26,10 +45,6 @@ function Members() {
   }
   const handleEdit = (id) => {
     navigate(`/admin/members/edit/${id}`)
-  }
-  const handleDelete = (id) => {
-    setShowModal(true)
-    setId(id)
   }
 
   const columns = [
@@ -98,20 +113,30 @@ function Members() {
             <button className='button button--add' onClick={handleAdd}>
               Thêm
             </button>
-            <button className='button button--import'>Import</button>
+            <button className='button button--import' onClick={handleImport}>Import</button>
           </div>
         </div>
         <Table columns={columns} dataSource={data1} rowKey='stt' pagination={{ pageSize: 8 }} />
       </div>
       <div>
-        {showmodal && (
-          <DeleteMember
-            deleteId={id}
-            member={member}
-            setMember={setMember}
-            setShowModal={setShowModal}
+        {deletePopup.open && (
+          <Delete
+            id={id}
+            data={data}
+            setData={setData}
+            setDeletePopup={setDeletePopup}
+            deletePopup = {deletePopup}
           />
         )}
+        {
+          importPopup.open && (
+            <Import 
+            importPopup = {importPopup}
+            setImportPopup = {setImportPopup} 
+            setData = {setData}
+            />
+          )
+        }
       </div>
     </>
   )

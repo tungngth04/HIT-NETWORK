@@ -1,8 +1,8 @@
 import React from 'react'
 import './LayoutAdmin.scss'
 import { Outlet } from 'react-router-dom'
-import Sidebar from '../Sidebar/Sidebar'
-import HeaderAdmin from '../../../common/admin/HeaderAdmin'
+import HeaderAdmin from '../../common/admin/HeaderAdmin'
+import Sidebar from '../../components/admin/Sidebar/Sidebar'
 
 function LayoutAdmin() {
   return (
@@ -16,7 +16,6 @@ function LayoutAdmin() {
                 <div className='children-layout'>
                   <Outlet/>
                 </div>
-                
             </div>
         </div>
     </div>

@@ -1,5 +1,4 @@
 import React from 'react'
-import LayoutAdmin from '../../../layouts/admin/LayoutAdmin/LayoutAdmin'
 
 const Dashboard = () => {
   return (
