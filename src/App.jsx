@@ -3,7 +3,9 @@ import "./App.scss";
 import Dashboard from "./pages/Admin/dashboard/Dashboard";
 import MemberForm from "./components/admin/member/MemberForm";
 import Members from "./pages/Admin/members/Members";
-import LayoutAdmin from "./layouts/admin/LayoutAdmin/LayoutAdmin";
+import Events from "./pages/Admin/events/Events";
+import EventForm from "./components/admin/event/EventForm";
+import LayoutAdmin from "./layouts/LayoutAdmin/LayoutAdmin";
 
 
 function App() {
@@ -32,10 +34,22 @@ function App() {
           path: "members/edit/:id",
           element: <MemberForm modal="edit"/>
         },
+        {
+          path: "events",
+          element: <Events/>
+        },
+        {
+          path: "events/create",
+          element: <EventForm modal="add"/>
+        },
+        {
+          path: "events/edit/:id",
+          element: <EventForm modal="edit"/>
+        },
+
+        
       ]
     }
-    
-
   ])
   return (
     <>
