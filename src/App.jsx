@@ -12,7 +12,7 @@ function App() {
       element: <LoginPage />,
     },
     {
-      path: '/login',
+      path: '/loginPage',
       element: <LoginPage />,
     },
     {
@@ -21,11 +21,14 @@ function App() {
     },
     {
       path: '/home',
-      element: (
-        <MainLayout>
-          <UserHomePage />
-        </MainLayout>
-      ),
+      element: <MainLayout />,
+      children: [
+        {
+          path: '',
+          element: <UserHomePage />,
+          index: true,
+        },
+      ],
     },
   ])
 
