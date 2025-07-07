@@ -34,7 +34,7 @@ function DeleteMember({id, data, setData, deletePopup, setDeletePopup}) {
         
         
         <div className='action'>
-            <button className='button btn_cancel' onClick={handleClose}>Hủy</button>
+            <button className='button btn_cancel ' onClick={handleClose}>Hủy</button>
             <button className='button btn_ok' onClick={handleDelete}>Ok</button>
         </div>
       </div>
