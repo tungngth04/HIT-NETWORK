@@ -8,10 +8,6 @@ import UserHomePage from './pages/userHomePage/userHomePage'
 function App() {
   let elements = useRoutes([
     {
-      path: '/',
-      element: <LoginPage />,
-    },
-    {
       path: '/loginPage',
       element: <LoginPage />,
     },
@@ -20,11 +16,11 @@ function App() {
       element: <ForgotPasswordPage />,
     },
     {
-      path: '/home',
+      path: '/',
       element: <MainLayout />,
       children: [
         {
-          path: '',
+          path: '/home',
           element: <UserHomePage />,
           index: true,
         },
