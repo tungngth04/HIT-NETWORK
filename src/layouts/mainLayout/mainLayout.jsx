@@ -9,9 +9,9 @@ const MainLayout = () => {
     <div className='main-app-layout'>
       <Header />
       <main className='layout-content'>
-        <div className='main-app-container'>
+        {/* <div className='main-app-container'> */}
           <Outlet />
-        </div>
+        {/* </div> */}
       </main>
       <Footer />
     </div>
