@@ -21,6 +21,9 @@ function MemberForm({ modal }) {
   const onFinish = (values) => {
     console.log('Dữ liệu:', values)
   }
+  const handleCancel = () => {
+    navigate("/admin/members")
+  }
   return (
     <div>
       <div className='member-form__wrapper'>
@@ -44,7 +47,6 @@ function MemberForm({ modal }) {
             >
             <Input placeholder='Nhập họ và tên' onChange={handleChange}/>
           </Form.Item>
-
           <Form.Item label='Giới tính' name='gioitinh' rules={[{required: true}]}>
             <Radio.Group>
               <Radio value='nam' onChange={handleChange}>Nam</Radio>
@@ -92,15 +94,15 @@ function MemberForm({ modal }) {
           </Form.Item>
 
           <Space style={{width: '100%', display: 'flex', flexDirection: 'row', gap: '32px', justifyContent: 'center', marginTop: '40px'}}>
-            <Form.Item>
+          <Form.Item>
+            <Button htmlType='button' className="btnCancel" onClick={handleCancel}>
+              Hủy
+            </Button>
+          </Form.Item>
+          <Form.Item>
               <Button htmlType='submit' className="btnSubmit">
                 Gửi
               </Button>
-          </Form.Item>
-          <Form.Item>
-            <Button htmlType='button' className="btnCancel">
-              Hủy
-            </Button>
           </Form.Item>
           </Space>
         </Form>

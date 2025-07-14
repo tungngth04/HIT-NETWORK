@@ -53,7 +53,7 @@
   }
   .button {
     border: none;
-    padding: 4px 16px;
+    padding: 8px 16px;
     border-radius: 4px;
     cursor: pointer;
   }
@@ -75,9 +75,10 @@
       background-color: #ed4232;
     }
   }
-  .ant-table-tbody > tr > td {
+  .ant-table-tbody>tr>td {
     padding: 6px 8px;
   }
+
   .ant-pagination {
     font-size: 14px;
   }
