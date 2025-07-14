@@ -2,10 +2,9 @@ import React from 'react'
 import CreatePost from '../../components/createPost/createPost'
 import PostCard from '../../components/postCard/postCard'
 import SidebarWidget from '../../components/sidebarWidget/sidebarWidget'
-import './UserHomePage.scss' // Import CSS styles for UserHomePage component
-import { usePosts } from '../../hooks/userPosts' // Import hook quản lý posts
+import './UserHomePage.scss' 
+import { usePosts } from '../../hooks/userPosts' 
 
-// --- MOCK DATA CHO SIDEBAR (có thể chuyển vào hook nếu cần) ---
 const recruitmentPosts = [
   {
     id: 1,
@@ -28,16 +27,15 @@ const upcomingEvents = [
     subtitle: 'Creative Town Hall',
   },
 ]
-// --- KẾT THÚC MOCK DATA ---
+
 
 const UserHomePage = () => {
-  // Chỉ cần gọi hook để lấy danh sách posts và hàm để thêm post mới
   const { posts, addPost } = usePosts()
 
   return (
     <div className='user-homepage-container'>
       <div className='main-content'>
-        {/* Truyền hàm addPost xuống làm callback onPostCreated */}
+   
         <CreatePost onPostCreated={addPost} />
 
         {posts.map((post) => (

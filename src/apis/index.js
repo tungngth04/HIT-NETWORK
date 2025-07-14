@@ -29,6 +29,7 @@ api.interceptors.response.use(
   }
 );
 
+// Axios config
 const apiDefault = axios.create({
   baseURL: `${import.meta.env.VITE_API_SERVER}/api/v1`,
   headers: {

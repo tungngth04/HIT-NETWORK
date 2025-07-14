@@ -8,11 +8,9 @@ const MainLayout = () => {
   return (
     <div className='main-app-layout'>
       <Header />
-
       <main className='layout-content'>
         <Outlet />
       </main>
-
       <Footer />
     </div>
   )
