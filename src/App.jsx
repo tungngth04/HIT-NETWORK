@@ -1,19 +1,57 @@
 import LoginPage from './pages/LoginPage/LoginPage'
-import './App.scss'
-import { Routes, useRoutes } from 'react-router-dom'
 import ForgotPasswordPage from './pages/ForgotPasswordPage/ForgotPasswordPage'
 import MainLayout from './layouts/mainLayout/mainLayout'
 import UserHomePage from './pages/userHomePage/userHomePage'
-import ProfilePage from './pages/ProfilePage/ProfilePage'
-
+import { useRoutes, Navigate, Routes } from 'react-router-dom'
+import './App.scss'
+import Dashboard from './pages/Admin/dashboard/Dashboard'
+import MemberForm from './components/admin/member/MemberForm'
+import Members from './pages/Admin/members/Members'
+import Events from './pages/Admin/events/Events'
+import EventForm from './components/admin/event/EventForm'
+import LayoutAdmin from './layouts/LayoutAdmin/LayoutAdmin'
 function App() {
-  let elements = useRoutes([
+  const elements = useRoutes([
+    {
+      path: '/admin',
+      element: <LayoutAdmin />,
+      children: [
+        {
+          path: 'dashboard',
+          element: <Dashboard />,
+        },
+        {
+          path: 'members',
+          element: <Members />,
+        },
+        {
+          path: 'members/create',
+          element: <MemberForm modal='add' />,
+        },
+        {
+          path: 'members/edit/:id',
+          element: <MemberForm modal='edit' />,
+        },
+        {
+          path: 'events',
+          element: <Events />,
+        },
+        {
+          path: 'events/create',
+          element: <EventForm modal='add' />,
+        },
+        {
+          path: 'events/edit/:id',
+          element: <EventForm modal='edit' />,
+        },
+      ],
+    },
     {
       path: '/',
       element: <LoginPage />,
     },
     {
-      path: '/loginPage',
+      path: '/login',
       element: <LoginPage />,
     },
     {
@@ -21,23 +59,18 @@ function App() {
       element: <ForgotPasswordPage />,
     },
     {
-      path: '/user',
+      path: '/home',
       element: <MainLayout />,
       children: [
         {
-          path: 'home',
+          path: '',
+
           element: <UserHomePage />,
           index: true,
         },
-        {
-          path: 'profile',
-          element: <ProfilePage/>,
-        }
       ],
     },
   ])
-
-  return elements
+  return <>{elements}</>
 }
-
 export default App
