@@ -1,11 +1,13 @@
 import React from 'react'
-import './createPost.scss'
+import './createPost.scss' // Import CSS styles for CreatePost component
 
-import { useCreatePost } from '../../hooks/userCreatePost'
+import { useCreatePost } from '../../hooks/userCreatePost' // Import hook
 
-import userAvatar from '../../assets/images/hinh-anime-2.jpg'
+import userAvatar from '../../assets/images/hinh-anime-2.jpg' // Import ảnh đại diện người dùng
 
+// Component chỉ nhận một prop onPostCreated từ cha
 const CreatePost = ({ onPostCreated }) => {
+  // Gọi hook và truyền callback vào
   const {
     modalIsOpen,
     content,
@@ -17,6 +19,7 @@ const CreatePost = ({ onPostCreated }) => {
     handleSubmit,
   } = useCreatePost(onPostCreated)
 
+  // Phần JSX không thay đổi, chỉ sử dụng state và hàm từ hook
   return (
     <>
       <div className='create-post-card' onClick={handleOpenModal}>

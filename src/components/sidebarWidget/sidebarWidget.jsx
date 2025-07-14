@@ -1,7 +1,7 @@
 import React from 'react'
 import { ChevronRight } from 'react-bootstrap-icons'
-
-import './sidebarWidget.scss'
+// Cập nhật đường dẫn import SCSS
+import './sidebarWidget.scss' // Import CSS styles for SidebarWidget component
 
 const SidebarWidget = ({ title, items }) => {
   return (

@@ -25,7 +25,7 @@ export const useCreatePost = (onPostCreated) => {
     setError('')
     try {
       const newPostData = await createPostApi({ content })
-
+      // Gọi callback từ hook cha (usePosts) để cập nhật UI
       onPostCreated(newPostData)
       handleCloseModal()
     } catch (err) {
