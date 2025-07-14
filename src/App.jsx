@@ -1,11 +1,25 @@
-import "./App.scss";
+import LoginPage from './pages/LoginPage/LoginPage'
+import './App.scss'
+import { Routes, useRoutes } from 'react-router-dom'
+import ForgotPasswordPage from './pages/ForgotPasswordPage/ForgotPasswordPage'
 
 function App() {
-  return (
-    <>
-      <h1>Hello World</h1>
-    </>
-  );
+  let elements = useRoutes([
+    {
+      path: '/',
+      element: <LoginPage />,
+    },
+    {
+      path: '/login',
+      element: <LoginPage />,
+    },
+    {
+      path: '/forgotpassword',
+      element: <ForgotPasswordPage />,
+    },
+  ])
+
+  return elements
 }
 
-export default App;
+export default App
