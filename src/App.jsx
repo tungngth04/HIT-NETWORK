@@ -1,11 +1,14 @@
+
+import LoginPage from './pages/LoginPage/LoginPage'
+import ForgotPasswordPage from './pages/ForgotPasswordPage/ForgotPasswordPage'
+import MainLayout from './layouts/mainLayout/mainLayout'
+import UserHomePage from './pages/userHomePage/userHomePage'
 import { useRoutes, Navigate,  Routes } from "react-router-dom";
 import "./App.scss";
 import Dashboard from "./pages/Admin/dashboard/Dashboard";
 import MemberForm from "./components/admin/member/MemberForm";
 import Members from "./pages/Admin/members/Members";
 import LayoutAdmin from "./layouts/admin/LayoutAdmin/LayoutAdmin";
-import LoginPage from './pages/LoginPage/LoginPage'
-import ForgotPasswordPage from './pages/ForgotPasswordPage/ForgotPasswordPage'
 
 function App() {
   const elements = useRoutes([
@@ -42,6 +45,17 @@ function App() {
     {
       path: '/forgotpassword',
       element: <ForgotPasswordPage />,
+    },
+    {
+      path: '/home',
+      element: <MainLayout />,
+      children: [
+        {
+          path: '',
+          element: <UserHomePage />,
+          index: true,
+        },
+      ],
     },
   ])
   return (

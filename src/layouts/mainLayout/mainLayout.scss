@@ -1,0 +1,17 @@
+@use '../../styles/index' as *;
+
+.main-app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: $background-color;
+}
+.main-app-container {
+  background-color: #f57d3c;
+  width: 100%;
+  height: 150px;
+}
+
+.layout-content {
+  flex-grow: 1;
+}
