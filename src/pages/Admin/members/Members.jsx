@@ -46,7 +46,6 @@ function Members() {
   const handleEdit = (id) => {
     navigate(`/admin/members/edit/${id}`)
   }
-
   const columns = [
     {
       title: 'STT',
