@@ -1,17 +1,14 @@
-import { useRoutes, Navigate } from "react-router-dom";
+import { useRoutes, Navigate,  Routes } from "react-router-dom";
 import "./App.scss";
 import Dashboard from "./pages/Admin/dashboard/Dashboard";
 import MemberForm from "./components/admin/member/MemberForm";
 import Members from "./pages/Admin/members/Members";
 import LayoutAdmin from "./layouts/admin/LayoutAdmin/LayoutAdmin";
-
+import LoginPage from './pages/LoginPage/LoginPage'
+import ForgotPasswordPage from './pages/ForgotPasswordPage/ForgotPasswordPage'
 
 function App() {
   const elements = useRoutes([
-    {
-      path: "/",
-      element: <Navigate to="/admin/dashboard" />
-    },
     {
       path: "/admin",
       element: <LayoutAdmin/>,
@@ -33,9 +30,19 @@ function App() {
           element: <MemberForm modal="edit"/>
         },
       ]
-    }
-    
-
+    },
+    {
+      path: '/',
+      element: <LoginPage />,
+    },
+    {
+      path: '/login',
+      element: <LoginPage />,
+    },
+    {
+      path: '/forgotpassword',
+      element: <ForgotPasswordPage />,
+    },
   ])
   return (
     <>
@@ -43,5 +50,4 @@ function App() {
     </>
   );
 }
-
-export default App;
+export default App
