@@ -40,7 +40,7 @@ function MemberForm({ modal }) {
         tentaikhoan: '',
         matkhau: '',
       }}>
-          <Form.Item   
+          <Form.Item
             label='Họ và tên'
             name='hoten'
             rules={[{ required: true, message: 'Hãy nhập họ và tên!' }]}

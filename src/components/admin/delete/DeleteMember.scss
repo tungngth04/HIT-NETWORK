@@ -55,13 +55,12 @@
             background-color: style.$secondary-color;
             color: white;
             border: none;
-            margin-left: 20px;
         }
         .btn_cancel {
             background-color: transparent;
             color: style.$secondary-color;
             border: 1px solid style.$secondary-color;
-            
+            margin-left: 20px;
         }
     }
 }
