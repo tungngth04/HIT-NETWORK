@@ -10,6 +10,7 @@ import Members from './pages/Admin/members/Members'
 import Events from './pages/Admin/events/Events'
 import EventForm from './components/admin/event/EventForm'
 import LayoutAdmin from './layouts/LayoutAdmin/LayoutAdmin'
+import ProfilePage from './pages/ProfilePage/ProfilePage'
 function App() {
   const elements = useRoutes([
     {
@@ -66,6 +67,10 @@ function App() {
           path: '',
           element: <UserHomePage />,
           index: true,
+        },
+        {
+          path: 'profile',
+          element: <ProfilePage />,
         },
       ],
     },
