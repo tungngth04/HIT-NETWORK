@@ -1,29 +1,70 @@
 import axios from 'axios'
 
-// Giả sử bạn có một instance axios đã được cấu hình
-// Bạn nên lấy token từ localStorage hoặc nơi bạn lưu trữ nó
-const apiClient = axios.create({
-  baseURL: 'https://api.yourdomain.com/v1', // <-- THAY THẾ BẰNG URL API THỰC TẾ
-  headers: {
-    'Content-Type': 'application/json',
+// --- FAKE DATABASE ---
+const allFakePosts = Array.from({ length: 25 }, (_, i) => ({
+  id: i + 1,
+  user: {
+    name: `User Name ${i + 1}`,
+    title: 'UX Designer @ Devn Technology',
+    timestamp: `2${(i % 6) + 1} Nov at 12:24 PM`,
+    avatar: `https://placehold.co/48x48/EFEFEF/AAAAAA?text=U${i + 1}`,
   },
+  content: `Đây là nội dung của bài đăng thứ ${
+    i + 1
+  }. Lorem Ipsum is simply dummy text of the printing and typesetting industry.`,
+  media: i % 3 === 0 ? `https://placehold.co/600x250/F0F2F5/CCCCCC?text=Image+${i + 1}` : null,
+  stats: {
+    likes: Math.floor(Math.random() * 100),
+    comments: Math.floor(Math.random() * 50),
+    applies: i % 4 === 0 ? Math.floor(Math.random() * 50) : null,
+  },
+}))
+// --- END FAKE DATABASE ---
+
+const apiClient = axios.create({
+  baseURL: 'https://api.yourdomain.com/v1',
+  headers: { 'Content-Type': 'application/json' },
 })
 
-// Interceptor để tự động thêm token vào mỗi request
 apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem('accessToken') // Hoặc lấy từ Redux/Context
+  const token = localStorage.getItem('accessToken')
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
   return config
 })
 
-/**
- * Hàm gọi API để tạo bài đăng mới
- * @param {{content: string}} postData - Dữ liệu bài đăng, chứa thuộc tính content.
- * @returns {Promise<object>} Dữ liệu bài đăng vừa được tạo từ server.
- */
 export const createPostApi = async (postData) => {
-  const response = await apiClient.post('/posts', postData) // <-- THAY THẾ BẰNG ENDPOINT CỦA BẠN
-  return response.data
+  const newPost = {
+    id: Math.random(),
+    user: {
+      name: 'Ne Lam',
+      title: 'You',
+      timestamp: 'Just now',
+      avatar: 'https://placehold.co/48x48/EFEFEF/AAAAAA?text=NL',
+    },
+    content: postData.content,
+    stats: { likes: 0, comments: 0 },
+  }
+  return new Promise((resolve) => setTimeout(() => resolve(newPost), 500))
+}
+
+/**
+ * Hàm giả lập lấy bài đăng theo trang
+ * @param {number} page - Số trang muốn lấy (bắt đầu từ 1)
+ * @param {number} limit - Số lượng bài đăng trên mỗi trang
+ * @returns {Promise<{posts: Array<object>, totalPages: number}>}
+ */
+export const getPostsApi = async (page = 1, limit = 3) => {
+  console.log(`Fetching posts for page: ${page}`)
+  const totalPosts = allFakePosts.length
+  const totalPages = Math.ceil(totalPosts / limit)
+  const startIndex = (page - 1) * limit
+  const paginatedPosts = allFakePosts.slice(startIndex, startIndex + limit)
+
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ posts: paginatedPosts, totalPages: totalPages })
+    }, 800)
+  })
 }

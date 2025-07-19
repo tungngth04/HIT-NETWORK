@@ -1,7 +1,6 @@
 import React from 'react'
 import { HandThumbsUp, Chat, Bookmark, Handbag } from 'react-bootstrap-icons'
-// Cập nhật đường dẫn import SCSS
-import './postCard.scss' // Import CSS styles for PostCard component
+import './postCard.scss'
 
 const PostCard = ({ post }) => {
   const { user, content, media, stats } = post
