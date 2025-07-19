@@ -2,8 +2,9 @@ import React from 'react'
 import CreatePost from '../../components/createPost/createPost'
 import PostCard from '../../components/postCard/postCard'
 import SidebarWidget from '../../components/sidebarWidget/sidebarWidget'
-import './UserHomePage.scss' 
-import { usePosts } from '../../hooks/userPosts' 
+import Pagination from '../../components/pagination/pagination'
+import { usePosts } from '../../hooks/userPosts'
+import './userHomePage.scss'
 
 const recruitmentPosts = [
   {
@@ -28,19 +29,21 @@ const upcomingEvents = [
   },
 ]
 
-
 const UserHomePage = () => {
-  const { posts, addPost } = usePosts()
+  const { posts, isLoading, currentPage, totalPages, addPost, goToPage } = usePosts()
 
   return (
     <div className='user-homepage-container'>
       <div className='main-content'>
-   
         <CreatePost onPostCreated={addPost} />
 
-        {posts.map((post) => (
-          <PostCard key={post.id} post={post} />
-        ))}
+        {isLoading ? (
+          <div className='loading-indicator'>Đang tải bài viết...</div>
+        ) : (
+          posts.map((post) => <PostCard key={post.id} post={post} />)
+        )}
+
+        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={goToPage} />
       </div>
       <aside className='sidebar'>
         <SidebarWidget title='Recruitment Posts' items={recruitmentPosts} />
