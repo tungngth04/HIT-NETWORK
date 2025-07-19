@@ -1,44 +1,45 @@
-import { useState, useEffect } from 'react'
-
-// --- MOCK DATA ---
-const initialPosts = [
-  {
-    id: 1,
-    user: {
-      name: 'Vishnu Kumar Agrawal',
-      title: 'UX Designer @ Devn Technology',
-      timestamp: '25 Nov at 12:24 PM',
-      avatar: 'https://placehold.co/48x48/EFEFEF/AAAAAA?text=A',
-    },
-    content:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
-    media: 'https://placehold.co/600x250/F0F2F5/CCCCCC?text=Post+Image',
-    stats: { likes: 14, comments: 16, applies: 52 },
-  },
-]
-// --- KẾT THÚC MOCK DATA ---
+import { useState, useEffect, useCallback } from 'react'
+import { getPostsApi } from '../apis/posts.api'
 
 export const usePosts = () => {
-  const [posts, setPosts] = useState(initialPosts)
+  const [posts, setPosts] = useState([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(0)
+  const [isLoading, setIsLoading] = useState(true)
 
-  // Trong thực tế, bạn sẽ gọi API để lấy danh sách bài đăng ở đây
-  // useEffect(() => {
-  //   const fetchPosts = async () => {
-  //     const data = await getPostsApi(); // Giả sử bạn có hàm getPostsApi
-  //     setPosts(data);
-  //   };
-  //   fetchPosts();
-  // }, []);
+  const goToPage = useCallback(
+    async (pageNum) => {
+      if (pageNum < 1 || (totalPages > 0 && pageNum > totalPages)) return
+      setIsLoading(true)
+      try {
+        const { posts: newPosts, totalPages: newTotalPages } = await getPostsApi(pageNum)
+        setPosts(newPosts)
+        setCurrentPage(pageNum)
+        setTotalPages(newTotalPages)
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      } catch (error) {
+        console.error('Failed to fetch posts:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    },
+    [totalPages],
+  )
 
-  // Hàm để thêm một bài đăng mới vào đầu danh sách
+  useEffect(() => {
+    goToPage(1)
+  }, [goToPage])
+
   const addPost = (newPost) => {
     setPosts((prevPosts) => [newPost, ...prevPosts])
   }
 
   return {
     posts,
+    isLoading,
+    currentPage,
+    totalPages,
     addPost,
+    goToPage,
   }
 }
-// Hook này sẽ được sử dụng trong các component khác để lấy danh sách bài đăng
-// và thêm bài đăng mới. Bạn có thể mở rộng hook này để bao gồm các chứcn năng khác như xóa bài đăng, cập nhật bài đăng, v.v.

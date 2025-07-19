@@ -64,7 +64,6 @@ function App() {
       children: [
         {
           path: '',
-
           element: <UserHomePage />,
           index: true,
         },
