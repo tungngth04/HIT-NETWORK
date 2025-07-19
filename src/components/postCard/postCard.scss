@@ -9,6 +9,16 @@
     display: flex;
     align-items: center;
     margin-bottom: 16px;
+
+    .recruit-tag {
+      margin-left: auto;
+      background-color: #e0f2fe;
+      color: #0c54a1;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
   }
 
   .post-avatar {
@@ -44,7 +54,6 @@
     background-color: #f0f2f5;
     border-radius: 8px;
     margin-bottom: 16px;
-    // Giả lập vùng chứa ảnh
     height: 250px;
     display: flex;
     align-items: center;

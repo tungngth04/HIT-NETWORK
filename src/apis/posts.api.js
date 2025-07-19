@@ -3,6 +3,7 @@ import axios from 'axios'
 // --- FAKE DATABASE ---
 const allFakePosts = Array.from({ length: 25 }, (_, i) => ({
   id: i + 1,
+  type: i % 4 === 0 ? 'Recruit' : 'Normal',
   user: {
     name: `User Name ${i + 1}`,
     title: 'UX Designer @ Devn Technology',
@@ -35,8 +36,10 @@ apiClient.interceptors.request.use((config) => {
 })
 
 export const createPostApi = async (postData) => {
+  console.log('Creating post with data:', postData)
   const newPost = {
     id: Math.random(),
+    type: postData.type,
     user: {
       name: 'Ne Lam',
       title: 'You',
@@ -44,18 +47,12 @@ export const createPostApi = async (postData) => {
       avatar: 'https://placehold.co/48x48/EFEFEF/AAAAAA?text=NL',
     },
     content: postData.content,
-    stats: { likes: 0, comments: 0 },
+    stats: { likes: 0, comments: 0, applies: postData.type === 'Recruit' ? 0 : null },
   }
   return new Promise((resolve) => setTimeout(() => resolve(newPost), 500))
 }
 
-/**
- * Hàm giả lập lấy bài đăng theo trang
- * @param {number} page - Số trang muốn lấy (bắt đầu từ 1)
- * @param {number} limit - Số lượng bài đăng trên mỗi trang
- * @returns {Promise<{posts: Array<object>, totalPages: number}>}
- */
-export const getPostsApi = async (page = 1, limit = 3) => {
+export const getPostsApi = async (page = 1, limit = 5) => {
   console.log(`Fetching posts for page: ${page}`)
   const totalPosts = allFakePosts.length
   const totalPages = Math.ceil(totalPosts / limit)
