@@ -1,15 +1,16 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './Members.scss'
-import data1 from '../data/data'
+// import data1 from '../data/data'
 import { CiSearch } from 'react-icons/ci'
 import { useNavigate } from 'react-router-dom'
 import { Table } from 'antd'
 import Delete from '../../../components/admin/delete/Delete'
 import Import from '../../../components/admin/import/Import'
+import { selectAllUser } from '../../../apis/admin.api'
 
 function Members() {
   const navigate = useNavigate()
-  const [data, setData] = useState(data1)
+  // const [data, setData] = useState(data1)
   const [id, setId] = useState()
   const [deletePopup, setDeletePopup] = useState({
     open: false,
@@ -32,14 +33,14 @@ function Members() {
       type: 'user',
     })
   }
-  const newData = () => ({
-    hoten: '',
-    gioitinh: '',
-    ngaysinh: null,
-    email: '',
-    tentaikhoan: '',
-    matkhau: '',
-  })
+  // const newData = () => ({
+  //   hoten: '',
+  //   gioitinh: '',
+  //   ngaysinh: null,
+  //   email: '',
+  //   tentaikhoan: '',
+  //   matkhau: '',
+  // })
   const handleAdd = () => {
     navigate('/admin/members/create')
   }
@@ -99,6 +100,27 @@ function Members() {
     },
   ]
 
+  const [user, setUser] = useState()
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchUsers = async() => {
+      try {
+        const response = await selectAllUser();
+        setUser(response.data || [])
+      } catch(error){
+        console.error(error)
+      }finally{
+        setLoading(false)
+      }
+    };
+    fetchUsers();
+  }, []);
+  useEffect(() => {
+  console.log(user); // Sẽ chạy mỗi khi user thay đổi
+}, [user]);
+
+  if (loading) return <p>Đang tải dữ liệu...</p>
   return (
     <>
       <div className='members-page'>
@@ -115,7 +137,7 @@ function Members() {
             <button className='button button--import' onClick={handleImport}>Import</button>
           </div>
         </div>
-        <Table columns={columns} dataSource={data1} rowKey='stt' pagination={{ pageSize: 8 }} />
+        {/* <Table columns={columns} dataSource={user} rowKey='stt' pagination={{ pageSize: 8 }} /> */}
       </div>
       <div>
         {deletePopup.open && (

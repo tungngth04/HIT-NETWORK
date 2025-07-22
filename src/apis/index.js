@@ -37,4 +37,21 @@ const apiDefault = axios.create({
   },
 });
 
-export { apiDefault, api };
+const adminApi = axios.create({
+  baseURL: `${import.meta.env.VITE_API_SERVER}/api/v1`,
+  headers: {
+    'Content-Type': 'Application/json',
+  },
+})
+adminApi.interceptors.request.use((config) => {
+  const accessToken = JSON.parse(localStorage.getItem('auth'))?.token
+  if (accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`
+  }
+  return config
+}, Promise.reject)
+
+export { apiDefault, api, adminApi };
+
+
+// config.headers.Authorization = `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJCUVQiLCJpYXQiOjE3NTMxOTUzNTIsImV4cCI6MTc1MzI4MTc1Mn0.U3nlVoGwV2SM2cFQFDa5hhvgnaRblJdJ6BIPuE1bVbA`
