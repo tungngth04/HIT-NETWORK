@@ -47,6 +47,13 @@ const Header = () => {
         <div className='profile-dropdown'>
           <div className='profile-avatar'>
             <img src={avatar} />
+            <div className='profile-menu'>
+              <ul>
+                <li>Thông tin cá nhân</li>
+                <li>Chỉnh sửa thông tin cá nhân</li>
+                <li>Đăng xuất</li>
+              </ul>
+            </div>
           </div>
           <div className='caret-down-container'>
             <div className='caret-down'>
