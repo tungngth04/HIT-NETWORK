@@ -6,7 +6,8 @@ import { useNavigate } from 'react-router-dom'
 import { Table } from 'antd'
 import Delete from '../../../components/admin/delete/Delete'
 import Import from '../../../components/admin/import/Import'
-import { selectAllUser } from '../../../apis/admin.api'
+import { getAllMembers } from '../../../apis/members.api'
+
 
 function Members() {
   const navigate = useNavigate()
@@ -50,23 +51,23 @@ function Members() {
   const columns = [
     {
       title: 'STT',
-      dataIndex: 'stt',
-      key: 'stt',
+      dataIndex: 'userId',
+      key: 'userId',
     },
     {
       title: 'Họ tên',
-      dataIndex: 'hoten',
-      key: 'hoten',
+      dataIndex: 'fullName',
+      key: 'fullName',
     },
     {
       title: 'Giới tính',
-      dataIndex: 'gioitinh',
-      key: 'gioitinh',
+      dataIndex: 'gender',
+      key: 'gender',
     },
     {
       title: 'Ngày sinh',
-      dataIndex: 'ngaysinh',
-      key: 'ngaysinh',
+      dataIndex: 'dob',
+      key: 'dob',
     },
     {
       title: 'Email',
@@ -75,8 +76,8 @@ function Members() {
     },
     {
       title: 'Tài khoản',
-      dataIndex: 'tentaikhoan',
-      key: 'tentaikhoan',
+      dataIndex: 'username',
+      key: 'username',
     },
     {
       title: 'Mật khẩu',
@@ -103,22 +104,25 @@ function Members() {
   const [user, setUser] = useState()
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    const fetchUsers = async() => {
+   const fetchUsers = async() => {
       try {
-        const response = await selectAllUser();
-        setUser(response.data || [])
+        const response = await getAllMembers();
+        console.log("Get AllMember",response)
+        setUser(response?.data?.items)
       } catch(error){
         console.error(error)
       }finally{
         setLoading(false)
       }
     };
+
+  useEffect(() => {
     fetchUsers();
   }, []);
-  useEffect(() => {
-  console.log(user); // Sẽ chạy mỗi khi user thay đổi
-}, [user]);
+  
+//   useEffect(() => {
+//   console.log(user); // Sẽ chạy mỗi khi user thay đổi
+// }, [user]);
 
   if (loading) return <p>Đang tải dữ liệu...</p>
   return (
@@ -137,7 +141,7 @@ function Members() {
             <button className='button button--import' onClick={handleImport}>Import</button>
           </div>
         </div>
-        {/* <Table columns={columns} dataSource={user} rowKey='stt' pagination={{ pageSize: 8 }} /> */}
+        <Table columns={columns} dataSource={user} rowKey="useId" pagination={{ pageSize: 8 }} /> 
       </div>
       <div>
         {deletePopup.open && (
