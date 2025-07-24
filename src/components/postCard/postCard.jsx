@@ -1,10 +1,9 @@
 import React from 'react'
 import { HandThumbsUp, Chat, Bookmark, Handbag } from 'react-bootstrap-icons'
-// Cập nhật đường dẫn import SCSS
-import './postCard.scss' // Import CSS styles for PostCard component
+import './PostCard.scss'
 
 const PostCard = ({ post }) => {
-  const { user, content, media, stats } = post
+  const { user, content, media, stats, type } = post
 
   return (
     <div className='post-card'>
@@ -16,6 +15,8 @@ const PostCard = ({ post }) => {
             {user.title} • {user.timestamp}
           </span>
         </div>
+
+        {type === 'Recruit' && <span className='recruit-tag'>Recruitment</span>}
       </div>
       <p className='post-content'>{content}</p>
       {media && (
@@ -31,9 +32,10 @@ const PostCard = ({ post }) => {
           <button className='action-button'>
             <Chat /> <span>{stats.comments}</span>
           </button>
-          {stats.applies && (
+
+          {type === 'Recruit' && (
             <button className='action-button apply-button'>
-              <Handbag /> <span>Apply {stats.applies}</span>
+              <Handbag /> <span>Apply {stats.applies ?? 0}</span>
             </button>
           )}
         </div>

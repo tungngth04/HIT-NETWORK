@@ -1,21 +1,54 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Eye, EyeSlash } from 'react-bootstrap-icons'
-import { useLogin } from '../../hooks/useLogin'
 import './LoginPage.scss'
+import { useNavigate } from 'react-router-dom'
+import useAuth from '../../hooks/useAuth'
 import { Link } from 'react-router-dom'
+import { login } from '../../apis/auth.api'
 
 const LoginPage = () => {
-  const {
-    msv,
-    setMsv,
-    password,
-    setPassword,
-    passwordShow,
-    togglePassword,
-    isLoading,
-    error,
-    handleSubmit,
-  } = useLogin()
+  const authen = useAuth()
+  const navigate = useNavigate()
+  const [msv, setMsv] = useState('')
+  const [password, setPassword] = useState('')
+  const [passwordShow, setPasswordShow] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  const toogglePassword = () => {
+    setPasswordShow(!passwordShow)
+  }
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setIsLoading(true)
+    setError(null)
+    try {
+      const response = await login({ username: msv, password: password })
+      // nếu có token thì authen.saveUser({token: response.token})
+      // kiểm tra biến role vừa lấy có phải là BQT không
+      //dùng role.includes('BQT') để kiểm tra
+      // nếu là BQT thì chuyển hướng đến tran admin
+      // nếu là TV thì chuyển hướng đến trang home
+      console.log(response)
+      if (response && response.data.token) {
+        authen.saveUser({ token: response.data.token, role: response.data.role })
+        if (response.data.role.includes('BQT')) {
+          navigate('/admin')
+        }
+        if (response.data.role.includes('TV')) {
+          navigate('/home')
+        }
+      } else {
+        setError('Đăng nhập không thành công. Vui lòng kiểm tra lại thông tin.')
+      }
+    } catch (error) {
+      console.error('Login failed:', error)
+      setError('Đăng nhập không thành công. Vui lòng kiểm tra lại thông tin.')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
     <div className='login-page-container'>
       <div className='welcome-section'>
@@ -37,8 +70,8 @@ const LoginPage = () => {
                 id='msv'
                 name='msv'
                 placeholder='Nhập mã sinh viên của bạn'
-                value={msv}
                 onChange={(e) => setMsv(e.target.value)}
+                required
               />
             </div>
 
@@ -50,18 +83,15 @@ const LoginPage = () => {
                   id='password'
                   name='password'
                   placeholder='Nhập mật khẩu'
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
                   required
+                  onChange={(e) => setPassword(e.target.value)}
                   disabled={isLoading}
                 />
-                <span onClick={togglePassword} className='toggle-icon'>
+                <span onClick={toogglePassword} className='toggle-icon'>
                   {passwordShow ? <EyeSlash size={20} /> : <Eye size={20} />}
                 </span>
               </div>
             </div>
-
-            {error && <p className='error-message'>{error}</p>}
 
             <div className='options'>
               <p>
