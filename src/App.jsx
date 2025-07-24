@@ -17,7 +17,7 @@ function App() {
       element: <LayoutAdmin />,
       children: [
         {
-          path: 'dashboard',
+          path: '',
           element: <Dashboard />,
         },
         {

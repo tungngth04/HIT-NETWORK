@@ -1,13 +1,34 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Button, DatePicker, Form, Input, Space } from 'antd'
-import "./EventForm.scss"
+import './EventForm.scss'
+import { createEvents } from '../../../apis/events.api'
 const { TextArea } = Input
 function EventForm({ modal }) {
   const navigate = useNavigate()
   const handleCancel = () => {
-    navigate("/admin/events")
+    navigate('/admin/events')
   }
+
+
+  const handleSubmit = async (values) => {
+     const payload = {
+    ...values,
+    eventDate: values.eventDate.format("YYYY-MM-DD[T]HH:mm:ss")
+  }
+    try {
+      await createEvents(payload)
+      console.log('Create API event thanh cong')
+    } catch(error) {
+      console.log('Loi khi tao su kien', error.message)
+    }
+  }
+
+
+  const handleFailed = (errorInfo) => {
+    console.error('Lỗi khi submit:', errorInfo)
+  }
+
   return (
     <div className='event-form__wrapper'>
       {modal == 'add' ? (
@@ -23,38 +44,42 @@ function EventForm({ modal }) {
         labelAlign='left'
         className='event-form'
         initialValues={{
-          tensukien: '',
-          thoigian: '',
-          điaiem: '',
-          nguoitochuc: '',
-          mota: '',
-        }}>
+          title: '',
+          eventDate: '',
+          location: '',
+          organizer: '',
+          description: '',
+        }}
+        onFinish={handleSubmit} // ← xử lý khi submit thành công
+        onFinishFailed={handleFailed}>
         <Form.Item
           label='Tên sự kiện'
-          name='tensukien'
+          name='title'
           rules={[{ required: true, message: 'Hãy nhập tên sự kiện' }]}>
-          <Input placeholder='Nhập tên sự kiện'/>
+          <Input placeholder='Nhập tên sự kiện' />
         </Form.Item>
         <Form.Item
           label='Thời gian tổ chức'
-          name='thoigian'
+          name='eventDate'
           rules={[{ required: true, message: 'Hãy chọn thời gian tổ chức' }]}>
           <DatePicker className='datetime' placeholder='Chọn thời gian tổ chức'/>
         </Form.Item>
         <Form.Item
           label='Địa điểm'
-          name='diadiem'
+          name='location'
           rules={[{ required: true, message: 'Hãy nhập địa điểm' }]}>
-          <Input placeholder='Nhập địa điểm'/>
+          <Input placeholder='Nhập địa điểm' />
         </Form.Item>
         <Form.Item
           label='Người tổ chức'
-          name='nguoitochuc'
+          name='organizer'
           rules={[{ required: true, message: 'Hãy nhập tên người tổ chức' }]}>
-          <Input placeholder='Nhập tên người tổ chức'/>
-        </Form.Item> 
-        <Form.Item label={<span style={{ marginLeft: '12px' }}>Mô tả sự kiện</span>}        >
-          <TextArea rows={4} placeholder='Nhập mô tả sự kiện'/>
+          <Input placeholder='Nhập tên người tổ chức' />
+        </Form.Item>
+        <Form.Item
+          name='description'
+          label={<span style={{ marginLeft: '12px' }}>Mô tả sự kiện</span>}>
+          <TextArea rows={4} placeholder='Nhập mô tả sự kiện' />
         </Form.Item>
         <Space
           style={{

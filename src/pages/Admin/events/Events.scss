@@ -97,3 +97,9 @@
         font-size: 14px;
     }
 }
+
+.ant-input, .ant-picker{
+    &:hover{
+       border: 1px solid #ed4232 !important; 
+    }
+}
