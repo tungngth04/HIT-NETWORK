@@ -1,21 +1,36 @@
 import React from 'react'
 import { Eye, EyeSlash } from 'react-bootstrap-icons'
-import { useLogin } from '../../hooks/useLogin'
 import './LoginPage.scss'
+import useAuth from '../../hooks/useAuth'
 import { Link } from 'react-router-dom'
+import { saveAuth } from '../../store/auth.store'
 
 const LoginPage = () => {
-  const {
-    msv,
-    setMsv,
-    password,
-    setPassword,
-    passwordShow,
-    togglePassword,
-    isLoading,
-    error,
-    handleSubmit,
-  } = useLogin()
+  const authen = useAuth()
+  const handleSubmit = async (values) => {
+    try {
+      const response = await login(values)
+      // nếu có token thì authen.saveUser({token: response.token})
+      // kiểm tra biến role vừa lấy có phải là BQT không
+      //dùng role.includes('BQT') để kiểm tra
+      // nếu là BQT thì chuyển hướng đến tran admin
+      // nếu là TV thì chuyển hướng đến trang home
+      if (response.token) {
+        saveAuth(response)
+        authen.saveUser({ token: response.token, role: response.role })
+        if (response.role.includes('BQT')) {
+          window.location.href = '/admin'
+        } if (response.role.includes('TV')) {
+          window.location.href = '/home'
+        }
+      } else {
+        setError('Đăng nhập không thành công. Vui lòng kiểm tra lại thông tin.')
+      }
+    } catch (error) {
+      console.error('Login failed:', error)
+      setError('Đăng nhập không thành công. Vui lòng kiểm tra lại thông tin.')
+    }
+  }
   return (
     <div className='login-page-container'>
       <div className='welcome-section'>
@@ -38,7 +53,6 @@ const LoginPage = () => {
                 name='msv'
                 placeholder='Nhập mã sinh viên của bạn'
                 value={msv}
-                onChange={(e) => setMsv(e.target.value)}
               />
             </div>
 
@@ -51,7 +65,6 @@ const LoginPage = () => {
                   name='password'
                   placeholder='Nhập mật khẩu'
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
                   required
                   disabled={isLoading}
                 />

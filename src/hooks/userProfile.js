@@ -12,7 +12,6 @@ export const useUserProfile = () => {
   const [editForm] = Form.useForm()
   const [passwordForm] = Form.useForm()
 
-  // Lấy dữ liệu người dùng khi component được mount
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -21,6 +20,7 @@ export const useUserProfile = () => {
         editForm.setFieldsValue({
           hoten: userData.hoten,
           gioitinh: userData.gioitinh,
+
           ngaysinh: userData.ngaysinh ? dayjs(userData.ngaysinh) : null,
         })
       } catch (error) {
@@ -32,20 +32,19 @@ export const useUserProfile = () => {
     fetchUser()
   }, [editForm])
 
-  // Xử lý submit form chỉnh sửa thông tin
+ 
   const handleUpdateProfile = async (values) => {
     console.log('Submitting profile update:', values)
     try {
       const updatedUser = await updateUserProfileApi(values)
-      setUser(updatedUser)
+      setUser(updatedUser) 
       alert('Cập nhật thông tin thành công!')
-      setAction('info')
+      setAction('info') 
     } catch (error) {
       alert('Có lỗi xảy ra, vui lòng thử lại.')
     }
   }
 
-  // Xử lý submit form đổi mật khẩu
   const handleChangePassword = async (values) => {
     console.log('Submitting password change:', values)
     if (values.newPassword !== values.confirmPassword) {
