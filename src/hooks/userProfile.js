@@ -32,14 +32,13 @@ export const useUserProfile = () => {
     fetchUser()
   }, [editForm])
 
- 
   const handleUpdateProfile = async (values) => {
     console.log('Submitting profile update:', values)
     try {
       const updatedUser = await updateUserProfileApi(values)
-      setUser(updatedUser) 
+      setUser(updatedUser)
       alert('Cập nhật thông tin thành công!')
-      setAction('info') 
+      setAction('info')
     } catch (error) {
       alert('Có lỗi xảy ra, vui lòng thử lại.')
     }
