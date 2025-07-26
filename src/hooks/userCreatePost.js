@@ -1,9 +1,9 @@
 import { useState } from 'react'
-// import { createPostApi } from '../apis/posts.api'
-
+import { createPostApi } from '../apis/posts.api'
 export const useCreatePost = (onPostCreated) => {
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [content, setContent] = useState('')
+  const [postType, setPostType] = useState('Normal')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -14,6 +14,7 @@ export const useCreatePost = (onPostCreated) => {
     setModalIsOpen(false)
     setContent('')
     setError('')
+    setPostType('Normal')
   }
 
   const handleSubmit = async () => {
@@ -24,8 +25,7 @@ export const useCreatePost = (onPostCreated) => {
     setIsLoading(true)
     setError('')
     try {
-      const newPostData = await createPostApi({ content })
-      // Gọi callback từ hook cha (usePosts) để cập nhật UI
+      const newPostData = await createPostApi({ content, type: postType })
       onPostCreated(newPostData)
       handleCloseModal()
     } catch (err) {
@@ -39,9 +39,11 @@ export const useCreatePost = (onPostCreated) => {
   return {
     modalIsOpen,
     content,
+    postType,
     isLoading,
     error,
     setContent,
+    setPostType,
     handleOpenModal,
     handleCloseModal,
     handleSubmit,
