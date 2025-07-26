@@ -3,20 +3,29 @@ import './Events.scss'
 // import events from '../data/events';
 import { useNavigate } from 'react-router-dom'
 import { Table } from 'antd'
+import { Pagination } from 'antd'
 import Import from '../../../components/admin/import/Import'
 import Delete from '../../../components/admin/delete/Delete'
 import { getAllEvents } from '../../../apis/events.api'
+import { current } from '@reduxjs/toolkit'
 
 function Events() {
   const navigate = useNavigate()
+  const [pagination, setPagination] = useState({
+    current: 0,
+    size: 10,
+  })
+  const handlePageChange = (pageCurrent, pageSize) => {
+    setPagination((prev) => ({ ...prev, current: pageCurrent - 1, size: pageSize || prev.size }))
+  }
   const handleCreate = () => {
     navigate('/admin/events/create')
   }
   const columns = [
     {
       title: 'STT',
-      dataIndex: 'eventId',
-      key: 'eventId',
+      render:  (_, __, index) => (pagination.current ) * pagination.size + index + 1,
+      key: 'index',
     },
     {
       title: 'Tên sự kiện',
@@ -30,13 +39,13 @@ function Events() {
     },
     {
       title: 'Địa điểm',
-      dataIndex: 'diadiem',
-      key: 'diadiem',
+      dataIndex: 'location',
+      key: 'location',
     },
     {
       title: 'Người tổ chức',
-      dataIndex: 'nguoitochuc',
-      key: 'nguoitochuc',
+      dataIndex: 'organizer',
+      key: 'organizer',
     },
     {
       title: 'Trạng thái',
@@ -89,9 +98,12 @@ function Events() {
 
   const feathEvent = async () => {
     try {
-      const response = await getAllEvents()
+      const response = await getAllEvents({
+        page: pagination.current,
+        size: pagination.size,
+      })
       console.log('Get All Events', response)
-      setEvents(response?.data?.content)
+      setEvents(response?.data)
     } catch (error) {
       console.error(error)
     } finally {
@@ -100,7 +112,7 @@ function Events() {
   }
   useEffect(() => {
     feathEvent()
-  }, [])
+  }, [pagination])
   if (loading) return <p>Đang tải dữ liệu...</p>
   return (
     <div className='events-page'>
@@ -119,18 +131,38 @@ function Events() {
           </button>
         </div>
       </div>
-      <Table columns={columns} dataSource={events} rowKey='stt' pagination={{ pageSize: 8 }} />
+      <Table
+        columns={columns}
+        dataSource={events?.content}
+        // rowKey={events.eventId}
+        rowKey='id'
+        // scroll={cacluateTabe}
+        pagination={false}
+      />
+      <Pagination
+        align='end'
+        defaultCurrent={pagination.current}
+        total={events?.totalElements}
+        pageSize={pagination.size}
+        showSizeChanger
+        onChange={handlePageChange}
+        onShowSizeChange={handlePageChange}
+      />
       {deletePopup.open && (
         <Delete
           id={id}
-          data={data}
-          setData={setData}
+          // data={data}
+          // setData={setData}
           setDeletePopup={setDeletePopup}
           deletePopup={deletePopup}
         />
       )}
       {importPopup.open && (
-        <Import importPopup={importPopup} setImportPopup={setImportPopup} setData={setData} />
+        <Import
+          importPopup={importPopup}
+          setImportPopup={setImportPopup}
+          //  setData={setData}
+        />
       )}
     </div>
   )
