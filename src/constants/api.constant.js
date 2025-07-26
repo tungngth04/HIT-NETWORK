@@ -5,4 +5,11 @@ export const ApiConstants = {
     user: '/auth/home',
     admin: '/auth/admin',
   },
+  events: {
+    updateEvents: '/admin/event/',
+    // getDetaiEvents: '/admin/event/',
+    getDetaiEvents: '/admin/event',
+    createEvents: '/admin/event',
+    getAllEvents: '/admin/events',
+  },
 }
