@@ -147,8 +147,8 @@ function Members() {
         {deletePopup.open && (
           <Delete
             id={id}
-            data={data}
-            setData={setData}
+            // data={data}
+            // setData={setData}
             setDeletePopup={setDeletePopup}
             deletePopup = {deletePopup}
           />
@@ -158,7 +158,7 @@ function Members() {
             <Import 
             importPopup = {importPopup}
             setImportPopup = {setImportPopup} 
-            setData = {setData}
+            // setData = {setData}
             />
           )
         }
