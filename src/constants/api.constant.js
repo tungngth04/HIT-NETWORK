@@ -6,7 +6,7 @@ export const ApiConstants = {
     admin: '/auth/admin',
   },
   members: {
-    updateMembers: '/admin/update',
+    updateMembers: '/admin/update/',
     // updateMembers: '/admin/update/',
     importMembers: '/admin/import',
     createMembers: '/admin/create',

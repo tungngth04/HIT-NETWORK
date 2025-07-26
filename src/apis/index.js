@@ -45,7 +45,7 @@ const apiDefaultUpload = axios.create({
 
 apiDefaultUpload.interceptors.request.use((config) => {
   const accessToken = JSON.parse(localStorage.getItem(LocalStorage.auth))?.token
-  config.headers.Authorization = `${accessToken}`
+  config.headers.Authorization = `Bearer ${accessToken}`
   return config
 }, Promise.reject)
 
