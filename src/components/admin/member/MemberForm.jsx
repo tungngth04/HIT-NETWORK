@@ -1,33 +1,59 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { data, useNavigate, useParams } from 'react-router-dom'
 import { Form, Input, Button, Radio, DatePicker, Space, Select } from 'antd'
 import './MemberForm.scss'
+import dayjs from 'dayjs'
+import { createMembers, detailMembers, updateMembers } from '../../../apis/members.api'
+import toast from 'react-hot-toast'
 function MemberForm({ modal }) {
   const navigate = useNavigate()
   const { id } = useParams()
-  const { form } = Form.useForm()
-  const [data, setData] = useState({
-    fullName: '',
-    role: '',
-    gender: 'Nam',
-    dob: null,
-    email: '',
-  })
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setData((prev) => ({ ...prev, [name]: value }))
+  const [ form ] = Form.useForm()
+
+  // get api lay chi tiet
+  const getDetail = async (id) => {
+    try {
+      const response = await detailMembers(id)
+      const data = response?.data
+      const filledEvent = {
+        fullName: data.fullName,
+        role: data.role,
+        gender: data.gender,
+        dob: dayjs(data.eventDate),
+        email: data.email,
+      }
+      form.setFieldsValue(filledEvent)
+    } catch (error) {
+      console.error(error)
+    }
   }
-  const handleSubmit = async(values) => {
+  useEffect(() => {
+    if (id) {
+      getDetail(id)
+    }
+  }, [id, form])
+
+  const handleSubmit = async (values) => {
     const payload = {
       ...values,
-      dob: values.dob.format('YYYY-MM-DD[T]HH:mm:ss'),
+      dob: values.dob?.format('YYYY-MM-DD'),
     }
-    try{
-      await createMembers(payload)
-      console.log("Tao api member thanh cong")
-    }
-    catch(error){
-      console.error(error)
+    console.log('Du lieu gui len api ', payload)
+
+    try {
+      if (modal === 'add') {
+        await createMembers(payload)
+        toast.success('Thêm người dùng thành công!')
+      } else {
+        await updateMembers(id, payload)
+        toast.success('Cập nhập người dùng thành công!')
+      }
+    } catch (error) {
+      if (modal === 'add') {
+        toast.error('Thêm người dùng thất bại!')
+      } else {
+        toast.error('Cập nhật người dùng thất bại!')
+      }
     }
 
     navigate('/admin/members')
@@ -35,8 +61,6 @@ function MemberForm({ modal }) {
   const handleCancel = () => {
     navigate('/admin/members')
   }
-
-
 
   return (
     <div>
@@ -54,34 +78,24 @@ function MemberForm({ modal }) {
             label='Họ và tên'
             name='fullName'
             rules={[{ required: true, message: 'Hãy nhập họ và tên!' }]}>
-            <Input placeholder='Nhập họ và tên' onChange={handleChange} />
+            <Input placeholder='Nhập họ và tên' />
           </Form.Item>
 
-          <Form.Item label='Vai trò' name='role' rules={[
-              { required: true, message: 'Hãy chọn vai trò' },
-            ]}>
+          <Form.Item
+            label='Vai trò'
+            name='role'
+            rules={[{ required: true, message: 'Hãy chọn vai trò' }]}>
             <Select placeholder='Chọn vai trò'>
-              <Select.Option value='TV' onChange={handleChange}>
-                TV
-              </Select.Option>
-              <Select.Option value='BQT' onChange={handleChange}>
-                BQT
-              </Select.Option>
+              <Select.Option value='TV'>TV</Select.Option>
+              <Select.Option value='BQT'>BQT</Select.Option>
             </Select>
           </Form.Item>
 
           <Form.Item label='Giới tính' name='gender' rules={[{ required: true }]}>
             <Radio.Group>
-              <Radio value='MALE' onChange={handleChange}>
-                Nam
-              </Radio>
-              <Radio value='FEMALE' onChange={handleChange}>
-                {' '}
-                Nữ{' '}
-              </Radio>
-              <Radio value='OTHER' onChange={handleChange}>
-                Khác
-              </Radio>
+              <Radio value='MALE'>Nam</Radio>
+              <Radio value='FEMALE'> Nữ </Radio>
+              <Radio value='OTHER'>Khác</Radio>
             </Radio.Group>
           </Form.Item>
 
@@ -89,7 +103,9 @@ function MemberForm({ modal }) {
             label='Ngày sinh'
             name='dob'
             rules={[{ required: true, message: 'Hãy chọn ngày sinh!' }]}>
-            <DatePicker className='datetime' placeholder='Chọn ngày sinh' onChange={handleChange} />
+            <DatePicker className='datetime' placeholder='Chọn ngày sinh' 
+            disabledDate={(current) => current && current >= dayjs().startOf('day')}
+            />
           </Form.Item>
 
           <Form.Item
@@ -99,26 +115,8 @@ function MemberForm({ modal }) {
               { required: true, message: 'Hãy nhập email' },
               { type: 'email', message: 'Giá trị email không hợp lệ' },
             ]}>
-            <Input placeholder='Nhập email' onChange={handleChange} />
+            <Input placeholder='Nhập email' />
           </Form.Item>
-          {/* 
-          <Form.Item
-            label='Tên tài khoản'
-            name='username'
-            rules={[{ required: true, message: 'Hãy nhập tên tài khoản!' }]}>
-            <Input placeholder='Nhập tên tài khoản' onChange={handleChange} />
-          </Form.Item>
-
-          <Form.Item
-            label='Mật khẩu'
-            name='passwordHash'
-            rules={[{ required: true, message: 'Hãy nhập mật khẩu hoặc nhấn Rundome' }]}
-            style={{ marginBottom: 8 }}>
-            <Space.Compact style={{ width: '100%' }}>
-              <Input.Password placeholder='Rundome mật khẩu' onChange={handleChange} />
-              <Button className='btnSubmit'>Rundome</Button>
-            </Space.Compact>
-          </Form.Item> */}
 
           <Space
             style={{
@@ -147,3 +145,24 @@ function MemberForm({ modal }) {
 }
 
 export default MemberForm
+
+{
+  /* 
+          <Form.Item
+            label='Tên tài khoản'
+            name='username'
+            rules={[{ required: true, message: 'Hãy nhập tên tài khoản!' }]}>
+            <Input placeholder='Nhập tên tài khoản' />
+          </Form.Item>
+
+          <Form.Item
+            label='Mật khẩu'
+            name='passwordHash'
+            rules={[{ required: true, message: 'Hãy nhập mật khẩu hoặc nhấn Rundome' }]}
+            style={{ marginBottom: 8 }}>
+            <Space.Compact style={{ width: '100%' }}>
+              <Input.Password placeholder='Rundome mật khẩu' />
+              <Button className='btnSubmit'>Rundome</Button>
+            </Space.Compact>
+          </Form.Item> */
+}

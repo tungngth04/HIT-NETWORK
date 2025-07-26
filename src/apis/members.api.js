@@ -3,10 +3,11 @@ import { apiDefault } from '.'
 import { ApiConstants } from '../constants/api.constant'
 
 const membersApi = () => ({
-  getAllMembers: async () => api.get(ApiConstants.members.getAllMembers),
-  updateMembers: async (memberData, id) =>
+  getAllMembers: async (params) => api.get(ApiConstants.members.getAllMembers, { params }),
+  detailMembers: async (id) => api.get(`${ApiConstants.members.detailMembers}?userId=${id}`),
+  updateMembers: async (id, memberData) =>
     api.put(
-      `${ApiConstants.members.updateMembers}${id}`,
+      `${ApiConstants.members.updateMembers}?id=${id}`,
       memberData, // gửi lên
     ),
 
@@ -16,14 +17,17 @@ const membersApi = () => ({
       memberData, // gửi lên
     ),
 
-  deleteMembers: async (name) =>
-    api.delete(
-      ApiConstants.members.deleteMembers,
-      name, // gửi lên
-    ),
+  deleteMembers: async (username) =>
+    api.delete(`${ApiConstants.members.deleteMembers}?username=${username}`),
 
   importMembers: async (data) => apiDefaultUpload.post(ApiConstants.members.importMembers, data),
 })
 
-export const { getAllMembers, updateMembers, createMembers, deleteMembers, importMembers } =
-  membersApi()
+export const {
+  getAllMembers,
+  updateMembers,
+  createMembers,
+  deleteMembers,
+  importMembers,
+  detailMembers,
+} = membersApi()

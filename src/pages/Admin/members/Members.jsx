@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import './Members.scss'
-// import data1 from '../data/data'
 import { CiSearch } from 'react-icons/ci'
 import { useNavigate } from 'react-router-dom'
-import { Table } from 'antd'
+import { Pagination, Table } from 'antd'
 import Delete from '../../../components/admin/delete/Delete'
 import Import from '../../../components/admin/import/Import'
 import { getAllMembers } from '../../../apis/members.api'
 
-
 function Members() {
   const navigate = useNavigate()
-  // const [data, setData] = useState(data1)
   const [id, setId] = useState()
+  const [username, setUsername] = useState()
+  const [searchValue, setSearchValue] = useState('')
   const [deletePopup, setDeletePopup] = useState({
     open: false,
     type: '', // 'user' hoặc 'event'
@@ -20,9 +19,16 @@ function Members() {
   const [importPopup, setImportPopup] = useState({
     open: false,
     type: '', // 'user' hoặc 'event'
-  });
-  const handleDelete = (id) => {
-    setId(id)
+  })
+  const [pagination, setPagination] = useState({
+    current: 0,
+    size: 10,
+  })
+  const handlePageChange = (pageCurrent, pageSize) => {
+    setPagination((prev) => ({ ...prev, current: pageCurrent - 1, size: pageSize || prev.size }))
+  }
+  const handleDelete = (username) => {
+    setUsername(username)
     setDeletePopup({
       open: true,
       type: 'user',
@@ -34,40 +40,69 @@ function Members() {
       type: 'user',
     })
   }
-  // const newData = () => ({
-  //   hoten: '',
-  //   gioitinh: '',
-  //   ngaysinh: null,
-  //   email: '',
-  //   tentaikhoan: '',
-  //   matkhau: '',
-  // })
   const handleAdd = () => {
     navigate('/admin/members/create')
   }
   const handleEdit = (id) => {
     navigate(`/admin/members/edit/${id}`)
   }
+
+  const [data, setData] = useState()
+  const [loading, setLoading] = useState(true)
+  const fetchUsers = async () => {
+    try {
+      const response = await getAllMembers({
+        page: pagination.current,
+        size: pagination.size,
+      })
+      console.log('Get AllMember', response)
+      setData(response?.data)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+  useEffect(() => {
+    fetchUsers()
+  }, [pagination])
+
   const columns = [
     {
       title: 'STT',
-      dataIndex: 'userId',
+      render: (_, __, index) => pagination.current * pagination.size + index + 1,
       key: 'userId',
+      width: 70,
+      align: 'center',
     },
     {
       title: 'Họ tên',
       dataIndex: 'fullName',
       key: 'fullName',
+      filters: [
+        { text: 'Hoạt động', value: 'active' },
+        { text: 'Đã xóa', value: 'deleted' },
+      ],
+      filterMultiple: false,
+      onFilter: (value, record) => {
+        if (value === 'active') return record.deletedAt === null
+        if (value === 'deleted') return record.deletedAt !== null
+        return true
+      },
     },
     {
       title: 'Giới tính',
       dataIndex: 'gender',
       key: 'gender',
+      width: 100,
+      align: 'center',
     },
     {
       title: 'Ngày sinh',
       dataIndex: 'dob',
       key: 'dob',
+      // width: 100,
+      align: 'center',
     },
     {
       title: 'Email',
@@ -78,90 +113,115 @@ function Members() {
       title: 'Tài khoản',
       dataIndex: 'username',
       key: 'username',
-    },
-    {
-      title: 'Mật khẩu',
-      dataIndex: 'matkhau',
-      key: 'matkhau',
+      //  width: 150,
     },
     {
       title: 'Hành động',
       dataIndex: '',
       key: 'x',
-      render: (_, record) => (
-        <div>
-          <button className='button button--edit' onClick={() => handleEdit(record.stt)}>
-            Sửa
-          </button>
-          <button className='button button--delete' onClick={() => handleDelete(record.stt)}>
-            Xóa
-          </button>
-        </div>
-      ),
+      render: (_, record) => {
+        if (record.deletedAt !== null) {
+          return (
+            <>
+              <button
+                className='button button--restore'
+                onClick={() => handleRestore(record.userId)}>
+                Khôi phục
+              </button>
+            </>
+          )
+        }
+        return (
+          <div>
+            <button className='button button--edit' onClick={() => handleEdit(record.userId)}>
+              Sửa
+            </button>
+            <button className='button button--delete' onClick={() => handleDelete(record.username)}>
+              Xóa
+            </button>
+          </div>
+        )
+      },
     },
   ]
+  // if (loading) return <p>Đang tải dữ liệu...</p>
 
-  const [user, setUser] = useState()
-  const [loading, setLoading] = useState(true)
+  // Lọc trước khi render
+  const filteredData =
+    data?.items?.filter((item) => {
+      const value = searchValue.toLowerCase()
+      return (
+        item.fullName?.toLowerCase().includes(value) ||
+        item.username?.toLowerCase().includes(value) ||
+        item.email?.toLowerCase().includes(value)
+      )
+    }) || []
 
-   const fetchUsers = async() => {
-      try {
-        const response = await getAllMembers();
-        console.log("Get AllMember",response)
-        setUser(response?.data?.items)
-      } catch(error){
-        console.error(error)
-      }finally{
-        setLoading(false)
-      }
-    };
-
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-  
-//   useEffect(() => {
-//   console.log(user); // Sẽ chạy mỗi khi user thay đổi
-// }, [user]);
-
-  if (loading) return <p>Đang tải dữ liệu...</p>
   return (
     <>
       <div className='members-page'>
         <h2>Danh sách thành viên</h2>
         <div className='members-toolbar'>
           <div className='members-toolbar__search'>
-            <input type='text' placeholder='Tìm kiếm theo fullname, username, email' />
+            <input
+              type='text'
+              placeholder='Tìm kiếm theo fullname, username, email'
+              onChange={(e) => setSearchValue(e.target.value)}
+            />
           </div>
           <div className='members-toolbar__actions'>
             <button className='button button--search'>Tìm kiếm</button>
-            <button className='button button--add' onClick={handleAdd}>
-              Thêm
-            </button>
-            <button className='button button--import' onClick={handleImport}>Import</button>
+            <div style={{marginLeft: '400px'}}>
+              <button className='button button--add' onClick={handleAdd}>
+                Thêm
+              </button>
+              <button className='button button--import' onClick={handleImport} style={{marginLeft: "10px"}}>
+                Import
+              </button>
+            </div>
           </div>
         </div>
-        <Table columns={columns} dataSource={user} rowKey="useId" pagination={{ pageSize: 8 }} /> 
+        <Table
+          columns={columns}
+          // dataSource={data?.items}
+          dataSource={filteredData}
+          rowKey='userId'
+          pagination={false}
+          rowClassName={(record) => (record.deletedAt !== null ? 'row--deleted' : '')}
+          scroll={{ y: 36 * 10 }}
+          className='no-scrollbar'
+          loading={loading}
+        />
+
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
+          <Pagination
+            current={pagination.current + 1}
+            pageSize={pagination.size}
+            total={data?.totalItems}
+            showSizeChanger
+            onChange={handlePageChange}
+            onShowSizeChange={handlePageChange}
+          />
+        </div>
       </div>
       <div>
         {deletePopup.open && (
           <Delete
-            id={id}
+            username={username}
             // data={data}
             // setData={setData}
             setDeletePopup={setDeletePopup}
-            deletePopup = {deletePopup}
+            deletePopup={deletePopup}
+            fetchUsers={fetchUsers}
           />
         )}
-        {
-          importPopup.open && (
-            <Import 
-            importPopup = {importPopup}
-            setImportPopup = {setImportPopup} 
+        {importPopup.open && (
+          <Import
+            importPopup={importPopup}
+            setImportPopup={setImportPopup}
             // setData = {setData}
-            />
-          )
-        }
+          />
+        )}
       </div>
     </>
   )
