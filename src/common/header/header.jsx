@@ -7,10 +7,19 @@ import { Bell } from 'react-bootstrap-icons'
 import { Envelope } from 'react-bootstrap-icons'
 import { CaretDown } from 'react-bootstrap-icons'
 import { clearAuth } from '../../store/auth.store'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { NavLink } from 'react-router-dom'
 const Header = () => {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
   const handleLogout = () => {
     dispatch(clearAuth())
     navigate('/login')
+    console.log(1)
+  }
+  const handleInfor = () => {
+    navigate('/home/profile')
   }
   return (
     <header className='main-header'>
@@ -22,18 +31,24 @@ const Header = () => {
       <nav className='main-nav'>
         <ul>
           <li>
-            <a href='/home' className='active'>
+            <NavLink to='/home' className={({ isActive }) => (isActive ? 'active' : '')}>
               Home
-            </a>
+            </NavLink>
           </li>
           <li>
-            <a href='#'>My posts</a>
+            <NavLink to='/my-posts' className={({ isActive }) => (isActive ? 'active' : '')}>
+              My posts
+            </NavLink>
           </li>
           <li>
-            <a href='#'>Events</a>
+            <NavLink to='/events' className={({ isActive }) => (isActive ? 'active' : '')}>
+              Events
+            </NavLink>
           </li>
           <li>
-            <a href='#'>Recruitment</a>
+            <NavLink to='/recruitment' className={({ isActive }) => (isActive ? 'active' : '')}>
+              Recruitment
+            </NavLink>
           </li>
         </ul>
       </nav>
@@ -54,22 +69,15 @@ const Header = () => {
             <img src={avatar} />
             <div className='profile-menu'>
               <ul>
-                <li>Thông tin cá nhân</li>
-                <li>Chỉnh sửa thông tin cá nhân</li>
-                <li>Đăng xuất</li>
+                <li onClick={handleInfor}>Thông tin cá nhân</li>
+                <li onClick={handleLogout}>Đăng xuất</li>
               </ul>
             </div>
           </div>
           <div className='caret-down-container'>
             <div className='caret-down'>
               <CaretDown size={20} />
-              <div className='profile-menu'>
-                <ul>
-                  <li>Thông tin cá nhân</li>
-                  <li>Chỉnh sửa thông tin cá nhân</li>
-                  <li onClick={handleLogout}>Đăng xuất</li>
-                </ul>
-              </div>
+              <div className='profile-menu'></div>
             </div>
           </div>
         </div>

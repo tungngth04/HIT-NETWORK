@@ -29,13 +29,12 @@ const LoginPage = () => {
       //dùng role.includes('BQT') để kiểm tra
       // nếu là BQT thì chuyển hướng đến tran admin
       // nếu là TV thì chuyển hướng đến trang home
-      console.log(response)
-      if (response && response.data.token) {
-        authen.saveUser({ token: response.data.token, role: response.data.role })
-        if (response.data.role.includes('BQT')) {
+      if (response && response.data.data.token) {
+        authen.saveUser({ token: response.data.data.token, role: response.data.data.role })
+        if (response.data.data.role.includes('BQT')) {
           navigate('/admin')
         }
-        if (response.data.role.includes('TV')) {
+        if (response.data.data.role.includes('TV')) {
           navigate('/home')
         }
       } else {
