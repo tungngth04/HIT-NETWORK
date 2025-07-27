@@ -15,4 +15,5 @@ export const ApiConstants = {
     getPosts: '/posts',
     createPost: '/posts/create',
   },
+
 }

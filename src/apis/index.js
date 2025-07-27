@@ -4,11 +4,11 @@ import { useNavigate } from 'react-router-dom'
 
 const api = axios.create({
   baseURL: `${import.meta.env.VITE_API_SERVER}`,
+
   headers: {
     'Content-Type': 'Application/json',
   },
 })
-
 api.interceptors.request.use((config) => {
   const accessToken = JSON.parse(localStorage.getItem(LocalStorage.auth))?.token
   console.log(accessToken)
@@ -17,6 +17,7 @@ api.interceptors.request.use((config) => {
 }, Promise.reject)
 
 api.interceptors.response.use(
+
   (value) => value.data,
   (error) => {
     if (error.code === 401) {
@@ -62,5 +63,3 @@ apiDefaultUpload.interceptors.response.use(
 )
 
 export { apiDefault, api, apiDefaultUpload }
-
-// config.headers.Authorization = `eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJCUVQiLCJpYXQiOjE3NTMxOTUzNTIsImV4cCI6MTc1MzI4MTc1Mn0.U3nlVoGwV2SM2cFQFDa5hhvgnaRblJdJ6BIPuE1bVbA`

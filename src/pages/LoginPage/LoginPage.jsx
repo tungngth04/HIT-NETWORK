@@ -21,7 +21,6 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsLoading(true)
-
     try {
       const response = await login({ username: msv, password: password })
       // nếu có token thì authen.saveUser({token: response.token})
