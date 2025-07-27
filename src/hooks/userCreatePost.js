@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { createPostApi } from '../apis/posts.api'
 export const useCreatePost = (onPostCreated) => {
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [content, setContent] = useState('')
@@ -25,7 +24,6 @@ export const useCreatePost = (onPostCreated) => {
     setIsLoading(true)
     setError('')
     try {
-      const newPostData = await createPostApi({ content, type: postType })
       onPostCreated(newPostData)
       handleCloseModal()
     } catch (err) {

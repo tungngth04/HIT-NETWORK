@@ -16,7 +16,7 @@ const PostCard = ({ post }) => {
           </span>
         </div>
 
-        {type === 'Recruit' && <span className='recruit-tag'>Recruitment</span>}
+        {/* {type === 'Recruit' && <span className='recruit-tag'>Recruitment</span>} */}
       </div>
       <p className='post-content'>{content}</p>
       {media && (

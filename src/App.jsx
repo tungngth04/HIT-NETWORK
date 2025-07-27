@@ -11,6 +11,7 @@ import Events from './pages/Admin/events/Events'
 import EventForm from './components/admin/event/EventForm'
 import LayoutAdmin from './layouts/LayoutAdmin/LayoutAdmin'
 import ProfilePage from './pages/ProfilePage/ProfilePage'
+import toast, { Toaster } from 'react-hot-toast'
 function App() {
   const elements = useRoutes([
     {
@@ -75,6 +76,11 @@ function App() {
       ],
     },
   ])
-  return <>{elements}</>
+  return (
+    <>
+      {elements}
+      <Toaster />
+    </>
+  )
 }
 export default App
