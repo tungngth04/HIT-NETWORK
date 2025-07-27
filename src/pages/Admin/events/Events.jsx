@@ -8,6 +8,7 @@ import Import from '../../../components/admin/import/Import'
 import Delete from '../../../components/admin/delete/Delete'
 import { getAllEvents } from '../../../apis/events.api'
 import { current } from '@reduxjs/toolkit'
+import dayjs from 'dayjs'
 
 function Events() {
   const navigate = useNavigate()
@@ -24,23 +25,30 @@ function Events() {
   const columns = [
     {
       title: 'STT',
-      render:  (_, __, index) => (pagination.current ) * pagination.size + index + 1,
+      render: (_, __, index) => pagination.current * pagination.size + index + 1,
       key: 'index',
+      width: 70,
+      align: 'center',
     },
     {
       title: 'Tên sự kiện',
       dataIndex: 'title',
       key: 'title',
+      width: 150,
     },
     {
       title: 'Thời gian',
-      dataIndex: 'createdAt',
-      key: 'createdAt',
+      dataIndex: 'eventDate',
+      key: 'eventDate',
+      render: (text) => dayjs(text).format('YYYY-MM-DD'),
+      align: 'center',
+      width: 140,
     },
     {
       title: 'Địa điểm',
       dataIndex: 'location',
       key: 'location',
+      width: 200,
     },
     {
       title: 'Người tổ chức',
@@ -49,8 +57,27 @@ function Events() {
     },
     {
       title: 'Trạng thái',
-      dataIndex: 'trangthai',
       key: 'trangthai',
+      // align: 'center',
+      render: (_, record) => {
+        const today = dayjs().startOf('day')
+        const eventDate = dayjs(record.eventDate).startOf('day')
+        const diffDays = eventDate.diff(today, 'day')
+
+        console.log('Ngày hôm nay:', today.format('YYYY-MM-DD'))
+        console.log('Ngày sự kiện:', eventDate.format('YYYY-MM-DD'))
+        console.log('Khoảng cách ngày:', diffDays)
+
+        if (diffDays === 0) {
+          return <span style={{ color: 'orange' }}>Đang diễn ra</span>
+        } else if (diffDays > 0 && diffDays <= 3) {
+          return <span style={{ color: 'red' }}>Sắp diễn ra</span>
+        } else if (diffDays < 0) {
+          return <span style={{ color: 'gray' }}>Đã diễn ra</span>
+        } else {
+          return <span style={{ color: 'blue' }}>Chưa tới</span>
+        }
+      },
     },
     {
       title: 'Hành động',
@@ -113,7 +140,7 @@ function Events() {
   useEffect(() => {
     feathEvent()
   }, [pagination])
-  if (loading) return <p>Đang tải dữ liệu...</p>
+  // if (loading) return <p>Đang tải dữ liệu...</p>
   return (
     <div className='events-page'>
       <h2 className='events-page__title'>Danh sách sự kiện</h2>
@@ -123,12 +150,14 @@ function Events() {
         </div>
         <div className='members-toolbar__actions'>
           <button className='button button--search'>Tìm kiếm</button>
-          <button className='button button--add' onClick={handleCreate}>
-            Thêm
-          </button>
-          <button className='button button--import' onClick={handleImport}>
-            Import
-          </button>
+          <div style={{marginLeft: '400px'}}>
+            <button className='button button--add' onClick={handleCreate}>
+              Thêm
+            </button>
+            <button className='button button--import' onClick={handleImport} style={{marginLeft: "10px"}}>
+              Import
+            </button>
+          </div>
         </div>
       </div>
       <Table
@@ -138,16 +167,22 @@ function Events() {
         rowKey='id'
         // scroll={cacluateTabe}
         pagination={false}
+        scroll={{ y: 36 * 10 }}
+        className='no-scrollbar'
+        loading={loading}
       />
-      <Pagination
-        align='end'
-        defaultCurrent={pagination.current}
-        total={events?.totalElements}
-        pageSize={pagination.size}
-        showSizeChanger
-        onChange={handlePageChange}
-        onShowSizeChange={handlePageChange}
-      />
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
+        <Pagination
+          align='end'
+          defaultCurrent={pagination.current}
+          total={events?.totalElements}
+          pageSize={pagination.size}
+          showSizeChanger
+          onChange={handlePageChange}
+          onShowSizeChange={handlePageChange}
+        />
+      </div>
+
       {deletePopup.open && (
         <Delete
           id={id}

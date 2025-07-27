@@ -70,7 +70,7 @@
             background-color: #1dcba8;
             transition: 0.2s ease;
             color: white;
-
+            width: 70px;
             &:hover {
                 background-color: #00b69b;
             }
@@ -81,7 +81,7 @@
             margin-left: 20px;
             transition: 0.2s ease;
             color: white;
-
+            width: 70px;
             &:hover {
                 background-color: #ed4232;
             }
@@ -102,4 +102,12 @@
     &:hover{
        border: 1px solid #ed4232 !important; 
     }
+}
+.no-scrollbar .ant-table-body {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.no-scrollbar .ant-table-body::-webkit-scrollbar {
+    display: none;
 }
