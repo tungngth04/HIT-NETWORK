@@ -18,19 +18,16 @@ export const useUserProfile = () => {
       const userData = response?.data
       setInfoUser(userData)
       editForm.setFieldsValue({
-        fullName: userData.fullName || userData.hoten || '',
-        gender: userData.gender || userData.gioitinh || '',
-        dob: userData.dob
-          ? dayjs(userData.dob)
-          : userData.ngaysinh
-          ? dayjs(userData.ngaysinh)
-          : null,
+        fullName: userData.fullName || '',
+        gender: userData.gender || '',
+        dob: userData.dob ? dayjs(userData.dob) : null,
         email: userData.email || '',
-        username: userData.username || userData.tentaikhoan || '',
+        username: userData.username || '',
         phone: userData.phone || '',
+        // avatarUrl: userData.avatarUrl || null,
       })
     } catch (error) {
-      console.error('Failed to fetch user profile', error)
+      console.error('Lỗi: ', error)
     } finally {
       setIsLoading(false)
     }
@@ -41,19 +38,25 @@ export const useUserProfile = () => {
 
   // PUT API chỉnh sửa thông
   const handleUpdateProfile = async (values) => {
-    const payload = {
-      ...values,
-      dob: values.dob?.format('YYYY-MM-DD'),
-      email: infoUser.email,
-    }
-    console.log('Du lieu gui len api ', payload)
+    console.log(values.avatarUrl)
+    const formData = new FormData()
+    formData.append('fullName', values.fullName)
+    formData.append('gender', values.gender)
+    formData.append('dob', values.dob?.format('YYYY-MM-DD'))
+    formData.append('email', values.email)
+    // formData.append('usename', values.usename)
+    formData.append('phone', values.phone)
+    formData.append('avatarUrl', values.avatarUrl[0].originFileObj)
+
     try {
-      await update(payload)
+      await update(formData)
+      console.log('ádasd', formData)
       await fetchGetUser()
       setAction('info')
-      // alert('Cập nhật thành công!')
+      alert('Cập nhật thành công!')
     } catch {
       alert('Cap nhat nguoi dung that bai')
+      console.log('ádasd', formData)
     }
   }
 

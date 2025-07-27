@@ -1,5 +1,5 @@
 import React from 'react'
-import { DatePicker, Form, Input, Radio, Space, Button, Spin } from 'antd'
+import { DatePicker, Form, Input, Radio, Space, Button, Spin, Upload } from 'antd'
 import dayjs from 'dayjs'
 import { useUserProfile } from '../../hooks/userProfile'
 import avatar from '../../assets/images/hinh-anime-2.jpg'
@@ -9,10 +9,10 @@ const ProfilePage = () => {
   const {
     action,
     setAction,
-    hoverIndex, 
-    setHoverIndex, 
-    handleUpdateProfile, 
-    editForm, 
+    hoverIndex,
+    setHoverIndex,
+    handleUpdateProfile,
+    editForm,
     infoUser,
     // handleChangePassword,
     // passwordForm,
@@ -26,12 +26,14 @@ const ProfilePage = () => {
     { key: 'edit', label: 'Chỉnh sửa thông tin' },
     { key: 'changePassword', label: 'Đổi mật khẩu' },
   ]
+  
   return (
     <div className='profile-page'>
       {/* Phần header card */}
       <div className='profile-header-card'>
         <div className='header-user-info'>
-          <img src={avatar} alt='avatar' className='user-avatar' />
+          {/* <img src={avatar} alt='avatar' className='user-avatar' /> */}
+          <img src={infoUser.avatarUrl} alt="" style={{width: '100px', height: '100px', borderRadius: '100%'}}/>
           <div className='user-details'>
             <p className='user-name'>{infoUser?.fullName}</p>
             <p className='user-email'>{infoUser?.email}</p>
@@ -55,8 +57,7 @@ const ProfilePage = () => {
 
       {/* Phần nội dung chính */}
       <div className='profile-main-section'>
-
-      {/* Sidebar */}
+        {/* Sidebar */}
         <div className='profile-sidebar'>
           <ul className='sidebar-menu'>
             {menuItems.map((item, index) => (
@@ -104,7 +105,7 @@ const ProfilePage = () => {
             </>
           )}
 
-            {/* Chỉnh sủa thông tin người dùng */}
+          {/* Chỉnh sủa thông tin người dùng */}
           {action === 'edit' && (
             <>
               <h4 className='content-title'>Chỉnh sửa thông tin cá nhân</h4>
@@ -132,19 +133,28 @@ const ProfilePage = () => {
                   rules={[{ required: true, message: 'Vui lòng chọn ngày sinh' }]}>
                   <DatePicker className='edit-datepicker' placeholder='Chọn ngày sinh' />
                 </Form.Item>
-
                 <Form.Item
-                  label='Phone'
+                  label='Số điện thoại'
                   name='phone'
                   rules={[{ required: true, message: 'Vui lòng nhập số điện thoại' }]}>
-                   <Input className='edit-input' placeholder='Nhập số điện thoại' />
+                  <Input className='edit-input' placeholder='Nhập số điện thoại' />
+                </Form.Item>
+
+                <Form.Item
+                  label='Ảnh đại diện'
+                  name='avatarUrl'
+                  valuePropName='fileList'
+                  getValueFromEvent={(e) => e && e.fileList}>
+                  <Upload listType='picture' maxCount={1} beforeUpload={() => false}>
+                    <Button>Chọn ảnh</Button>
+                  </Upload>
                 </Form.Item>
 
                 <Form.Item label='Email' name='email'>
                   <Input className='edit-input' disabled />
                 </Form.Item>
                 <Form.Item label='Tên tài khoản' name='username'>
-                  <Input className='edit-input' disabled  />
+                  <Input className='edit-input' disabled />
                 </Form.Item>
                 <Form.Item className='form-buttons'>
                   <Space>
@@ -163,7 +173,6 @@ const ProfilePage = () => {
           {action === 'changePassword' && (
             <>
               <h4 className='content-title'>Đổi mật khẩu</h4>
-             
             </>
           )}
         </div>
