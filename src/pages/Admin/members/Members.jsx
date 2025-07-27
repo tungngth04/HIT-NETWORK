@@ -219,6 +219,7 @@ function Members() {
           <Import
             importPopup={importPopup}
             setImportPopup={setImportPopup}
+            fetchUsers={fetchUsers}
             // setData = {setData}
           />
         )}
