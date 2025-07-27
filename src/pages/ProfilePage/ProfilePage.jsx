@@ -7,36 +7,25 @@ import './ProfilePage.scss'
 
 const ProfilePage = () => {
   const {
-    user,
-    isLoading,
     action,
     setAction,
-    hoverIndex,
-    setHoverIndex,
-    editForm,
-    passwordForm,
-    handleUpdateProfile,
-    handleChangePassword,
+    hoverIndex, 
+    setHoverIndex, 
+    handleUpdateProfile, 
+    editForm, 
+    infoUser,
+    // handleChangePassword,
+    // passwordForm,
   } = useUserProfile()
 
-  if (isLoading) {
-    return (
-      <div className='profile-loading'>
-        <Spin size='large' />
-      </div>
-    )
-  }
-
-  if (!user) {
+  if (!infoUser) {
     return <div className='profile-loading'>Không thể tải dữ liệu người dùng.</div>
   }
-
   const menuItems = [
     { key: 'info', label: 'Thông tin cá nhân' },
     { key: 'edit', label: 'Chỉnh sửa thông tin' },
     { key: 'changePassword', label: 'Đổi mật khẩu' },
   ]
-
   return (
     <div className='profile-page'>
       {/* Phần header card */}
@@ -44,21 +33,21 @@ const ProfilePage = () => {
         <div className='header-user-info'>
           <img src={avatar} alt='avatar' className='user-avatar' />
           <div className='user-details'>
-            <p className='user-name'>{user.hoten}</p>
-            <p className='user-email'>{user.email}</p>
+            <p className='user-name'>{infoUser?.fullName}</p>
+            <p className='user-email'>{infoUser?.email}</p>
           </div>
         </div>
         <div className='header-stats'>
           <div className='stats-item'>
-            <p>{user.stats.posts}</p>
+            <p>20</p>
             <p>Posts</p>
           </div>
           <div className='stats-item'>
-            <p>{user.stats.recruitments}</p>
+            <p>30</p>
             <p>Recruitment</p>
           </div>
           <div className='stats-item'>
-            <p>{user.stats.applies}</p>
+            <p>50</p>
             <p>Apply</p>
           </div>
         </div>
@@ -66,7 +55,8 @@ const ProfilePage = () => {
 
       {/* Phần nội dung chính */}
       <div className='profile-main-section'>
-        {/* Sidebar */}
+
+      {/* Sidebar */}
         <div className='profile-sidebar'>
           <ul className='sidebar-menu'>
             {menuItems.map((item, index) => (
@@ -84,36 +74,37 @@ const ProfilePage = () => {
           </ul>
         </div>
 
-        {/* Content Area */}
         <div className='profile-content-area'>
+          {/* Xem thong tin tai khoan */}
           {action === 'info' && (
             <>
               <h4 className='content-title'>Thông tin cá nhân</h4>
               <div className='info-display'>
                 <div className='info-item'>
                   <p>Họ và tên:</p>
-                  <p>{user.hoten}</p>
+                  <p>{infoUser?.fullName}</p>
                 </div>
                 <div className='info-item'>
                   <p>Giới tính:</p>
-                  <p>{user.gioitinh}</p>
+                  <p>{infoUser?.gender}</p>
                 </div>
                 <div className='info-item'>
                   <p>Ngày sinh:</p>
-                  <p>{dayjs(user.ngaysinh).format('DD/MM/YYYY')}</p>
+                  <p>{dayjs(infoUser?.dob).format('DD/MM/YYYY')}</p>
                 </div>
                 <div className='info-item'>
                   <p>Email:</p>
-                  <p>{user.email}</p>
+                  <p>{infoUser?.email}</p>
                 </div>
                 <div className='info-item'>
                   <p>Tên tài khoản:</p>
-                  <p>{user.tentaikhoan}</p>
+                  <p>{infoUser?.username}</p>
                 </div>
               </div>
             </>
           )}
 
+            {/* Chỉnh sủa thông tin người dùng */}
           {action === 'edit' && (
             <>
               <h4 className='content-title'>Chỉnh sửa thông tin cá nhân</h4>
@@ -124,28 +115,36 @@ const ProfilePage = () => {
                 layout='vertical'>
                 <Form.Item
                   label='Họ và tên'
-                  name='hoten'
+                  name='fullName'
                   rules={[{ required: true, message: 'Hãy nhập họ và tên' }]}>
                   <Input className='edit-input' placeholder='Nhập họ và tên' />
                 </Form.Item>
-                <Form.Item label='Giới tính' name='gioitinh'>
+                <Form.Item label='Giới tính' name='gender'>
                   <Radio.Group>
-                    <Radio value='Nam'>Nam</Radio>
-                    <Radio value='Nữ'>Nữ</Radio>
-                    <Radio value='Khác'>Khác</Radio>
+                    <Radio value='MALE'>Nam</Radio>
+                    <Radio value='FEMALE'>Nữ</Radio>
+                    <Radio value='OTHER'>Khác</Radio>
                   </Radio.Group>
                 </Form.Item>
                 <Form.Item
                   label='Ngày sinh'
-                  name='ngaysinh'
+                  name='dob'
                   rules={[{ required: true, message: 'Vui lòng chọn ngày sinh' }]}>
                   <DatePicker className='edit-datepicker' placeholder='Chọn ngày sinh' />
                 </Form.Item>
-                <Form.Item label='Email'>
-                  <Input className='edit-input' disabled value={user.email} />
+
+                <Form.Item
+                  label='Phone'
+                  name='phone'
+                  rules={[{ required: true, message: 'Vui lòng nhập số điện thoại' }]}>
+                   <Input className='edit-input' placeholder='Nhập số điện thoại' />
                 </Form.Item>
-                <Form.Item label='Tên tài khoản'>
-                  <Input className='edit-input' disabled value={user.tentaikhoan} />
+
+                <Form.Item label='Email' name='email'>
+                  <Input className='edit-input' disabled />
+                </Form.Item>
+                <Form.Item label='Tên tài khoản' name='username'>
+                  <Input className='edit-input' disabled  />
                 </Form.Item>
                 <Form.Item className='form-buttons'>
                   <Space>
@@ -164,51 +163,7 @@ const ProfilePage = () => {
           {action === 'changePassword' && (
             <>
               <h4 className='content-title'>Đổi mật khẩu</h4>
-              <Form
-                form={passwordForm}
-                onFinish={handleChangePassword}
-                className='edit-form'
-                layout='vertical'>
-                <Form.Item
-                  label='Nhập mật khẩu cũ'
-                  name='oldPassword'
-                  rules={[{ required: true, message: 'Hãy nhập mật khẩu cũ' }]}>
-                  <Input.Password className='edit-input' />
-                </Form.Item>
-                <Form.Item
-                  label='Nhập mật khẩu mới'
-                  name='newPassword'
-                  rules={[{ required: true, message: 'Hãy nhập mật khẩu mới' }]}>
-                  <Input.Password className='edit-input' />
-                </Form.Item>
-                <Form.Item
-                  label='Xác nhận mật khẩu'
-                  name='confirmPassword'
-                  dependencies={['newPassword']}
-                  rules={[
-                    { required: true, message: 'Hãy xác nhận mật khẩu' },
-                    ({ getFieldValue }) => ({
-                      validator(_, value) {
-                        if (!value || getFieldValue('newPassword') === value) {
-                          return Promise.resolve()
-                        }
-                        return Promise.reject(new Error('Mật khẩu mới không khớp!'))
-                      },
-                    }),
-                  ]}>
-                  <Input.Password className='edit-input' />
-                </Form.Item>
-                <Form.Item className='form-buttons'>
-                  <Space>
-                    <Button onClick={() => passwordForm.resetFields()} className='cancel-button'>
-                      Hủy
-                    </Button>
-                    <Button type='primary' htmlType='submit' className='submit-button'>
-                      Xác nhận
-                    </Button>
-                  </Space>
-                </Form.Item>
-              </Form>
+             
             </>
           )}
         </div>

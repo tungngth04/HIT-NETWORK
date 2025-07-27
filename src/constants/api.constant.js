@@ -5,4 +5,8 @@ export const ApiConstants = {
     user: '/auth/home',
     admin: '/auth/admin',
   },
+  user: {
+    info: '/users/me',
+    update: '/users/me',
+  },
 }
