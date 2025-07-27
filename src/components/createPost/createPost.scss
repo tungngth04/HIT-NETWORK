@@ -1,8 +1,7 @@
-// Style cũ cho card ban đầu
 .create-post-card {
   background-color: #fff;
   border-radius: 12px;
-  padding: 16px;
+  padding: 24px;
   margin-bottom: 24px;
   display: flex;
   align-items: center;
@@ -22,107 +21,192 @@
   }
 
   .create-post-placeholder {
-    color: #999;
+    color: #555;
     font-size: 1rem;
   }
 }
 
-// Style mới cho Modal
 .create-post-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.75);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  padding: 20px;
 }
 
 .create-post-modal-content {
   background-color: #fff;
-  border-radius: 12px;
+  border-radius: 16px;
   width: 100%;
-  max-width: 500px;
+  max-width: 550px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
+  max-height: 90vh;
+}
 
-  .modal-header {
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  border-bottom: 1px solid #e0e0e0;
+
+  .modal-title-text {
+    font-weight: 600;
+    font-size: 1.25rem;
+  }
+
+  .close-button {
+    background: #e4e6eb;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #606770;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 16px 20px;
-    border-bottom: 1px solid #eee;
-
-    h3 {
-      margin: 0;
-      font-size: 1.25rem;
+    justify-content: center;
+    line-height: 1;
+    &:hover {
+      background: #d8dadf;
     }
+  }
+}
 
-    .close-button {
+.modal-user-info {
+  display: flex;
+  align-items: center;
+  padding: 16px 24px;
+
+  .modal-user-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    margin-right: 12px;
+  }
+
+  .user-details {
+    display: flex;
+    flex-direction: column;
+    .user-name {
+      font-weight: 600;
+    }
+    .post-audience {
+      font-size: 0.85rem;
+      color: #65676b;
+    }
+  }
+}
+
+.modal-body {
+  padding: 0 24px 16px 24px;
+  overflow-y: auto;
+  flex-grow: 1;
+
+  .modal-textarea {
+    width: 100%;
+    border: none;
+    resize: none;
+    font-size: 1.1rem;
+    min-height: 150px;
+    box-sizing: border-box;
+    font-family: inherit;
+
+    &::placeholder {
+      color: #65676b;
+    }
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+.modal-add-ons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+
+  .add-ons-title {
+    font-weight: 600;
+    color: #333;
+  }
+
+  .add-ons-icons {
+    display: flex;
+    gap: 8px;
+    .icon-button {
       background: none;
       border: none;
-      font-size: 2rem;
       cursor: pointer;
-      color: #888;
-      line-height: 1;
+      color: #65676b;
+      padding: 8px;
+      border-radius: 50%;
+      &:hover {
+        background-color: #f0f2f5;
+      }
     }
   }
+}
 
-  .modal-body {
-    padding: 20px;
+.modal-error {
+  color: #d8000c;
+  font-size: 0.9rem;
+  padding: 0 24px;
+  margin-top: 10px;
+}
 
-    .modal-textarea {
-      width: 100%;
-      min-height: 120px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 12px;
-      font-size: 1rem;
-      resize: vertical;
-      box-sizing: border-box;
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
 
+  .type-selector {
+    font-size: 0.95rem;
+    color: #333;
+    select {
+      margin-left: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 4px 8px;
+      background-color: #f0f2f5;
+      cursor: pointer;
       &:focus {
         outline: none;
-        border-color: #ff8a00;
       }
-    }
-
-    .modal-error {
-      color: #d8000c;
-      font-size: 0.9rem;
-      margin-top: 10px;
     }
   }
 
-  .modal-footer {
-    padding: 16px 20px;
-    border-top: 1px solid #eee;
-    display: flex;
-    justify-content: flex-end;
+  .modal-submit-button {
+    background-color: #ff8a00;
+    color: #fff;
+    border: none;
+    padding: 10px 32px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
 
-    .modal-submit-button {
-      background-color: #ff8a00;
-      color: #fff;
-      border: none;
-      padding: 10px 24px;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
+    &:hover {
+      background-color: #e57a00;
+    }
 
-      &:hover {
-        background-color: #e57a00;
-      }
-
-      &:disabled {
-        background-color: #ccc;
-        cursor: not-allowed;
-      }
+    &:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
     }
   }
 }

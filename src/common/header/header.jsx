@@ -6,7 +6,12 @@ import { Search } from 'react-bootstrap-icons'
 import { Bell } from 'react-bootstrap-icons'
 import { Envelope } from 'react-bootstrap-icons'
 import { CaretDown } from 'react-bootstrap-icons'
+import { clearAuth } from '../../store/auth.store'
 const Header = () => {
+  const handleLogout = () => {
+    dispatch(clearAuth())
+    navigate('/login')
+  }
   return (
     <header className='main-header'>
       <div className='header-left'>
@@ -47,6 +52,13 @@ const Header = () => {
         <div className='profile-dropdown'>
           <div className='profile-avatar'>
             <img src={avatar} />
+            <div className='profile-menu'>
+              <ul>
+                <li>Thông tin cá nhân</li>
+                <li>Chỉnh sửa thông tin cá nhân</li>
+                <li>Đăng xuất</li>
+              </ul>
+            </div>
           </div>
           <div className='caret-down-container'>
             <div className='caret-down'>
@@ -55,7 +67,7 @@ const Header = () => {
                 <ul>
                   <li>Thông tin cá nhân</li>
                   <li>Chỉnh sửa thông tin cá nhân</li>
-                  <li>Đăng xuất</li>
+                  <li onClick={handleLogout}>Đăng xuất</li>
                 </ul>
               </div>
             </div>
