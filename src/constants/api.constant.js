@@ -8,4 +8,11 @@ export const ApiConstants = {
   users: {
     changePassword: '/users/change-password',
   },
+  home: {
+    posts: '/auth/home',
+  },
+  posts: {
+    getPosts: '/posts',
+    createPost: '/posts/create',
+  },
 }

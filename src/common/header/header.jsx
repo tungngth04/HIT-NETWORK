@@ -1,4 +1,3 @@
-import React from 'react'
 import './header.scss'
 import logo from '../../assets/images/logo.png'
 import avatar from '../../assets/images/hinh-anime-2.jpg'
@@ -6,17 +5,17 @@ import { Search } from 'react-bootstrap-icons'
 import { Bell } from 'react-bootstrap-icons'
 import { Envelope } from 'react-bootstrap-icons'
 import { CaretDown } from 'react-bootstrap-icons'
-import { clearAuth } from '../../store/auth.store'
 import { useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
 import { NavLink } from 'react-router-dom'
+import useAuth from '../../hooks/useAuth'
+import toast from 'react-hot-toast'
 const Header = () => {
   const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const authen = useAuth()
   const handleLogout = () => {
-    dispatch(clearAuth())
+    authen.clearUser()
     navigate('/login')
-    console.log(1)
+    toast.success('Đăng xuất thành công')
   }
   const handleInfor = () => {
     navigate('/home/profile')

@@ -2,27 +2,25 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import './ForgotPasswordPage.scss'
 import { forgotPassword } from '../../apis/auth.api'
+import toast from 'react-hot-toast'
 
 const ForgotPasswordPage = () => {
   const [msv, setMsv] = useState('')
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
-  const [message, setMessage] = useState('')
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    setMessage('')
 
     try {
-      const response = await forgotPassword({ username: msv, email: email })
-      setMessage(
+      await forgotPassword({ username: msv, email: email })
+      toast.success(
         'Yêu cầu khôi phục mật khẩu đã được gửi đến email của bạn. Vui lòng kiểm tra hộp thư đến.',
       )
       setEmail('')
     } catch (error) {
-      console.error('Lỗi khi gửi yêu cầu khôi phục mật khẩu:', error)
-      setMessage(error.response.data.message || 'Có lỗi xảy ra khi gửi yêu cầu. Vui lòng thử lại.')
+      toast.error('Có lỗi xảy ra khi gửi yêu cầu. Vui lòng thử lại.')
     } finally {
       setLoading(false)
     }

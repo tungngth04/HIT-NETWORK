@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import { changePassword } from '../../apis/changePassword.api'
 import avatar from '../../assets/images/hinh-anime-2.jpg'
 import './ProfilePage.scss'
+import toast from 'react-hot-toast'
 
 const ProfilePage = () => {
   const [user, setUser] = useState(null)
@@ -67,11 +68,11 @@ const ProfilePage = () => {
     }
     try {
       await changePassword(values)
-      alert('Đổi mật khẩu thành công!')
+      toast.success('Đổi mật khẩu thành công!')
       passwordForm.resetFields()
       setAction('info')
     } catch (error) {
-      alert('Có lỗi xảy ra, vui lòng thử lại.')
+      toast.error('Có lỗi xảy ra, vui lòng thử lại.')
     }
   }
 

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import useAuth from '../../hooks/useAuth'
 import { Link } from 'react-router-dom'
 import { login } from '../../apis/auth.api'
+import toast from 'react-hot-toast'
 
 const LoginPage = () => {
   const authen = useAuth()
@@ -13,7 +14,6 @@ const LoginPage = () => {
   const [password, setPassword] = useState('')
   const [passwordShow, setPasswordShow] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState('')
 
   const toogglePassword = () => {
     setPasswordShow(!passwordShow)
@@ -21,7 +21,7 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsLoading(true)
-    setError(null)
+
     try {
       const response = await login({ username: msv, password: password })
       // nếu có token thì authen.saveUser({token: response.token})
@@ -33,16 +33,17 @@ const LoginPage = () => {
         authen.saveUser({ token: response.data.data.token, role: response.data.data.role })
         if (response.data.data.role.includes('BQT')) {
           navigate('/admin')
+          toast.success('Đăng nhập thành công')
         }
         if (response.data.data.role.includes('TV')) {
           navigate('/home')
+          toast.success('Đăng nhập thành công')
         }
       } else {
-        setError('Đăng nhập không thành công. Vui lòng kiểm tra lại thông tin.')
+        toast.error('Đăng nhập không thành công. Vui lòng kiểm tra lại thông tin.')
       }
     } catch (error) {
-      console.error('Login failed:', error)
-      setError('Đăng nhập không thành công. Vui lòng kiểm tra lại thông tin.')
+      toast.error('Đăng nhập không thành công. Vui lòng kiểm tra lại thông tin.')
     } finally {
       setIsLoading(false)
     }
