@@ -7,7 +7,6 @@ import { createEvents, getDetaiEvents, updateEvents } from '../../../apis/events
 import toast from 'react-hot-toast'
 const { TextArea } = Input
 
-
 function EventForm({ modal }) {
   const navigate = useNavigate()
   const { id } = useParams()
@@ -65,13 +64,11 @@ function EventForm({ modal }) {
         toast.success('Cập nhật sự kiện thành công!')
       }
     } catch (error) {
-      if (modal === 'add'){
-         toast.error('Tạo sự kiện thất bại!')
+      if (modal === 'add') {
+        toast.error('Tạo sự kiện thất bại!')
+      } else {
+        toast.error('Cập nhật sự kiện thất bại!')
       }
-      else{
-         toast.error('Cập nhật sự kiện thất bại!')
-      }
-     
     }
 
     navigate('/admin/events')
@@ -108,18 +105,38 @@ function EventForm({ modal }) {
           rules={[{ required: true, message: 'Hãy chọn thời gian tổ chức' }]}>
           <DatePicker className='datetime' placeholder='Chọn thời gian tổ chức' />
         </Form.Item>
-        <Form.Item
-          label='Địa điểm'
-          name='location'
-          rules={[{ required: true, message: 'Hãy nhập địa điểm' }]}>
-          <Input placeholder='Nhập địa điểm' />
-        </Form.Item>
-        <Form.Item
-          label='Người tổ chức'
-          name='organizer'
-          rules={[{ required: true, message: 'Hãy nhập tên người tổ chức' }]}>
-          <Input placeholder='Nhập tên người tổ chức' />
-        </Form.Item>
+
+        {modal === 'add' ? (
+          <Form.Item
+            label='Địa điểm'
+            name='location'
+            rules={[{ required: true, message: 'Hãy nhập địa điểm' }]}>
+            <Input placeholder='Nhập địa điểm' />
+          </Form.Item>
+        ) : (
+          <Form.Item
+            label='Địa điểm'
+            name='location'
+            rules={[{ required: true, message: 'Hãy nhập địa điểm' }]}>
+            <Input placeholder='Nhập địa điểm' disabled />
+          </Form.Item>
+        )}
+        {modal === 'add' ? (
+          <Form.Item
+            label='Người tổ chức'
+            name='organizer'
+            rules={[{ required: true, message: 'Hãy nhập tên người tổ chức' }]}>
+            <Input placeholder='Nhập tên người tổ chức' />
+          </Form.Item>
+        ) : (
+          <Form.Item
+            label='Người tổ chức'
+            name='organizer'
+            rules={[{ required: true, message: 'Hãy nhập tên người tổ chức' }]}>
+            <Input placeholder='Nhập tên người tổ chức' disabled />
+          </Form.Item>
+        )}
+
         <Form.Item
           name='description'
           label={<span style={{ marginLeft: '12px' }}>Mô tả sự kiện</span>}>

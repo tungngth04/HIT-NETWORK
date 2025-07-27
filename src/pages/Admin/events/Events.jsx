@@ -64,9 +64,9 @@ function Events() {
         const eventDate = dayjs(record.eventDate).startOf('day')
         const diffDays = eventDate.diff(today, 'day')
 
-        console.log('Ngày hôm nay:', today.format('YYYY-MM-DD'))
-        console.log('Ngày sự kiện:', eventDate.format('YYYY-MM-DD'))
-        console.log('Khoảng cách ngày:', diffDays)
+        // console.log('Ngày hôm nay:', today.format('YYYY-MM-DD'))
+        // console.log('Ngày sự kiện:', eventDate.format('YYYY-MM-DD'))
+        // console.log('Khoảng cách ngày:', diffDays)
 
         if (diffDays === 0) {
           return <span style={{ color: 'orange' }}>Đang diễn ra</span>
@@ -123,7 +123,7 @@ function Events() {
     })
   }
 
-  const feathEvent = async () => {
+  const fetchEvent = async () => {
     try {
       const response = await getAllEvents({
         page: pagination.current,
@@ -138,7 +138,7 @@ function Events() {
     }
   }
   useEffect(() => {
-    feathEvent()
+    fetchEvent ()
   }, [pagination])
   // if (loading) return <p>Đang tải dữ liệu...</p>
   return (
@@ -190,6 +190,8 @@ function Events() {
           // setData={setData}
           setDeletePopup={setDeletePopup}
           deletePopup={deletePopup}
+          fetchEvent  = {fetchEvent }
+          
         />
       )}
       {importPopup.open && (
