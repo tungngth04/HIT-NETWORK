@@ -13,6 +13,8 @@ function Members() {
   const [id, setId] = useState()
   const [username, setUsername] = useState()
   const [searchValue, setSearchValue] = useState('')
+  const [search, setSearch] = useState("")
+
   const [deletePopup, setDeletePopup] = useState({
     open: false,
     type: '', // 'user' hoặc 'event'
@@ -159,12 +161,16 @@ function Members() {
   ]
   // if (loading) return <p>Đang tải dữ liệu...</p>
 
+  const handleSearch = () => {
+    setSearchValue(search)
+    setPagination((prev) => ({ ...prev, current: 0 }))
+  }
   // Lọc trước khi render
   const filteredData =
     data?.items?.filter((item) => {
       const value = searchValue.toLowerCase()
       return (
-        item.fullName?.toLowerCase().includes(value) ||
+        item.fullName?.toLowerCase().split(" ").some(word => word === value )||
         item.username?.toLowerCase().includes(value) ||
         item.email?.toLowerCase().includes(value)
       )
@@ -179,11 +185,11 @@ function Members() {
             <input
               type='text'
               placeholder='Tìm kiếm theo fullname, username, email'
-              onChange={(e) => setSearchValue(e.target.value)}
+              onChange={(e) => setSearch(e.target.value)}
             />
           </div>
           <div className='members-toolbar__actions'>
-            <button className='button button--search'>Tìm kiếm</button>
+            <button className='button button--search' onClick={() => handleSearch()}>Tìm kiếm</button>
             <div style={{marginLeft: '400px'}}>
               <button className='button button--add' onClick={handleAdd}>
                 Thêm
@@ -210,7 +216,8 @@ function Members() {
           <Pagination
             current={pagination.current + 1}
             pageSize={pagination.size}
-            total={data?.totalItems}
+            total={searchValue ? filteredData.length :data?.totalItems}
+            
             showSizeChanger
             onChange={handlePageChange}
             onShowSizeChange={handlePageChange}

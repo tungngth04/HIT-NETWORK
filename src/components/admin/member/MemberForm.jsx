@@ -19,7 +19,7 @@ function MemberForm({ modal }) {
         fullName: data.fullName,
         role: data.role,
         gender: data.gender,
-        dob: dayjs(data.eventDate),
+        dob: dayjs(data.dob),
         email: data.email,
       }
       form.setFieldsValue(filledEvent)
