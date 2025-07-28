@@ -51,6 +51,11 @@
   }
 
   .post-media-container {
+    img {
+      width: auto;
+      height: auto;
+      object-fit: contain;
+    }
     background-color: #f0f2f5;
     border-radius: 8px;
     margin-bottom: 16px;

@@ -10,6 +10,8 @@ import Members from './pages/Admin/members/Members'
 import Events from './pages/Admin/events/Events'
 import EventForm from './components/admin/event/EventForm'
 import LayoutAdmin from './layouts/LayoutAdmin/LayoutAdmin'
+import ProfilePage from './pages/ProfilePage/ProfilePage'
+import toast, { Toaster } from 'react-hot-toast'
 function App() {
   const elements = useRoutes([
     {
@@ -67,9 +69,18 @@ function App() {
           element: <UserHomePage />,
           index: true,
         },
+        {
+          path: 'profile',
+          element: <ProfilePage />,
+        },
       ],
     },
   ])
-  return <>{elements}</>
+  return (
+    <>
+      {elements}
+      <Toaster />
+    </>
+  )
 }
 export default App
