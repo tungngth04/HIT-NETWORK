@@ -21,6 +21,7 @@ const membersApi = () => ({
     api.delete(`${ApiConstants.members.deleteMembers}?username=${username}`),
 
   importMembers: async (data) => apiDefaultUpload.post(ApiConstants.members.importMembers, data),
+  restoreMembers: async (email) => api.put(ApiConstants.members.restoreMembers, { email }),
 })
 
 export const {
@@ -30,4 +31,5 @@ export const {
   deleteMembers,
   importMembers,
   detailMembers,
+  restoreMembers,
 } = membersApi()

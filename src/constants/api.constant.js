@@ -12,5 +12,6 @@ export const ApiConstants = {
     getAllMembers: '/admin/select-all',
     deleteMembers: '/admin/delete',
     detailMembers: '/admin/get-detail',
+    restoreMembers: '/admin/restore',
   },
 }

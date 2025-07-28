@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router-dom'
 import { Pagination, Table } from 'antd'
 import Delete from '../../../components/admin/delete/Delete'
 import Import from '../../../components/admin/import/Import'
-import { getAllMembers } from '../../../apis/members.api'
+import { getAllMembers, restoreMembers } from '../../../apis/members.api'
+import toast from 'react-hot-toast'
 
 function Members() {
   const navigate = useNavigate()
@@ -49,6 +50,8 @@ function Members() {
 
   const [data, setData] = useState()
   const [loading, setLoading] = useState(true)
+
+  // Get api lay du lieu thong tin user
   const fetchUsers = async () => {
     try {
       const response = await getAllMembers({
@@ -66,6 +69,16 @@ function Members() {
   useEffect(() => {
     fetchUsers()
   }, [pagination])
+
+  const handleRestore = async(email) => {
+    try{
+      await restoreMembers(email)
+      fetchUsers()
+      toast.success("Khôi phục tài khoản thành công!")
+    }catch(error){
+      toast.error("Khôi phục tài khoản thất bại!")
+    }
+  } 
 
   const columns = [
     {
@@ -125,7 +138,7 @@ function Members() {
             <>
               <button
                 className='button button--restore'
-                onClick={() => handleRestore(record.userId)}>
+                onClick={() => handleRestore(record.email)}>
                 Khôi phục
               </button>
             </>

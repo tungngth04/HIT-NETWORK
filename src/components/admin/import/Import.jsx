@@ -5,6 +5,7 @@ import { InboxOutlined } from '@ant-design/icons'
 import { message, Upload } from 'antd'
 import { importMembers } from '../../../apis/members.api'
 import toast from 'react-hot-toast'
+
 const { Dragger } = Upload
 function Import({ importPopup, setImportPopup, id, setData, fetchUsers }) {
   const handleClose = () => {
@@ -87,7 +88,7 @@ function Import({ importPopup, setImportPopup, id, setData, fetchUsers }) {
           </>
         ) : (
           <>
-            <a href='../../../../public/Template_User.xlsx' download className='import-file'>
+            <a href='../../../public/Template_Import_Members.xlsx' download className='import-file'>
               Click vào đây để lấy template
             </a>
           </>
