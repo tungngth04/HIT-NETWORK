@@ -1,22 +1,63 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { DatePicker, Form, Input, Radio, Space, Button, Spin, Upload } from 'antd'
 import dayjs from 'dayjs'
-import { useUserProfile } from '../../hooks/userProfile'
+// import { useUserProfile } from '../../hooks/userProfile'
 import avatar from '../../assets/images/hinh-anime-2.jpg'
 import './ProfilePage.scss'
+import { info, update } from '../../apis/userProfile.api'
 
 const ProfilePage = () => {
-  const {
-    action,
-    setAction,
-    hoverIndex,
-    setHoverIndex,
-    handleUpdateProfile,
-    editForm,
-    infoUser,
-    // handleChangePassword,
-    // passwordForm,
-  } = useUserProfile()
+  const [action, setAction] = useState('info')
+  const [hoverIndex, setHoverIndex] = useState(null)
+  const [infoUser, setInfoUser] = useState()
+  const [editForm] = Form.useForm()
+
+  // Get api lay thong tin nguoi dung
+  const fetchGetUser = async () => {
+    try {
+      const response = await info()
+      const userData = response?.data
+      setInfoUser(userData)
+      editForm.setFieldsValue({
+        fullName: userData.fullName || '',
+        gender: userData.gender || '',
+        dob: userData.dob ? dayjs(userData.dob) : null,
+        email: userData.email || '',
+        username: userData.username || '',
+        phone: userData.phone || '',
+        // avatarUrl: userData.avatarUrl || null,
+      })
+    } catch (error) {
+      console.error('Lỗi: ', error)
+    } 
+  }
+  useEffect(() => {
+    fetchGetUser()
+  }, [])
+
+  // PUT API chỉnh sửa thông
+    const handleUpdateProfile = async (values) => {
+      console.log(values.avatarUrl)
+      const formData = new FormData()
+      formData.append('fullName', values.fullName)
+      formData.append('gender', values.gender)
+      formData.append('dob', values.dob?.format('YYYY-MM-DD'))
+      formData.append('email', values.email)
+      // formData.append('usename', values.usename)
+      formData.append('phone', values.phone)
+      formData.append('avatarUrl', values.avatarUrl[0].originFileObj)
+  
+      try {
+        await update(formData)
+        console.log('ádasd', formData)
+        await fetchGetUser()
+        setAction('info')
+        alert('Cập nhật thành công!')
+      } catch {
+        alert('Cap nhat nguoi dung that bai')
+        console.log('ádasd', formData)
+      }
+    }
 
   if (!infoUser) {
     return <div className='profile-loading'>Không thể tải dữ liệu người dùng.</div>
@@ -26,14 +67,18 @@ const ProfilePage = () => {
     { key: 'edit', label: 'Chỉnh sửa thông tin' },
     { key: 'changePassword', label: 'Đổi mật khẩu' },
   ]
-  
+
   return (
     <div className='profile-page'>
       {/* Phần header card */}
       <div className='profile-header-card'>
         <div className='header-user-info'>
           {/* <img src={avatar} alt='avatar' className='user-avatar' /> */}
-          <img src={infoUser.avatarUrl} alt="" style={{width: '100px', height: '100px', borderRadius: '100%'}}/>
+          <img
+            src={infoUser.avatarUrl}
+            alt=''
+            style={{ width: '100px', height: '100px', borderRadius: '100%' }}
+          />
           <div className='user-details'>
             <p className='user-name'>{infoUser?.fullName}</p>
             <p className='user-email'>{infoUser?.email}</p>
