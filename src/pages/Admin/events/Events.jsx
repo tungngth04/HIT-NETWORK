@@ -122,6 +122,8 @@ function Events() {
       type: 'event',
     })
   }
+  const [searchValue, setSearchValue] = useState('')
+  const [search, setSearch] = useState('')
 
   const fetchEvent = async () => {
     try {
@@ -138,23 +140,50 @@ function Events() {
     }
   }
   useEffect(() => {
-    fetchEvent ()
+    fetchEvent()
   }, [pagination])
   // if (loading) return <p>Đang tải dữ liệu...</p>
+
+  const handleSearch = () => {
+    setSearchValue(search)
+    setPagination((prev) => ({ ...prev, current: 0 }))
+  }
+  // Lọc trước khi render
+  const filteredData =
+    events?.content?.filter((item) => {
+      const value = searchValue.toLowerCase()
+      return (
+        item.title
+          ?.toLowerCase()
+          .split(' ')
+          .some((word) => word === value) ||
+        item.organizer?.toLowerCase().includes(value) 
+        // ||
+        // item.email?.toLowerCase().includes(value)
+      )
+    }) || []
+
   return (
     <div className='events-page'>
       <h2 className='events-page__title'>Danh sách sự kiện</h2>
       <div className='members-toolbar'>
         <div className='members-toolbar__search'>
-          <input type='text' placeholder='Tìm kiếm theo fullname, username, email' />
+          <input
+            type='text'
+            placeholder='Tìm kiếm theo tên sự kiện, người tổ chức'
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </div>
         <div className='members-toolbar__actions'>
-          <button className='button button--search'>Tìm kiếm</button>
-          <div style={{marginLeft: '400px'}}>
+          <button className='button button--search' onClick={() => handleSearch()}>Tìm kiếm</button>
+          <div style={{ marginLeft: '400px' }}>
             <button className='button button--add' onClick={handleCreate}>
               Thêm
             </button>
-            <button className='button button--import' onClick={handleImport} style={{marginLeft: "10px"}}>
+            <button
+              className='button button--import'
+              onClick={handleImport}
+              style={{ marginLeft: '10px' }}>
               Import
             </button>
           </div>
@@ -162,7 +191,7 @@ function Events() {
       </div>
       <Table
         columns={columns}
-        dataSource={events?.content}
+        dataSource={filteredData}
         // rowKey={events.eventId}
         rowKey='id'
         // scroll={cacluateTabe}
@@ -175,7 +204,7 @@ function Events() {
         <Pagination
           align='end'
           defaultCurrent={pagination.current}
-          total={events?.totalElements}
+          total={searchValue ? filteredData.length :events?.totalElements}
           pageSize={pagination.size}
           showSizeChanger
           onChange={handlePageChange}
@@ -190,8 +219,7 @@ function Events() {
           // setData={setData}
           setDeletePopup={setDeletePopup}
           deletePopup={deletePopup}
-          fetchEvent  = {fetchEvent }
-          
+          fetchEvent={fetchEvent}
         />
       )}
       {importPopup.open && (
