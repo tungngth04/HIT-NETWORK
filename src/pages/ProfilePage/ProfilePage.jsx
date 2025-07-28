@@ -25,39 +25,47 @@ const ProfilePage = () => {
         email: userData.email || '',
         username: userData.username || '',
         phone: userData.phone || '',
-        // avatarUrl: userData.avatarUrl || null,
+        avatar: userData.avatarUrl
+          ? [
+              {
+                name: 'avatar.jpg',
+                url: userData.avatarUrl,
+              },
+            ]
+          : [],
       })
     } catch (error) {
       console.error('Lỗi: ', error)
-    } 
+    }
   }
   useEffect(() => {
     fetchGetUser()
   }, [])
 
   // PUT API chỉnh sửa thông
-    const handleUpdateProfile = async (values) => {
-      console.log(values.avatarUrl)
-      const formData = new FormData()
-      formData.append('fullName', values.fullName)
-      formData.append('gender', values.gender)
-      formData.append('dob', values.dob?.format('YYYY-MM-DD'))
-      formData.append('email', values.email)
-      // formData.append('usename', values.usename)
-      formData.append('phone', values.phone)
-      formData.append('avatarUrl', values.avatarUrl[0].originFileObj)
-  
-      try {
-        await update(formData)
-        console.log('ádasd', formData)
-        await fetchGetUser()
-        setAction('info')
-        alert('Cập nhật thành công!')
-      } catch {
-        alert('Cap nhat nguoi dung that bai')
-        console.log('ádasd', formData)
-      }
+  const handleUpdateProfile = async (values) => {
+    console.log(values.avatarUrl)
+    const formData = new FormData()
+    formData.append('fullName', values.fullName)
+    formData.append('gender', values.gender)
+    formData.append('dob', values.dob?.format('YYYY-MM-DD'))
+    formData.append('email', values.email)
+    formData.append('phone', values.phone)
+    const file = values.avatarUrl?.[0]?.originFileObj
+    if (file) {
+      formData.append('avatar', file)
     }
+    try {
+      await update(formData)
+      console.log('ádasd', formData)
+      await fetchGetUser()
+      setAction('info')
+      alert('Cập nhật thành công!')
+    } catch {
+      alert('Cap nhat nguoi dung that bai')
+      console.log('ádasd', formData)
+    }
+  }
 
   if (!infoUser) {
     return <div className='profile-loading'>Không thể tải dữ liệu người dùng.</div>
@@ -187,7 +195,7 @@ const ProfilePage = () => {
 
                 <Form.Item
                   label='Ảnh đại diện'
-                  name='avatarUrl'
+                  name='avatar'
                   valuePropName='fileList'
                   getValueFromEvent={(e) => e && e.fileList}>
                   <Upload listType='picture' maxCount={1} beforeUpload={() => false}>
