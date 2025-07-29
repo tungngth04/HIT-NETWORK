@@ -135,24 +135,34 @@ const ProfilePage = () => {
               <h4 className='content-title'>Thông tin cá nhân</h4>
               <div className='info-display'>
                 <div className='info-item'>
-                  <p>Họ và tên:</p>
-                  <p>{infoUser?.fullName}</p>
+                  <div className='info-item--p'>
+                    <p>Họ và tên:</p>
+                    <p>{infoUser?.fullName}</p>
+                  </div>
                 </div>
                 <div className='info-item'>
-                  <p>Giới tính:</p>
-                  <p>{infoUser?.gender}</p>
+                  <div  className='info-item--p'>
+                    <p>Giới tính:</p>
+                    <p>{infoUser?.gender}</p>
+                  </div>
                 </div>
                 <div className='info-item'>
-                  <p>Ngày sinh:</p>
-                  <p>{dayjs(infoUser?.dob).format('DD/MM/YYYY')}</p>
+                  <div className='info-item--p'>
+                    <p>Ngày sinh:</p>
+                    <p>{dayjs(infoUser?.dob).format('DD/MM/YYYY')}</p>
+                  </div>
                 </div>
                 <div className='info-item'>
-                  <p>Email:</p>
-                  <p>{infoUser?.email}</p>
+                  <div className='info-item--p'>
+                    <p>Email:</p>
+                    <p>{infoUser?.email}</p>
+                  </div>
                 </div>
                 <div className='info-item'>
-                  <p>Tên tài khoản:</p>
-                  <p>{infoUser?.username}</p>
+                  <div className='info-item--p'>
+                    <p>Tên tài khoản:</p>
+                    <p>{infoUser?.username}</p>
+                  </div>
                 </div>
               </div>
             </>
