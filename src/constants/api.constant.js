@@ -13,4 +13,7 @@ export const ApiConstants = {
     getAllEvents: '/admin/events',
     deleteEvents: '/admin/event',
   },
+  admin: {
+    getAdmin: '/users/me',
+  },
 }
