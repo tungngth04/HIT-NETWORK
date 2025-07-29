@@ -81,8 +81,12 @@
   .button--restore{
     // width: 90px;
     width: 88%;
+    background-color: #4096ff;
+      color: white;
     &:hover{
-      background-color: #d4d2d2;
+      // background-color: #d4d2d2;
+      background-color: #1677ff;
+      color: white;
     }
 
   }
