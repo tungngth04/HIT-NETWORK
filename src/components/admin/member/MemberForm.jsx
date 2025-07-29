@@ -8,7 +8,7 @@ import toast from 'react-hot-toast'
 function MemberForm({ modal }) {
   const navigate = useNavigate()
   const { id } = useParams()
-  const [ form ] = Form.useForm()
+  const [form] = Form.useForm()
 
   // get api lay chi tiet
   const getDetail = async (id) => {
@@ -49,11 +49,19 @@ function MemberForm({ modal }) {
         toast.success('Cập nhập người dùng thành công!')
       }
     } catch (error) {
+      const errMsg = error?.response?.data?.message || ''
+
       if (modal === 'add') {
-        toast.error('Thêm người dùng thất bại!')
+        if (errMsg.includes('exception.user.already.exists')) {
+          toast.error('Email đã tồn tại!')
+        } else {
+          toast.error('Thêm người dùng thất bại!')
+        }
       } else {
         toast.error('Cập nhật người dùng thất bại!')
       }
+
+      console.error('Lỗi từ server:', errMsg)
     }
 
     navigate('/admin/members')
@@ -103,8 +111,10 @@ function MemberForm({ modal }) {
             label='Ngày sinh'
             name='dob'
             rules={[{ required: true, message: 'Hãy chọn ngày sinh!' }]}>
-            <DatePicker className='datetime' placeholder='Chọn ngày sinh' 
-            disabledDate={(current) => current && current >= dayjs().startOf('day')}
+            <DatePicker
+              className='datetime'
+              placeholder='Chọn ngày sinh'
+              disabledDate={(current) => current && current >= dayjs().startOf('day')}
             />
           </Form.Item>
 
