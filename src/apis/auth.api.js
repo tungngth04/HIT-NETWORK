@@ -7,6 +7,7 @@ const authApi = () => ({
       username,
       password,
     }),
+  Me: () => apiDefault.get(ApiConstants.users.getMe),
   forgotPassword: ({ username, email }) =>
     apiDefault.post(ApiConstants.auth.forgotpassword, {
       username,

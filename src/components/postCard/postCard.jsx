@@ -12,7 +12,6 @@ import toast from 'react-hot-toast'
 import './PostCard.scss'
 
 const PostCard = ({ post }) => {
-  // --- Logic được tích hợp trực tiếp ---
   const [isLiked, setIsLiked] = useState(post.reacted || false)
   const [likeCount, setLikeCount] = useState(post.countReaction || 0)
   const [isBookmarked, setIsBookmarked] = useState(post.bookmarked || false)
@@ -54,6 +53,7 @@ const PostCard = ({ post }) => {
       setIsLoadingApply(false)
     }
   }
+  console.log(post)
 
   return (
     <div className='post-card'>

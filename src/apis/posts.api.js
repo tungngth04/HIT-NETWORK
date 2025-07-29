@@ -1,9 +1,8 @@
-import { apiDefault, api } from '.'
+import { apiDefault, api, apiDefaultUpload } from '.'
 import { ApiConstants } from '../constants/api.constant'
 
 const postApi = () => ({
-  getPostsApi: async () => apiDefault.get(ApiConstants.home.posts),
-  createPostApi: async ({ title, description }) =>
-    apiDefault.post(ApiConstants.users.createJob, { title, description }),
+  getPostsApi: async (params) => apiDefault.get(ApiConstants.home.posts, { params }),
+  createPostApi: async (formdata) => apiDefaultUpload.post(ApiConstants.users.createJob, formdata),
 })
 export const { getPostsApi, createPostApi } = postApi()

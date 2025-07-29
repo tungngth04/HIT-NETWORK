@@ -1,31 +1,43 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { ChevronRight } from 'react-bootstrap-icons'
-// Cập nhật đường dẫn import SCSS
-import './sidebarWidget.scss' // Import CSS styles for SidebarWidget component
+import './SidebarWidget.scss'
 
-const SidebarWidget = ({ title, items }) => {
+const SidebarWidget = ({ title, posts = [], type, viewMoreLink = '#' }) => {
+  const filteredItems = useMemo(
+    () => posts.filter((post) => post.targetType === type).slice(0, 3),
+    [posts, type],
+  )
+
   return (
     <div className='sidebar-widget'>
-      <h3 className='widget-title'>{title}</h3>
+      <div className='widget-header'>
+        <h3 className='widget-title'>{title}</h3>
+        <a href={viewMoreLink} className='widget-view-more'>
+          View More <ChevronRight size={12} />
+        </a>
+      </div>
+
       <ul className='widget-list'>
-        {items.map((item) => (
-          <li key={item.id} className='widget-item'>
-            <div className='item-date'>
-              <span className='date-day'>{item.date.day}</span>
-              <span className='date-month'>{item.date.month}</span>
-            </div>
-            <div className='item-info'>
-              <span className='item-title'>{item.title}</span>
-              <a href='#' className='item-details-link'>
-                {item.subtitle}
-              </a>
-            </div>
-          </li>
-        ))}
+        {filteredItems.length > 0 ? (
+          // Hiển thị danh sách đã được lọc
+          filteredItems.map((item) => (
+            <li key={item.id} className='widget-item'>
+              <div className='item-date'>
+                <span className='date-day'>{new Date(item.createdAt).getDate()}</span>
+                <span className='date-month'>
+                  {new Date(item.createdAt).toLocaleString('en-US', { month: 'short' })}
+                </span>
+              </div>
+              <div className='item-info'>
+                <span className='item-title'>{item.title}</span>
+                <span className='item-details'>{item.creator.fullName}</span>
+              </div>
+            </li>
+          ))
+        ) : (
+          <li className='widget-item-empty'>Không có bài đăng nào.</li>
+        )}
       </ul>
-      <a href='#' className='widget-view-more'>
-        View More <ChevronRight size={12} />
-      </a>
     </div>
   )
 }
