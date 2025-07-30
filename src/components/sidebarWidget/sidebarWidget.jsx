@@ -2,11 +2,12 @@ import React, { useMemo } from 'react'
 import { ChevronRight } from 'react-bootstrap-icons'
 import './SidebarWidget.scss'
 
-const SidebarWidget = ({ title, posts = [], type, viewMoreLink = '#' }) => {
+const SidebarWidget = ({ title, items, type, viewMoreLink = '#' }) => {
   const filteredItems = useMemo(
-    () => posts.filter((post) => post.targetType === type).slice(0, 3),
-    [posts, type],
+    () => items.filter((items) => items.targetType === type).slice(0, 3),
+    [items, type],
   )
+  console.log('items', items)
 
   return (
     <div className='sidebar-widget'>

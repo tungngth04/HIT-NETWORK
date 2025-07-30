@@ -30,7 +30,7 @@ const Header = () => {
       <nav className='main-nav'>
         <ul>
           <li>
-            <NavLink to='/home' className={({ isActive }) => (isActive ? 'active' : '')}>
+            <NavLink to='/home' end className={({ isActive }) => (isActive ? 'active' : '')}>
               Home
             </NavLink>
           </li>
@@ -40,12 +40,12 @@ const Header = () => {
             </NavLink>
           </li>
           <li>
-            <NavLink to='/events' className={({ isActive }) => (isActive ? 'active' : '')}>
+            <NavLink to='/home/events' className={({ isActive }) => (isActive ? 'active' : '')}>
               Events
             </NavLink>
           </li>
           <li>
-            <NavLink to='/recruitment' className={({ isActive }) => (isActive ? 'active' : '')}>
+            <NavLink to='/home/jobs' className={({ isActive }) => (isActive ? 'active' : '')}>
               Recruitment
             </NavLink>
           </li>

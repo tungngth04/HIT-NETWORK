@@ -13,6 +13,7 @@ export const ApiConstants = {
     posts: '/auth/home',
   },
   posts: {
-    getPosts: '/posts',
+    getEventPosts: '/admin/events',
+    getJobPosts: '/user/jobs',
   },
 }

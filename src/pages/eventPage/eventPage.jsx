@@ -1,13 +1,15 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, use } from 'react'
 import { Pagination } from 'antd'
 import toast from 'react-hot-toast'
 import CreatePost from '../../components/createPost/createPost'
 import PostCard from '../../components/postCard/postCard'
 import SidebarWidget from '../../components/SidebarWidget/sidebarWidget'
-import { getPostsApi } from '../../apis/posts.api'
-import './userHomePage.scss'
+import { getEventApi, getPostsApi } from '../../apis/posts.api'
+import './eventPage.scss'
+import { current } from '@reduxjs/toolkit'
+import EventPostCard from '../../components/eventPostCard/evenPostCard'
 
-const UserHomePage = () => {
+const EventPage = () => {
   const [pagination, setPagination] = useState({
     current: 0,
     size: 10,
@@ -69,7 +71,7 @@ const UserHomePage = () => {
         {isLoading ? (
           <div className='loading-indicator'>Đang tải bài viết...</div>
         ) : posts && posts.length > 0 ? (
-          posts.map((post, index) => <PostCard key={post.id || index} post={post} />)
+          posts.map((post, index) => <EventPostCard key={post.id || index} post={post} />)
         ) : (
           <div className='no-posts-message'>Chưa có bài đăng nào để hiển thị.</div>
         )}
@@ -90,4 +92,4 @@ const UserHomePage = () => {
   )
 }
 
-export default UserHomePage
+export default EventPage

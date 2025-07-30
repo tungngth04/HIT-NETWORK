@@ -70,6 +70,7 @@ const PostCard = ({ post }) => {
           </span>
         </div>
         {post.targetType === 'JOB' && <span className='recruit-tag'>Recruitment</span>}
+        {post.targetType === 'EVENT' && <span className='recruit-tag'>Event</span>}
       </div>
       <p className='post-content'>{post.title}</p>
       {post.urlImage && (
