@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { EmojiSmile, Image, X } from 'react-bootstrap-icons' // Thêm icon X
+import { EmojiSmile, Image, X } from 'react-bootstrap-icons'
 import { useSelector } from 'react-redux'
 import { createPostApi } from '../../apis/posts.api'
 import './CreatePost.scss'
@@ -12,7 +12,7 @@ const CreatePost = ({ posts, onPostCreated }) => {
 
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [content, setContent] = useState('')
-  const [title, setTitle] = useState('') // Đổi tên để rõ ràng hơn
+  const [title, setTitle] = useState('')
   const [infoUser, setInfoUser] = useState()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
@@ -59,7 +59,6 @@ const CreatePost = ({ posts, onPostCreated }) => {
 
   const handleSubmit = async () => {
     if (!title.trim() || !content.trim()) {
-      // Kiểm tra cả title và content
       toast.error('Tiêu đề và mô tả không được để trống.')
       return
     }
@@ -97,7 +96,6 @@ const CreatePost = ({ posts, onPostCreated }) => {
       {modalIsOpen && (
         <div className='create-post-modal-overlay' onClick={handleCloseModal}>
           <div className='create-post-modal-content' onClick={(e) => e.stopPropagation()}>
-            {/* --- PHẦN HEADER CỦA MODAL --- */}
             <div className='modal-header'>
               {infoUser ? (
                 <div className='modal-user-info'>
@@ -114,8 +112,6 @@ const CreatePost = ({ posts, onPostCreated }) => {
                 <X size={24} />
               </button>
             </div>
-
-            {/* --- PHẦN BODY CỦA MODAL --- */}
             <div className='modal-body'>
               <input
                 type='text'
@@ -128,7 +124,7 @@ const CreatePost = ({ posts, onPostCreated }) => {
               <textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                placeholder='description' // Sửa lại từ 'descriftion'
+                placeholder='description'
                 className='modal-textarea-description'
               />
               {imagePreview && (
@@ -136,7 +132,6 @@ const CreatePost = ({ posts, onPostCreated }) => {
               )}
             </div>
 
-            {/* --- PHẦN THÊM VÀO BÀI VIẾT --- */}
             <div className='modal-add-ons'>
               <span className='add-ons-title'>Thêm vào bài viết của bạn</span>
               <div className='add-ons-icons'>
@@ -158,12 +153,10 @@ const CreatePost = ({ posts, onPostCreated }) => {
 
             {error && <p className='modal-error'>{error}</p>}
 
-            {/* --- PHẦN FOOTER CỦA MODAL --- */}
             <div className='modal-footer'>
               <div className='type-selector'>
                 <span>Type : </span>
-                <select defaultValue='NORMAL'>
-                  <option value='NORMAL'>Normal</option>
+                <select>
                   <option value='EVENT'>Event</option>
                 </select>
               </div>

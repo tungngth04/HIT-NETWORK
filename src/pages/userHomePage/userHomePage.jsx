@@ -13,8 +13,6 @@ const UserHomePage = () => {
     size: 10,
   })
   const [posts, setPosts] = useState([])
-  const [jobPosts, setJobPosts] = useState([])
-  const [eventPosts, setEventPost] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [totalPosts, setTotalPosts] = useState(0)
 
@@ -24,15 +22,11 @@ const UserHomePage = () => {
         page: pagination.current,
         size: pagination.size,
       })
-      console.log('response', response)
       setPosts(response?.data?.data?.content)
-      setJobPosts(response?.data?.data?.content)
-      setEventPost(response?.data?.data?.content)
       setTotalPosts(response?.data?.data?.totalElements || 0)
       setIsLoading(false)
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (error) {
-      console.error('Error fetching posts:', error)
       toast.error('Không thể tải bài đăng. Vui lòng thử lại sau.')
       setIsLoading(false)
     } finally {
@@ -58,7 +52,12 @@ const UserHomePage = () => {
       size: pageSize || prev.size,
     }))
   }
-
+  const handlePostUpdate = (updatedPost) => {
+    setPostsData((prevData) => ({
+      ...prevData,
+      content: prevData.content.map((post) => (post.id === updatedPost.id ? updatedPost : post)),
+    }))
+  }
   if (isLoading) {
     return <div>Đang tải bài viết...</div>
   }
@@ -70,7 +69,9 @@ const UserHomePage = () => {
         {isLoading ? (
           <div className='loading-indicator'>Đang tải bài viết...</div>
         ) : posts && posts.length > 0 ? (
-          posts.map((post, index) => <PostCard key={post.id || index} post={post} />)
+          posts.map((post, index) => (
+            <PostCard key={post.id || index} post={post} onPostUpdate={handlePostCreated} />
+          ))
         ) : (
           <div className='no-posts-message'>Chưa có bài đăng nào để hiển thị.</div>
         )}

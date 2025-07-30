@@ -4,7 +4,8 @@ import Header from '../../common/header/header'
 import Footer from '../../common/footer/footer'
 import SidebarWidget from '../../components/SidebarWidget/sidebarWidget'
 import { getPostsApi, getEventApi, getJobApi } from '../../apis/posts.api'
-import './MainLayout.scss'
+import './mainLayout.scss'
+import toast from 'react-hot-toast'
 
 const MainLayout = () => {
   const [recruitmentPosts, setRecruitmentPosts] = useState([])
@@ -18,7 +19,7 @@ const MainLayout = () => {
       const eventResponse = await getPostsApi({ page: 0, limit: 3 })
       setUpcomingEvents(eventResponse.data.data.content || [])
     } catch (error) {
-      console.error('Không thể tải dữ liệu cho sidebar:', error)
+      toast.error('Không thể tải dữ liệu cho sidebar:', error)
     }
   }, [])
 
@@ -27,8 +28,6 @@ const MainLayout = () => {
       fetchSidebarData()
     }
   }, [isProfilePage, fetchSidebarData])
-  console.log('Event', recruitmentPosts)
-  console.log('Job', upcomingEvents)
 
   return (
     <div className='main-app-layout'>

@@ -31,17 +31,6 @@ const JobPostCard = ({ post }) => {
     }
   }
 
-  const handleBookmark = async () => {
-    const originalBookmarkState = isBookmarked
-    setIsBookmarked(!isBookmarked)
-    try {
-      await bookmarkPostApi(post.id)
-    } catch (error) {
-      setIsBookmarked(originalBookmarkState)
-      toast.error('Đã có lỗi xảy ra.')
-    }
-  }
-
   const handleApply = async () => {
     setIsLoadingApply(true)
     try {
@@ -53,58 +42,50 @@ const JobPostCard = ({ post }) => {
       setIsLoadingApply(false)
     }
   }
-  console.log(post)
 
   return (
-    <>
-      {post.targetType === 'JOB' && (
-        <div className='post-card'>
-          <div className='post-header'>
-            <img
-              src={post.creator.avatarUrl || 'https://placehold.co/48x48/EFEFEF/AAAAAA?text=A'}
-              alt={`${post.creator.fullName}'s avatar`}
-              className='post-avatar'
-            />
-            <div className='post-user-info'>
-              <span className='post-user-name'>{post.creator.fullName}</span>
-              <span className='post-user-details'>
-                {post.description} • {new Date(post.createdAt).toLocaleDateString()}
-              </span>
-            </div>
-            {post.targetType === 'JOB' && <span className='recruit-tag'>Recruitment</span>}
-          </div>
-          <p className='post-content'>{post.title}</p>
-          {post.urlImage && (
-            <div className='post-media-container'>
-              <img src={post.urlImage} alt='Post media' className='post-media' />
-            </div>
-          )}
-          <div className='post-actions'>
-            <div className='action-group'>
-              <button onClick={handleLike} className={`action-button ${isLiked ? 'active' : ''}`}>
-                {isLiked ? <HandThumbsUpFill /> : <HandThumbsUp />} <span>{likeCount}</span>
-              </button>
-              <button className='action-button'>
-                <Chat /> <span>{post.countComment}</span>
-              </button>
-              {post.targetType === 'JOB' && (
-                <button
-                  onClick={handleApply}
-                  className='action-button apply-button'
-                  disabled={isLoadingApply}>
-                  <Handbag /> <span>{isLoadingApply ? 'Applying...' : 'Apply'}</span>
-                </button>
-              )}
-            </div>
-            <button
-              onClick={handleBookmark}
-              className={`action-button ${isBookmarked ? 'active' : ''}`}>
-              {isBookmarked ? <BookmarkFill /> : <Bookmark />}
-            </button>
-          </div>
+    <div className='post-card'>
+      <div className='post-header'>
+        <img
+          src={post.creator.avatarUrl}
+          alt={`${post.creator.fullName}'s avatar`}
+          className='post-avatar'
+        />
+        <div className='post-user-info'>
+          <span className='post-user-name'>{post.creator.fullName}</span>
+          <span className='post-user-create'>{new Date(post.createdAt).toLocaleDateString()}</span>
+        </div>
+        <span className='recruit-tag'>Recruitment</span>
+      </div>
+      <p className='post-title'>{post.title} </p>
+      <p className='post-content'>{post.description} </p>
+      {post.urlImage && (
+        <div className='post-media-container'>
+          <img src={post.urlImage} alt='Post media' className='post-media' />
         </div>
       )}
-    </>
+      <div className='post-actions'>
+        <div className='action-group'>
+          <button onClick={handleLike} className={`action-button ${isLiked ? 'active' : ''}`}>
+            {isLiked ? <HandThumbsUpFill /> : <HandThumbsUp />} <span>{likeCount}</span>
+          </button>
+          <button className='action-button'>
+            <Chat /> <span>{post.countComment}</span>
+          </button>
+          {post.targetType === 'JOB' && (
+            <button
+              onClick={handleApply}
+              className='action-button apply-button'
+              disabled={isLoadingApply}>
+              <Handbag /> <span>{isLoadingApply ? 'Applying...' : 'Apply'}</span>
+            </button>
+          )}
+        </div>
+        <button className={`action-button ${isBookmarked ? 'active' : ''}`}>
+          {isBookmarked ? <BookmarkFill /> : <Bookmark />}
+        </button>
+      </div>
+    </div>
   )
 }
 

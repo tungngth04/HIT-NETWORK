@@ -13,8 +13,12 @@ export const ApiConstants = {
     posts: '/auth/home',
   },
   posts: {
-    getEventPosts: '/admin/events',
+    getEventPosts: '/user/events',
     getJobPosts: '/user/jobs',
+    like: '/reaction/react',
+    getlike: '/reaction/get-all',
+    dellike: '/reaction/delete',
+    getdetail: '/user/event',
   },
   user: {
     info: '/users/me',
