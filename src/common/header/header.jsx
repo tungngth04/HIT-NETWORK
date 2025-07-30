@@ -9,7 +9,14 @@ import { useNavigate } from 'react-router-dom'
 import { NavLink } from 'react-router-dom'
 import useAuth from '../../hooks/useAuth'
 import toast from 'react-hot-toast'
+import { clearAuth } from '../../store/auth.store'
+import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { info } from '../../apis/userProfile.api'
 const Header = () => {
+  const authState = useSelector((state) => state.auth.auth)
+  const currentUser = authState
+  const [infoUser, setInfoUser] = useState()
   const navigate = useNavigate()
   const authen = useAuth()
   const handleLogout = () => {
@@ -20,6 +27,21 @@ const Header = () => {
   const handleInfor = () => {
     navigate('/home/profile')
   }
+  const fetchUser = async () => {
+    try {
+      const response = await info()
+      const userData = response?.data
+      setInfoUser(userData)
+      console.log('data-user', userData)
+    } catch (err) {
+      toast.error('lỗi')
+    }
+  }
+  useEffect(() => {
+    if (currentUser) {
+      fetchUser()
+    }
+  }, [currentUser])
   return (
     <header className='main-header'>
       <div className='header-left'>
@@ -40,12 +62,12 @@ const Header = () => {
             </NavLink>
           </li>
           <li>
-            <NavLink to='/home/events' className={({ isActive }) => (isActive ? 'active' : '')}>
+            <NavLink to='/home/EVENT' className={({ isActive }) => (isActive ? 'active' : '')}>
               Events
             </NavLink>
           </li>
           <li>
-            <NavLink to='/home/jobs' className={({ isActive }) => (isActive ? 'active' : '')}>
+            <NavLink to='/home/JOB' className={({ isActive }) => (isActive ? 'active' : '')}>
               Recruitment
             </NavLink>
           </li>
@@ -65,7 +87,7 @@ const Header = () => {
         </div>
         <div className='profile-dropdown'>
           <div className='profile-avatar'>
-            <img src={avatar} />
+            <img src={infoUser ? infoUser.avatarUrl : currentUser.avatarUrl} />
             <div className='profile-menu'>
               <ul>
                 <li onClick={handleInfor}>Thông tin cá nhân</li>

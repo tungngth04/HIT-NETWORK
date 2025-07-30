@@ -16,4 +16,8 @@ export const ApiConstants = {
     getEventPosts: '/admin/events',
     getJobPosts: '/user/jobs',
   },
+  user: {
+    info: '/users/me',
+    update: '/users/me',
+  },
 }

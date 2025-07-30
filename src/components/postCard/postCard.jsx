@@ -66,6 +66,7 @@ const PostCard = ({ post }) => {
         <div className='post-user-info'>
           <span className='post-user-name'>{post.creator.fullName}</span>
           <span className='post-user-details'>
+            post to anyone
             {post.description} • {new Date(post.createdAt).toLocaleDateString()}
           </span>
         </div>

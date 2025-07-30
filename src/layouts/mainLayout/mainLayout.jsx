@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Outlet } from 'react-router-dom'
-import Header from '../../common/header/header' // Giữ nguyên đường dẫn của bạn
-import Footer from '../../common/footer/footer' // Giữ nguyên đường dẫn của bạn
+import { Outlet, useLocation } from 'react-router-dom'
+import Header from '../../common/header/header'
+import Footer from '../../common/footer/footer'
 import SidebarWidget from '../../components/SidebarWidget/sidebarWidget'
 import { getPostsApi, getEventApi, getJobApi } from '../../apis/posts.api'
-import './MainLayout.scss' // Giữ nguyên đường dẫn của bạn
+import './MainLayout.scss'
 
 const MainLayout = () => {
-  // --- Logic để fetch dữ liệu cho Sidebar ---
   const [recruitmentPosts, setRecruitmentPosts] = useState([])
   const [upcomingEvents, setUpcomingEvents] = useState([])
-
+  const location = useLocation()
+  const isProfilePage = location.pathname === '/home/profile'
   const fetchSidebarData = useCallback(async () => {
     try {
       const jobResponse = await getPostsApi({ page: 0, limit: 3 })
@@ -23,22 +23,26 @@ const MainLayout = () => {
   }, [])
 
   useEffect(() => {
-    fetchSidebarData()
-  }, [fetchSidebarData])
-  console.log(recruitmentPosts)
-  console.log(upcomingEvents)
+    if (!isProfilePage) {
+      fetchSidebarData()
+    }
+  }, [isProfilePage, fetchSidebarData])
+  console.log('Event', recruitmentPosts)
+  console.log('Job', upcomingEvents)
 
   return (
     <div className='main-app-layout'>
       <Header />
-      <div className='main-layout-container'>
+      <div className={`main-layout-container ${isProfilePage ? 'no-sidebar' : ''}`}>
         <main className='layout-content'>
           <Outlet />
         </main>
-        <aside className='layout-sidebar'>
-          <SidebarWidget title='Recruitment Posts' items={recruitmentPosts} type='JOB' />
-          <SidebarWidget title='Upcoming Events' items={upcomingEvents} type='EVENT' />
-        </aside>
+        {!isProfilePage && (
+          <aside className='layout-sidebar'>
+            <SidebarWidget title='Recruitment Posts' items={recruitmentPosts} type='JOB' />
+            <SidebarWidget title='Upcoming Events' items={upcomingEvents} type='EVENT' />
+          </aside>
+        )}
       </div>
       <Footer />
     </div>

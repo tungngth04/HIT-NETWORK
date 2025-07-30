@@ -72,16 +72,16 @@ function App() {
           index: true,
         },
         {
-          path: 'profile',
-          element: <ProfilePage />,
-        },
-        {
-          path: 'events',
+          path: 'EVENT',
           element: <EventPage />,
         },
         {
-          path: 'jobs',
+          path: 'JOB',
           element: <JobPage />,
+        },
+        {
+          path: '/home/profile',
+          element: <ProfilePage />,
         },
       ],
     },

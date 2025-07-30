@@ -30,6 +30,7 @@ const UserHomePage = () => {
       setEventPost(response?.data?.data?.content)
       setTotalPosts(response?.data?.data?.totalElements || 0)
       setIsLoading(false)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (error) {
       console.error('Error fetching posts:', error)
       toast.error('Không thể tải bài đăng. Vui lòng thử lại sau.')
