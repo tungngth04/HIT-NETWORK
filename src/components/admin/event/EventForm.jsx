@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Button, DatePicker, Form, Input, Space } from 'antd'
+import { Button, DatePicker, Form, Input, Space, Upload } from 'antd'
 import './EventForm.scss'
 import dayjs from 'dayjs'
 import { createEvents, getDetaiEvents, updateEvents } from '../../../apis/events.api'
@@ -49,29 +49,31 @@ function EventForm({ modal }) {
 
   // Tao  va sua su kien voi api
   const handleSubmit = async (values) => {
-    const payload = {
-      ...values,
-      eventDate: values.eventDate.format('YYYY-MM-DD[T]HH:mm:ss'),
+    const formData = new FormData()
+    formData.append('title', values.title)
+    formData.append('description', values.description || '')
+    formData.append('eventDate', values.eventDate.format('YYYY-MM-DD[T]HH:mm:ss'))
+    formData.append('organizer', values.organizer)
+    formData.append('location', values.location)
+
+    const files = values.image?.[0]?.originFileObj
+    if (files) {
+      formData.append('image', files) 
     }
 
     try {
       if (modal === 'add') {
-        await createEvents(payload)
-        console.log('Create API event thanh cong')
+        await createEvents(formData)
         toast.success('Tạo sự kiện thành công!')
       } else {
-        await updateEvents(id, payload)
+        await updateEvents(id, formData)
         toast.success('Cập nhật sự kiện thành công!')
       }
-    } catch (error) {
-      if (modal === 'add') {
-        toast.error('Tạo sự kiện thất bại!')
-      } else {
-        toast.error('Cập nhật sự kiện thất bại!')
-      }
-    }
 
-    navigate('/admin/events')
+      navigate('/admin/events')
+    } catch (error) {
+      toast.error('Tạo sự kiện thất bại!')
+    }
   }
 
   return (
@@ -136,6 +138,15 @@ function EventForm({ modal }) {
             <Input placeholder='Nhập tên người tổ chức' disabled />
           </Form.Item>
         )}
+        <Form.Item
+          label='File'
+          name='image'
+          valuePropName='fileList'
+          getValueFromEvent={(e) => (Array.isArray(e) ? e : e?.fileList)}>
+          <Upload beforeUpload={() => false} accept='image/*,video/*' maxCount={1} listType='text'>
+            <Button style={{fontWeight: 400, color: '#AAAAAA'}}>Chọn file</Button>
+          </Upload>
+        </Form.Item>
 
         <Form.Item
           name='description'
