@@ -11,6 +11,8 @@ import Events from './pages/Admin/events/Events'
 import EventForm from './components/admin/event/EventForm'
 import LayoutAdmin from './layouts/LayoutAdmin/LayoutAdmin'
 import ProfilePage from './pages/ProfilePage/ProfilePage'
+import Post from './pages/Admin/post/Post'
+import DetailPost from './pages/Admin/post/DetailPost'
 function App() {
   const elements = useRoutes([
     {
@@ -45,6 +47,14 @@ function App() {
           path: 'events/edit/:id',
           element: <EventForm modal='edit' />,
         },
+        {
+          path: 'posts',
+          element: <Post/>
+        },
+        {
+          path: 'post/detail/:id',
+          element: <DetailPost/>
+        }
       ],
     },
     {
