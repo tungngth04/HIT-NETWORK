@@ -35,8 +35,8 @@ function EventForm({ modal }) {
         organizer: data.organizer,
         description: data.description,
       }
-      setEvent(filledEvent) // cập nhật state nếu bạn cần render khác
-      form.setFieldsValue(filledEvent) // set giá trị form  // chú ý phần này
+      setEvent(filledEvent)
+      form.setFieldsValue(filledEvent)
     } catch (error) {
       console.error(error)
     }
@@ -58,7 +58,7 @@ function EventForm({ modal }) {
 
     const files = values.image?.[0]?.originFileObj
     if (files) {
-      formData.append('image', files) 
+      formData.append('image', files)
     }
 
     try {
@@ -144,7 +144,7 @@ function EventForm({ modal }) {
           valuePropName='fileList'
           getValueFromEvent={(e) => (Array.isArray(e) ? e : e?.fileList)}>
           <Upload beforeUpload={() => false} accept='image/*,video/*' maxCount={1} listType='text'>
-            <Button style={{fontWeight: 400, color: '#AAAAAA'}}>Chọn file</Button>
+            <Button style={{ fontWeight: 400, color: '#AAAAAA' }}>Chọn file</Button>
           </Upload>
         </Form.Item>
 

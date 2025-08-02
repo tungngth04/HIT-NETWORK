@@ -2,9 +2,6 @@ import { api, apiDefault, apiDefaultUpload } from '.'
 import { ApiConstants } from '../constants/api.constant'
 
 const eventsApi = () => ({
-  //   updateEvents: '/admin/event/',
-  //   getDetaiEvents: '/admin/event',
-  //   postEvents: 'adimn/event',
   getAllEvents: async (params) => api.get(ApiConstants.events.getAllEvents, { params }),
   // getDetaiEvents: async (id) => api.get(`${ApiConstants.events.getDetaiEvents}${id}`),
   getDetaiEvents: async (id) => api.get(`${ApiConstants.events.getDetaiEvents}?eventId=${id}`),

@@ -135,6 +135,8 @@ function Events() {
       setEvents(response?.data)
     } catch (error) {
       console.error(error)
+      console.log("Sai su kien get all events");
+      
     } finally {
       setLoading(false)
     }

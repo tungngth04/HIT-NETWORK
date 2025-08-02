@@ -8,9 +8,9 @@ export const ApiConstants = {
   events: {
     updateEvents: '/admin/event/',
     // getDetaiEvents: '/admin/event/',
-    getDetaiEvents: '/admin/event',
+    getDetaiEvents: '/user/event',
     createEvents: '/admin/event',
-    getAllEvents: '/admin/events',
+    getAllEvents: '/user/events',
     deleteEvents: '/admin/event',
   },
   admin: {
