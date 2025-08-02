@@ -1,7 +1,5 @@
 import { Table } from 'antd'
 import React from 'react'
-import events from '../data/events'
-import fakePosts from '../data/posts'
 import './Post.scss'
 import { useNavigate } from 'react-router-dom'
 import { getAllPost } from '../../../apis/postAdmin'
