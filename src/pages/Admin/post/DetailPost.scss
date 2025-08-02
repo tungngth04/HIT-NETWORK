@@ -2,7 +2,7 @@
   display: flex;
   gap: 50px;
   // height: 100vh; // chiều cao đúng bằng màn hình
-    // overflow: hidden;
+  // overflow: hidden;
 
   &__main {
     color: #121212d1;
@@ -39,7 +39,7 @@
   .image-wrapper {
     aspect-ratio: 16 / 9;
     width: 100%;
-    max-width: 600px;
+    max-width: 550px;
     overflow: hidden;
     border-radius: 8px;
 
@@ -50,7 +50,7 @@
     }
   }
 
-  .reaction{
+  .reaction {
     flex: 1;
   }
   .reaction-action {
@@ -61,7 +61,6 @@
     color: #555555a2;
     cursor: pointer;
     // width: 100%;
-
 
     p {
       display: flex;
@@ -82,15 +81,20 @@
   }
   .reaction-likes {
     flex: 1;
-    // max-width: 300px;
     margin-top: 24px;
     overflow-y: auto;
     height: 500px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 12px;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
     .like {
       display: flex;
       gap: 12px;
       margin-bottom: 16px;
-      // align-items: flex-start;
       align-items: center;
       color: #121212d1;
 
@@ -112,13 +116,19 @@
   }
   .reaction-comments {
     flex: 1;
-      overflow-y: auto;
+    padding-bottom: 12px;
+    overflow-y: auto;
     // max-width: 600px;
     text-align: justify;
     margin-top: 24px;
     height: 500px;
     color: #121212d1;
-    // overflow:;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
     .comment {
       display: flex;
       gap: 12px;
@@ -141,7 +151,6 @@
 
         .comment__text {
           font-size: 14px;
-          
         }
 
         .comment__time {

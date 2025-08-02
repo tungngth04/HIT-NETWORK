@@ -52,7 +52,7 @@ function App() {
           element: <Post/>
         },
         {
-          path: 'post/detail/:id',
+          path: "post/detail/:id",
           element: <DetailPost/>
         }
       ],

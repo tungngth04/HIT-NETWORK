@@ -4,12 +4,30 @@ import events from '../data/events'
 import fakePosts from '../data/posts'
 import "./Post.scss"
 import { useNavigate } from 'react-router-dom'
+import { getAllPost } from '../../../apis/postAdmin'
+import { useState } from 'react'
+import { useEffect } from 'react'
+import dayjs from 'dayjs'
 
 function Post() {
   const navigate = useNavigate()
+  const [post, setPost] = useState()
   const handleCreate = () => {
     navigate('/admin/events/create')
   }
+  const fetchPost = async() => {
+    try{
+       const res = await getAllPost()
+       setPost(res?.data?.content)
+    }catch(error){
+      console.error(error)
+    }
+  }
+
+  useEffect(() => {
+    fetchPost()
+  },[])
+
   const columns = [
   {
     title: 'STT',
@@ -24,26 +42,26 @@ function Post() {
   },
   {
     title: 'Người đăng',
-    dataIndex: 'author',
-    key: 'author',
-    align: 'center'
+    dataIndex: ['creator', 'fullName'], // ✅ lấy creator.fullName
+    key: 'fullName',
+    // align: 'center'
   },
   {
     title: 'Ngày đăng',
-    dataIndex: 'date',
-    key: 'date',
-    align: 'center'
+    dataIndex: 'createdAt',
+    key: 'createdAt',
+    render: (_, record) => dayjs(record.createdAt).format('YYYY-MM-DD'),
   },
   {
     title: 'Lượt thích',
-    dataIndex: 'likes',
-    key: 'likes',
+    dataIndex: 'countReaction',
+    key: 'countReaction',
     align: 'center'
   },
   {
     title: 'Lượt bình luận',
-    dataIndex: 'comments',
-    key: 'comments',
+    dataIndex: 'countComment',
+    key: 'countComment',
     align: 'center'
   },
   {
@@ -53,7 +71,7 @@ function Post() {
       <div className='table-action'>
         <button
           className='table-action__edit'
-          onClick={() => navigate(`/admin/post/detail/${record.id}`)}
+          onClick={() => navigate(`/admin/post/detail/${record.postId}`)}
         >
           Chi tiết
         </button>
@@ -88,7 +106,7 @@ function Post() {
           <button className='button button--search'>Tìm kiếm</button>
         </div>
       </div>
-      <Table columns={columns} dataSource={fakePosts} rowKey='stt' pagination={{ pageSize: 8 }} />
+      <Table columns={columns} dataSource={post} rowKey='stt' pagination={{ pageSize: 8 }} />
     </div>
   )
 }
