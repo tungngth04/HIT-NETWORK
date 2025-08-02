@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom'
 
 const api = axios.create({
   baseURL: `${import.meta.env.VITE_API_SERVER}`,
-
   headers: {
     'Content-Type': 'Application/json',
   },
@@ -62,3 +61,4 @@ apiDefaultUpload.interceptors.response.use(
 )
 
 export { apiDefault, api, apiDefaultUpload }
+
