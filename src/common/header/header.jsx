@@ -21,7 +21,7 @@ const Header = () => {
   const authen = useAuth()
   const handleLogout = () => {
     authen.clearUser()
-    navigate('/login')
+    navigate('/')
     toast.success('Đăng xuất thành công')
   }
   const handleInfor = () => {
