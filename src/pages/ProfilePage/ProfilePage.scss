@@ -40,13 +40,15 @@
 
 .user-details {
   .user-name {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     font-weight: 600;
     margin: 0;
-    color: $text-color;
+    // color: $text-color;
+    padding-bottom: 4px;
+    color: #333;
   }
   .user-email {
-    font-size: 1rem;
+    font-size: 0.9rem;
     color: $text-light;
     margin: 0;
   }
@@ -58,13 +60,13 @@
   .stats-item {
     text-align: center;
     p:first-child {
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       font-weight: 600;
       margin: 0;
       color: $text-color;
     }
     p:last-child {
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       color: $text-light;
       margin: 0;
       text-transform: uppercase;
@@ -123,10 +125,10 @@
 }
 
 .content-title {
-  font-size: 1.75rem;
+  font-size: 1.35rem;
   font-weight: 600;
   margin-top: 0;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
   color: $text-color;
   text-align: center;
 }
@@ -142,14 +144,27 @@
     display: flex;
     gap: 16px;
     font-size: 1.1rem;
-    width: 350px;
-
+    // width: 350px;
+    background-color: #f8f9fa;
+    padding: 12px 20px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    &--p {
+          display: grid;
+          grid-auto-flow: column;
+          grid-template-columns: 130px 200px;
+    }
     p {
       margin: 0;
+      font-size: 16px;
+      color: #333;
+        // word-break: break-word;
     }
     p:first-child {
       font-weight: 500;
       color: $text-light;
+      flex: 0 0 140px;
     }
     p:last-child {
       font-weight: 500;
@@ -163,13 +178,16 @@
 .edit-form {
   max-width: 550px;
   margin: 0 auto;
+  .ant-form-item1{
+    margin-bottom: 20px;
+  }
   .ant-form-item-label > label {
     font-weight: 500;
     color: $text-light;
   }
   .edit-input,
   .edit-datepicker {
-    height: 44px;
+    height: 50px;
     width: 100%;
     border-radius: 8px;
   }

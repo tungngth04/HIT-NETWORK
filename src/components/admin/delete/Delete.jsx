@@ -1,10 +1,9 @@
-import React from 'react'
-import data1 from '../../../pages/Admin/data/data'
 import './Delete.scss'
 import { MdCancel } from 'react-icons/md'
 import { deleteEvents } from '../../../apis/events.api'
 import toast from 'react-hot-toast'
-function DeleteMember({ id, data, setData, deletePopup, setDeletePopup, fetchEvent }) {
+import { deleteMembers } from '../../../apis/members.api'
+function DeleteMember({ id, deletePopup, setDeletePopup, fetchEvent, username, fetchUsers }) {
   const handleClose = () => {
     setDeletePopup({
       open: false,
@@ -28,7 +27,6 @@ function DeleteMember({ id, data, setData, deletePopup, setDeletePopup, fetchEve
       toast.error(`Xóa ${deletePopup.type === 'event' ? 'sự kiện' : 'thành viên'} thất bại!`)
     }
   }
-
   return (
     <div className='delete-member'>
       <div className='overlay'></div>
@@ -44,7 +42,6 @@ function DeleteMember({ id, data, setData, deletePopup, setDeletePopup, fetchEve
             ? 'Bạn có chắc chắn xóa sự kiện này không?'
             : 'Bạn có chắc chắn xóa bài đăng này không?'}
         </p>
-
         <div className='action'>
           <button className='button btn_cancel' onClick={handleClose}>
             Hủy
@@ -57,5 +54,4 @@ function DeleteMember({ id, data, setData, deletePopup, setDeletePopup, fetchEve
     </div>
   )
 }
-
 export default DeleteMember
