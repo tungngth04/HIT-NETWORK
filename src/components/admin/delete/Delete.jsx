@@ -4,7 +4,7 @@ import './Delete.scss'
 import { MdCancel } from 'react-icons/md'
 import { deleteEvents } from '../../../apis/events.api'
 import toast from 'react-hot-toast'
-function DeleteMember({ id, data, setData, deletePopup, setDeletePopup, fetchEvent  }) {
+function DeleteMember({ id, data, setData, deletePopup, setDeletePopup, fetchEvent }) {
   const handleClose = () => {
     setDeletePopup({
       open: false,
@@ -13,13 +13,19 @@ function DeleteMember({ id, data, setData, deletePopup, setDeletePopup, fetchEve
   }
   const handleDelete = async () => {
     try {
-      await deleteEvents(id)
-      console.log('Xoas thanh cong')
-      toast.success('Xoá sự kiện thành công!')
-      fetchEvent ()
+      if (deletePopup.type === 'event') {
+        await deleteEvents(id)
+        toast.success('Xoá sự kiện thành công!')
+        fetchEvent()
+      } else if (deletePopup.type === 'user') {
+        await deleteMembers(username)
+        toast.success('Xoá thành viên thành công!')
+        fetchUsers()
+      }
       handleClose()
     } catch (error) {
-      toast.error('Xóa sự kiện thất bại!')
+      console.error(error)
+      toast.error(`Xóa ${deletePopup.type === 'event' ? 'sự kiện' : 'thành viên'} thất bại!`)
     }
   }
 
@@ -31,11 +37,13 @@ function DeleteMember({ id, data, setData, deletePopup, setDeletePopup, fetchEve
           <MdCancel onClick={handleClose} />
         </div>
         <h2>Xác nhận</h2>
-        {deletePopup.type === 'user' ? (
-          <p>Bạn có chắc chắn xóa tài khoản này không?</p>
-        ) : (
-          <p>Bạn có chắc chắn xóa sự kiện này không?</p>
-        )}
+        <p>
+          {deletePopup.type === 'user'
+            ? 'Bạn có chắc chắn xóa tài khoản này không?'
+            : deletePopup.type === 'event'
+            ? 'Bạn có chắc chắn xóa sự kiện này không?'
+            : 'Bạn có chắc chắn xóa bài đăng này không?'}
+        </p>
 
         <div className='action'>
           <button className='button btn_cancel' onClick={handleClose}>
