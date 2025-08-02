@@ -14,28 +14,24 @@ import ProfilePage from './pages/ProfilePage/ProfilePage'
 import Post from './pages/Admin/post/Post'
 import DetailPost from './pages/Admin/post/DetailPost'
 import toast, { Toaster } from 'react-hot-toast'
-import EventPage from './pages/eventPage/eventPage'
-import JobPage from './pages/jobPage/jobPage'
-import useAuth from './hooks/useAuth'
-import { useEffect } from 'react'
 function App() {
   const currentUser = useAuth()
   const role = currentUser.user?.role || []
-  const isAdmin = role.includes("BQT")
+  const isAdmin = role.includes('BQT')
   const location = useLocation()
   const path = location.pathname
   const naviagate = useNavigate()
-  console.log("role: ", role);
+  console.log('role: ', role)
   useEffect(() => {
-      if (!isAdmin && path.startsWith("/admin")) {
-        naviagate("/")
-      }
-  },[isAdmin, path, naviagate, role])
-  
+    if (!isAdmin && path.startsWith('/admin')) {
+      naviagate('/')
+    }
+  }, [isAdmin, path, naviagate, role])
+
   const elements = useRoutes([
     {
       path: '/admin',
-      element: isAdmin ? <LayoutAdmin /> : <MainLayout/>,
+      element: isAdmin ? <LayoutAdmin /> : <MainLayout />,
       children: [
         {
           path: '',
@@ -101,7 +97,7 @@ function App() {
           element: <JobPage />,
         },
         {
-          path: '/profile',
+          path: '/home/profile',
           element: <ProfilePage />,
         },
       ],
@@ -109,9 +105,9 @@ function App() {
   ])
   return (
     <>
-      <Toaster position="top-right" reverseOrder={false} />
+      <Toaster position='top-right' reverseOrder={false} />
       {elements}
     </>
-  );
+  )
 }
 export default App

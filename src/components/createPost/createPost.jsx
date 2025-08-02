@@ -158,7 +158,6 @@ const CreatePost = ({ posts, onPostCreated }) => {
                 <span>Type : </span>
                 <select>
                   <option value='JOB'>Recruitment</option>
-
                 </select>
               </div>
               <button
