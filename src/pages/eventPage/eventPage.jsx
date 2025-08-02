@@ -1,13 +1,15 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, use } from 'react'
 import { Pagination } from 'antd'
 import toast from 'react-hot-toast'
 import CreatePost from '../../components/createPost/createPost'
 import PostCard from '../../components/postCard/postCard'
 import SidebarWidget from '../../components/SidebarWidget/sidebarWidget'
-import { getPostsApi } from '../../apis/posts.api'
-import './userHomePage.scss'
+import { getEventApi, getPostsApi } from '../../apis/posts.api'
+import './eventPage.scss'
+import { current } from '@reduxjs/toolkit'
+import EventPostCard from '../../components/eventPostCard/evenPostCard'
 
-const UserHomePage = () => {
+const EventPage = () => {
   const [pagination, setPagination] = useState({
     current: 0,
     size: 10,
@@ -18,12 +20,12 @@ const UserHomePage = () => {
 
   const fetchPosts = async () => {
     try {
-      const response = await getPostsApi({
+      const response = await getEventApi({
         page: pagination.current,
         size: pagination.size,
       })
-      setPosts(response?.data?.data?.content)
-      setTotalPosts(response?.data?.data?.totalElements || 0)
+      setPosts(response?.data?.content)
+      setTotalPosts(response?.data?.totalElements || 0)
       setIsLoading(false)
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (error) {
@@ -36,7 +38,6 @@ const UserHomePage = () => {
   useEffect(() => {
     fetchPosts()
   }, [pagination])
-  console.log('totalelement', totalPosts)
   const handlePostCreated = () => {
     if (pagination.current === 0) {
       fetchPosts()
@@ -52,12 +53,7 @@ const UserHomePage = () => {
       size: pageSize || prev.size,
     }))
   }
-  const handlePostUpdate = (updatedPost) => {
-    setPostsData((prevData) => ({
-      ...prevData,
-      content: prevData.content.map((post) => (post.id === updatedPost.id ? updatedPost : post)),
-    }))
-  }
+
   if (isLoading) {
     return <div>Đang tải bài viết...</div>
   }
@@ -69,9 +65,7 @@ const UserHomePage = () => {
         {isLoading ? (
           <div className='loading-indicator'>Đang tải bài viết...</div>
         ) : posts && posts.length > 0 ? (
-          posts.map((post, index) => (
-            <PostCard key={post.id || index} post={post} onPostUpdate={handlePostCreated} />
-          ))
+          posts.map((post, index) => <EventPostCard key={post.id || index} post={post} />)
         ) : (
           <div className='no-posts-message'>Chưa có bài đăng nào để hiển thị.</div>
         )}
@@ -92,4 +86,4 @@ const UserHomePage = () => {
   )
 }
 
-export default UserHomePage
+export default EventPage

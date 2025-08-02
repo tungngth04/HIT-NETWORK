@@ -7,6 +7,12 @@ const authApi = () => ({
       username,
       password,
     }),
+  Me: () => apiDefault.get(ApiConstants.users.getMe),
+  forgotPassword: ({ username, email }) =>
+    apiDefault.post(ApiConstants.auth.forgotpassword, {
+      username,
+      email,
+    }),
 })
 
-export const { login } = authApi()
+export const { login, forgotPassword } = authApi()

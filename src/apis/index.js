@@ -8,7 +8,6 @@ const api = axios.create({
     'Content-Type': 'Application/json',
   },
 })
-
 api.interceptors.request.use((config) => {
   const accessToken = JSON.parse(localStorage.getItem(LocalStorage.auth))?.token
   console.log(accessToken)
@@ -63,4 +62,3 @@ apiDefaultUpload.interceptors.response.use(
 
 export { apiDefault, api, apiDefaultUpload }
 
-// config.headers.Authorization = `eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJCUVQiLCJpYXQiOjE3NTMxOTUzNTIsImV4cCI6MTc1MzI4MTc1Mn0.U3nlVoGwV2SM2cFQFDa5hhvgnaRblJdJ6BIPuE1bVbA`
