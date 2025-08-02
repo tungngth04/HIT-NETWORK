@@ -63,11 +63,6 @@ function Events() {
         const today = dayjs().startOf('day')
         const eventDate = dayjs(record.eventDate).startOf('day')
         const diffDays = eventDate.diff(today, 'day')
-
-        // console.log('Ngày hôm nay:', today.format('YYYY-MM-DD'))
-        // console.log('Ngày sự kiện:', eventDate.format('YYYY-MM-DD'))
-        // console.log('Khoảng cách ngày:', diffDays)
-
         if (diffDays === 0) {
           return <span style={{ color: 'orange' }}>Đang diễn ra</span>
         } else if (diffDays > 0 && diffDays <= 3) {
@@ -75,7 +70,7 @@ function Events() {
         } else if (diffDays < 0) {
           return <span style={{ color: 'gray' }}>Đã diễn ra</span>
         } else {
-          return <span style={{ color: 'blue' }}>Chưa tới</span>
+          return <span style={{ color: 'blue' }}>Chưa diễn ra</span>
         }
       },
     },

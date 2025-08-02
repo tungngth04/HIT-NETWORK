@@ -56,10 +56,12 @@ function EventForm({ modal }) {
     formData.append('organizer', values.organizer)
     formData.append('location', values.location)
 
-    const fileList = values.image || []
-    fileList.forEach((fileWrapper) => {
-      formData.append('image', fileWrapper.originFileObj)
-    })
+    if (modal === 'add') {
+      const fileList = values?.image || []
+      fileList.forEach((fileWrapper) => {
+        formData.append('files', fileWrapper.originFileObj)
+      })
+    }
 
     try {
       if (modal === 'add') {
@@ -138,19 +140,17 @@ function EventForm({ modal }) {
             <Input placeholder='Nhập tên người tổ chức' disabled />
           </Form.Item>
         )}
-        <Form.Item
-          label='File'
-          name='image'
-          valuePropName='fileList'
-          getValueFromEvent={(e) => (Array.isArray(e) ? e : e?.fileList)}>
-          <Upload
-            beforeUpload={() => false}
-            accept='image/*,video/*'
-            multiple 
-            listType='text'>
-            <Button style={{ fontWeight: 400, color: '#AAAAAA' }}>Chọn file</Button>
-          </Upload>
-        </Form.Item>
+        {modal === 'add' && (
+          <Form.Item
+            label='File'
+            name='image'
+            valuePropName='fileList'
+            getValueFromEvent={(e) => (Array.isArray(e) ? e : e?.fileList)}>
+            <Upload beforeUpload={() => false} accept='image/*,video/*' multiple listType='text'>
+              <Button style={{ fontWeight: 400, color: '#AAAAAA' }}>Chọn file</Button>
+            </Upload>
+          </Form.Item>
+        )}
 
         <Form.Item
           name='description'
