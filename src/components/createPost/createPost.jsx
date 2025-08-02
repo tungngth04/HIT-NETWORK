@@ -157,7 +157,7 @@ const CreatePost = ({ posts, onPostCreated }) => {
               <div className='type-selector'>
                 <span>Type : </span>
                 <select>
-                  <option value='EVENT'>Event</option>
+                  <option value='JOB'>Recruitment</option>
                 </select>
               </div>
               <button

@@ -13,6 +13,11 @@ const authApi = () => ({
       username,
       email,
     }),
+  changePassword: async ({ oldPassword, newPassword }) =>
+    api.put(ApiConstants.users.changePassword, {
+      oldPassword,
+      newPassword,
+    }),
 })
 
-export const { login, forgotPassword } = authApi()
+export const { login, forgotPassword, changePassword } = authApi()
