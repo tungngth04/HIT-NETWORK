@@ -66,7 +66,7 @@ function App() {
       ],
     },
     {
-      path: '/login',
+      path: '/',
       element: <LoginPage />,
     },
     {
