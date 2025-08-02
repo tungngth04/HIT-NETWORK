@@ -88,9 +88,9 @@ function App() {
   ])
   return (
     <>
+      <Toaster position="top-right" reverseOrder={false} />
       {elements}
-      <Toaster />
     </>
-  )
+  );
 }
 export default App
