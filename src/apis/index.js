@@ -61,4 +61,3 @@ apiDefaultUpload.interceptors.response.use(
 )
 
 export { apiDefault, api, apiDefaultUpload }
-
