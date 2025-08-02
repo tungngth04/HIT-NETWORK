@@ -7,8 +7,16 @@ import { FaUserGroup } from "react-icons/fa6";
 import { BiSolidCalendarMinus } from "react-icons/bi";
 import { RiLogoutBoxRFill } from "react-icons/ri";
 import { FaPen } from "react-icons/fa";
+import useAuth from '../../../hooks/useAuth';
+import toast from 'react-hot-toast';
 const Sidebar = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+  const auth = useAuth()
+  const handleLogOut = () => {
+   auth.clearUser()
+   navigate("/")
+   toast.success("Đăng xuất thành công!!")
+  }
   return (
     <div className='admin__sidebar'>
       <div className='admin__sidebar__image'>
@@ -19,7 +27,7 @@ const Sidebar = () => {
         <li onClick={() => navigate('/admin/members')}> <FaUserGroup size={30}/> <p>Quản lý thành viên</p></li>
         <li onClick={() => navigate('/admin/events')}><BiSolidCalendarMinus size={30}/> <p>Quản lý sự kiện</p></li>
         <li onClick={() => navigate('/admin/posts')}><FaPen size={30}/> <p>Quản lý bài đăng</p></li>
-        <li><RiLogoutBoxRFill size={30}/> <p>Đăng xuất</p> </li>
+        <li onClick={handleLogOut}><RiLogoutBoxRFill size={30}/> <p>Đăng xuất</p> </li>
       </ul> 
     </div>
   )

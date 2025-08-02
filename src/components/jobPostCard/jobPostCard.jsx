@@ -9,42 +9,25 @@ import {
 } from 'react-bootstrap-icons'
 import toast from 'react-hot-toast'
 // import { likePostApi, applyToPostApi, bookmarkPostApi } from '../../apis/posts.api'
-import './PostCard.scss'
-import { likePostApi, dellikePostApi } from '../../apis/posts.api'
+import './jobPostCard.scss'
 
-const PostCard = ({ post, onPostUpdate }) => {
-  const [isBookmarked, setIsBookmarked] = useState(post.bookmarked || false)
-  const [isLoadingApply, setIsLoadingApply] = useState(false)
-
+const JobPostCard = ({ post }) => {
   const [isLiked, setIsLiked] = useState(post.reacted || false)
   const [likeCount, setLikeCount] = useState(post.countReaction || 0)
+  const [isBookmarked, setIsBookmarked] = useState(post.bookmarked || false)
+  const [isLoadingApply, setIsLoadingApply] = useState(false)
 
   const handleLike = async () => {
     const originalLikedState = isLiked
     const originalLikeCount = likeCount
     setIsLiked(!isLiked)
     setLikeCount(isLiked ? likeCount - 1 : likeCount + 1)
-
     try {
-      if (originalLikedState) {
-        await dellikePostApi({
-          targetId: post.postId,
-          targetType: post.targetType,
-        })
-      } else {
-        await likePostApi({
-          targetId: post.postId,
-          targetType: post.targetType,
-          emotionType: 'LIKE',
-        })
-      }
-      if (response.data.data && onPostUpdate) {
-        onPostUpdate(response.data.data)
-      }
+      await likePostApi(post.id)
     } catch (error) {
-      toast.error('Đã có lỗi xảy ra.')
       setIsLiked(originalLikedState)
       setLikeCount(originalLikeCount)
+      toast.error('Đã có lỗi xảy ra.')
     }
   }
 
@@ -59,6 +42,7 @@ const PostCard = ({ post, onPostUpdate }) => {
       setIsLoadingApply(false)
     }
   }
+
   return (
     <div className='post-card'>
       <div className='post-header'>
@@ -71,12 +55,11 @@ const PostCard = ({ post, onPostUpdate }) => {
           <span className='post-user-name'>{post.creator.fullName}</span>
           <span className='post-user-create'>{new Date(post.createdAt).toLocaleDateString()}</span>
         </div>
-        {post.targetType === 'JOB' && <span className='recruit-tag'>Recruitment</span>}
-        {post.targetType === 'EVENT' && <span className='recruit-tag'>Event</span>}
+        <span className='recruit-tag'>Recruitment</span>
       </div>
-      <p className='post-title'>{post.title}</p>
-      <p className='post-content'>{post.description}</p>
-      {post.urlImage && post.urlImage.length > 0 && (
+      <p className='post-title'>{post.title} </p>
+      <p className='post-content'>{post.description} </p>
+      {post.urlImage && (
         <div className='post-media-container'>
           <img src={post.urlImage} alt='Post media' className='post-media' />
         </div>
@@ -106,4 +89,4 @@ const PostCard = ({ post, onPostUpdate }) => {
   )
 }
 
-export default PostCard
+export default JobPostCard

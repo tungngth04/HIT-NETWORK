@@ -141,7 +141,7 @@ const ProfilePage = () => {
                   </div>
                 </div>
                 <div className='info-item'>
-                  <div  className='info-item--p'>
+                  <div className='info-item--p'>
                     <p>Giới tính:</p>
                     <p>{infoUser?.gender}</p>
                   </div>
