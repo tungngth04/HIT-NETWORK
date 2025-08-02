@@ -25,7 +25,7 @@ const Header = () => {
     toast.success('Đăng xuất thành công')
   }
   const handleInfor = () => {
-    navigate('/home/profile')
+    navigate('/profile')
   }
   const fetchUser = async () => {
     try {
