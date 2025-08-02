@@ -72,11 +72,11 @@ function App() {
           index: true,
         },
         {
-          path: 'EVENT',
+          path: 'event',
           element: <EventPage />,
         },
         {
-          path: 'JOB',
+          path: 'job',
           element: <JobPage />,
         },
         {
