@@ -8,6 +8,7 @@ const ForgotPasswordPage = () => {
   const [msv, setMsv] = useState('')
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState('')
 
   const handleSubmit = async (e) => {
     e.preventDefault()

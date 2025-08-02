@@ -12,6 +12,8 @@ import EventForm from './components/admin/event/EventForm'
 import LayoutAdmin from './layouts/LayoutAdmin/LayoutAdmin'
 import ProfilePage from './pages/ProfilePage/ProfilePage'
 import toast, { Toaster } from 'react-hot-toast'
+import EventPage from './pages/eventPage/eventPage'
+import JobPage from './pages/jobPage/jobPage'
 function App() {
   const elements = useRoutes([
     {
@@ -70,7 +72,15 @@ function App() {
           index: true,
         },
         {
-          path: 'profile',
+          path: 'EVENT',
+          element: <EventPage />,
+        },
+        {
+          path: 'JOB',
+          element: <JobPage />,
+        },
+        {
+          path: '/home/profile',
           element: <ProfilePage />,
         },
       ],

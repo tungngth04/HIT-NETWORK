@@ -23,11 +23,6 @@ const LoginPage = () => {
     setIsLoading(true)
     try {
       const response = await login({ username: msv, password: password })
-      // nếu có token thì authen.saveUser({token: response.token})
-      // kiểm tra biến role vừa lấy có phải là BQT không
-      //dùng role.includes('BQT') để kiểm tra
-      // nếu là BQT thì chuyển hướng đến tran admin
-      // nếu là TV thì chuyển hướng đến trang home
       if (response && response.data.data.token) {
         authen.saveUser({ token: response.data.data.token, role: response.data.data.role })
         if (response.data.data.role.includes('BQT')) {

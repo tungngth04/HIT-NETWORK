@@ -17,7 +17,6 @@ api.interceptors.request.use((config) => {
 }, Promise.reject)
 
 api.interceptors.response.use(
-
   (value) => value.data,
   (error) => {
     if (error.code === 401) {
