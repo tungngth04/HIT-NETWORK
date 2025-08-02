@@ -79,7 +79,15 @@ function App() {
           index: true,
         },
         {
-          path: 'profile',
+          path: 'event',
+          element: <EventPage />,
+        },
+        {
+          path: 'job',
+          element: <JobPage />,
+        },
+        {
+          path: '/home/profile',
           element: <ProfilePage />,
         },
       ],
