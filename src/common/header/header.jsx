@@ -25,7 +25,7 @@ const Header = () => {
     toast.success('Đăng xuất thành công')
   }
   const handleInfor = () => {
-    navigate('/home/profile')
+    navigate('/profile')
   }
   const fetchUser = async () => {
     try {
@@ -57,12 +57,12 @@ const Header = () => {
             </NavLink>
           </li>
           <li>
-            <NavLink to='/home/EVENT' className={({ isActive }) => (isActive ? 'active' : '')}>
+            <NavLink to='/home/event' className={({ isActive }) => (isActive ? 'active' : '')}>
               Events
             </NavLink>
           </li>
           <li>
-            <NavLink to='/home/JOB' className={({ isActive }) => (isActive ? 'active' : '')}>
+            <NavLink to='/home/job' className={({ isActive }) => (isActive ? 'active' : '')}>
               Recruitment
             </NavLink>
           </li>
