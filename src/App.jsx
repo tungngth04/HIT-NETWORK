@@ -12,6 +12,10 @@ import EventForm from './components/admin/event/EventForm'
 import LayoutAdmin from './layouts/LayoutAdmin/LayoutAdmin'
 import ProfilePage from './pages/ProfilePage/ProfilePage'
 import toast, { Toaster } from 'react-hot-toast'
+import EventPage from './pages/eventPage/eventPage'
+import JobPage from './pages/jobPage/jobPage'
+import useAuth from './hooks/useAuth'
+import { useEffect } from 'react'
 function App() {
   const currentUser = useAuth()
   const role = currentUser.user?.role || []
@@ -74,7 +78,7 @@ function App() {
       element: <MainLayout />,
       children: [
         {
-          path: '',
+          path: 'home',
           element: <UserHomePage />,
           index: true,
         },
@@ -87,7 +91,7 @@ function App() {
           element: <JobPage />,
         },
         {
-          path: '/home/profile',
+          path: 'profile',
           element: <ProfilePage />,
         },
       ],

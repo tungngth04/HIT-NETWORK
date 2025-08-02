@@ -11,7 +11,7 @@ const MainLayout = () => {
   const [recruitmentPosts, setRecruitmentPosts] = useState([])
   const [upcomingEvents, setUpcomingEvents] = useState([])
   const location = useLocation()
-  const isProfilePage = location.pathname === '/home/profile'
+  const isProfilePage = location.pathname === '/profile'
   const fetchSidebarData = useCallback(async () => {
     try {
       const jobResponse = await getPostsApi({ page: 0, limit: 3 })

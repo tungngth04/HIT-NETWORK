@@ -59,7 +59,7 @@ const JobPostCard = ({ post }) => {
       </div>
       <p className='post-title'>{post.title} </p>
       <p className='post-content'>{post.description} </p>
-      {post.urlImage && (
+      {post.urlImage && post.urlImage.length > 0 && (
         <div className='post-media-container'>
           <img src={post.urlImage} alt='Post media' className='post-media' />
         </div>

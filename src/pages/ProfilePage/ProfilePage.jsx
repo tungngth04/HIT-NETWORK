@@ -10,7 +10,7 @@ const ProfilePage = () => {
   const [action, setAction] = useState('info')
   const [hoverIndex, setHoverIndex] = useState(null)
   const [infoUser, setInfoUser] = useState()
-  const [editForm] = Form.useForm()
+  const [editForm, passwordForm] = Form.useForm()
 
   // Get api lay thong tin nguoi dung
   const fetchGetUser = async () => {
@@ -236,6 +236,51 @@ const ProfilePage = () => {
           {action === 'changePassword' && (
             <>
               <h4 className='content-title'>Đổi mật khẩu</h4>
+              <Form
+                form={passwordForm}
+                // onFinish={handleChangePassword}
+                className='edit-form'
+                layout='vertical'>
+                <Form.Item
+                  label='Nhập mật khẩu cũ'
+                  name='oldPassword'
+                  rules={[{ required: true, message: 'Hãy nhập mật khẩu cũ' }]}>
+                  <Input.Password className='edit-input' />
+                </Form.Item>
+                <Form.Item
+                  label='Nhập mật khẩu mới'
+                  name='newPassword'
+                  rules={[{ required: true, message: 'Hãy nhập mật khẩu mới' }]}>
+                  <Input.Password className='edit-input' />
+                </Form.Item>
+                <Form.Item
+                  label='Xác nhận mật khẩu'
+                  name='confirmPassword'
+                  dependencies={['newPassword']}
+                  rules={[
+                    { required: true, message: 'Hãy xác nhận mật khẩu' },
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        if (!value || getFieldValue('newPassword') === value) {
+                          return Promise.resolve()
+                        }
+                        return Promise.reject(new Error('Mật khẩu mới không khớp!'))
+                      },
+                    }),
+                  ]}>
+                  <Input.Password className='edit-input' />
+                </Form.Item>
+                <Form.Item className='form-buttons'>
+                  <Space>
+                    <Button onClick={() => passwordForm.resetFields()} className='cancel-button'>
+                      Hủy
+                    </Button>
+                    <Button type='primary' htmlType='submit' className='submit-button'>
+                      Xác nhận
+                    </Button>
+                  </Space>
+                </Form.Item>
+              </Form>
             </>
           )}
         </div>

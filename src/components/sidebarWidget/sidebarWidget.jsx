@@ -12,7 +12,7 @@ const SidebarWidget = ({ title, items, type }) => {
     <div className='sidebar-widget'>
       <div className='widget-header'>
         <h3 className='widget-title'>{title}</h3>
-        <a href={`/home/${type.toLowerCase()}`} className='widget-view-more'>
+        <a href={`${type.toLowerCase()}`} className='widget-view-more'>
           View More <ChevronRight size={12} />
         </a>
       </div>
