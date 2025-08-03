@@ -210,3 +210,18 @@
     }
   }
 }
+#change-password-form {
+  .ant-form-item-has-error {
+    .ant-input-affix-wrapper {
+      border-color: $primary-orange !important;
+
+      &:hover {
+        border-color: $primary-orange !important;
+      }
+    }
+
+    .ant-input-affix-wrapper-focused {
+      box-shadow: 0 0 0 2px rgba($primary-orange, 0.2) !important;
+    }
+  }
+}

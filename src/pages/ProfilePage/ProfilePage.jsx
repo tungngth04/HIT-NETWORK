@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { DatePicker, Form, Input, Radio, Space, Button, Spin, Upload } from 'antd'
 import dayjs from 'dayjs'
-// import { useUserProfile } from '../../hooks/userProfile'
-import avatar from '../../assets/images/hinh-anime-2.jpg'
 import './ProfilePage.scss'
 import { info, update } from '../../apis/userProfile.api'
+import { changePassword } from '../../apis/auth.api'
+import toast from 'react-hot-toast'
 
 const ProfilePage = () => {
   const [action, setAction] = useState('info')
   const [hoverIndex, setHoverIndex] = useState(null)
   const [infoUser, setInfoUser] = useState()
-  const [editForm, passwordForm] = Form.useForm()
+  const [editForm] = Form.useForm()
+  const [passwordForm] = Form.useForm()
+  const [isLoading, setIsLoading] = useState(true)
+
 
   // Get api lay thong tin nguoi dung
   const fetchGetUser = async () => {
@@ -36,13 +39,14 @@ const ProfilePage = () => {
       })
     } catch (error) {
       console.error('Lỗi: ', error)
+    } finally {
+      setIsLoading(false)
     }
   }
   useEffect(() => {
     fetchGetUser()
   }, [])
 
-  // PUT API chỉnh sửa thông
   const handleUpdateProfile = async (values) => {
     console.log(values.avatarUrl)
     const formData = new FormData()
@@ -66,7 +70,35 @@ const ProfilePage = () => {
       console.log('ádasd', formData)
     }
   }
+  const handleChangePassword = async (values) => {
+    console.log('Đang thử đổi mật khẩu với giá trị:', values)
+    try {
+      await changePassword({
+        oldPassword: values.oldPassword,
+        newPassword: values.newPassword,
+      })
+      toast.success('Đổi mật khẩu thành công!')
+      passwordForm.resetFields()
+      setAction('info')
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại.'
+      toast.error(errorMessage)
+    }
+  }
 
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}>
+        <Spin size='large' />
+      </div>
+    )
+  }
   if (!infoUser) {
     return <div className='profile-loading'>Không thể tải dữ liệu người dùng.</div>
   }
@@ -233,15 +265,19 @@ const ProfilePage = () => {
             </>
           )}
 
+          {/* Đổi mật khẩu */}
           {action === 'changePassword' && (
             <>
               <h4 className='content-title'>Đổi mật khẩu</h4>
               <Form
                 form={passwordForm}
-                // onFinish={handleChangePassword}
+                onFinish={handleChangePassword}
                 className='edit-form'
                 layout='vertical'>
+                {/* Các Form.Item không thay đổi... */}
                 <Form.Item
+                  id='change-password-form'
+
                   label='Nhập mật khẩu cũ'
                   name='oldPassword'
                   rules={[{ required: true, message: 'Hãy nhập mật khẩu cũ' }]}>

@@ -1,4 +1,4 @@
-import { apiDefault } from '.'
+import { apiDefault, api } from '.'
 import { ApiConstants } from '../constants/api.constant'
 
 const authApi = () => ({

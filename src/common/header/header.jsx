@@ -69,7 +69,7 @@ const Header = () => {
         </ul>
       </nav>
       <div className='header-right'>
-        <div className='search-icon'>
+        {/* <div className='search-icon'>
           <Search size={22} />
         </div>
         <div className='notification-icon'>
@@ -79,7 +79,7 @@ const Header = () => {
         <div className='messages-icon'>
           <Bell size={22} />
           <span className='badge'></span>
-        </div>
+        </div> */}
         <div className='profile-dropdown'>
           <div className='profile-avatar'>
             <img src={infoUser ? infoUser.avatarUrl : currentUser.avatarUrl} />

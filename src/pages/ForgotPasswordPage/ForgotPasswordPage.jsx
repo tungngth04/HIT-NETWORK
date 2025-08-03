@@ -77,7 +77,7 @@ const ForgotPasswordPage = () => {
 
           <div className='login-link'>
             <p>
-              Bạn đã có tài khoản? <Link to='/login'>Đăng nhập</Link>
+              Bạn đã có tài khoản? <Link to='/'>Đăng nhập</Link>
             </p>
           </div>
         </div>
