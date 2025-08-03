@@ -10,8 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/v5-patch-for-react-19": "^1.0.3",
     "@reduxjs/toolkit": "^2.8.2",
-    "antd": "^5.26.3",
+    "antd": "^5.26.7",
     "axios": "^1.10.0",
     "bootstrap-icons": "^1.13.1",
     "dayjs": "^1.11.13",

@@ -14,10 +14,10 @@ import ProfilePage from './pages/ProfilePage/ProfilePage'
 import Post from './pages/Admin/post/Post'
 import DetailPost from './pages/Admin/post/DetailPost'
 import toast, { Toaster } from 'react-hot-toast'
-import useAuth from './hooks/useAuth'
-import { useEffect } from 'react'
 import EventPage from './pages/eventPage/eventPage'
 import JobPage from './pages/jobPage/jobPage'
+import useAuth from './hooks/useAuth'
+import { useEffect } from 'react'
 function App() {
   const currentUser = useAuth()
   const role = currentUser.user?.role || []
@@ -80,7 +80,7 @@ function App() {
       ],
     },
     {
-      path: '/login',
+      path: '/',
       element: <LoginPage />,
     },
     {
@@ -92,7 +92,7 @@ function App() {
       element: <MainLayout />,
       children: [
         {
-          path: '/home',
+          path: 'home',
           element: <UserHomePage />,
           index: true,
         },
@@ -105,7 +105,7 @@ function App() {
           element: <JobPage />,
         },
         {
-          path: '/home/profile',
+          path: 'profile',
           element: <ProfilePage />,
         },
       ],
