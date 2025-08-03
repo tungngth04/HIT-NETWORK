@@ -62,7 +62,7 @@ function Post() {
       title: 'Người đăng',
       dataIndex: ['creator', 'fullName'], // ✅ lấy creator
       key: 'fullName',
-      width: 150,
+      width: 200,
       // align: 'center'
     },
     {
@@ -90,6 +90,7 @@ function Post() {
     {
       title: 'Hành động',
       width: 180,
+       align: 'center',
       key: 'action',
       render: (_, record) => (
         <div className='table-action'>

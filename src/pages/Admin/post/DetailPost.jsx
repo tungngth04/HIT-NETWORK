@@ -35,10 +35,12 @@ const PostDetail = () => {
         <div className='post-detail__main'>
           <h3>{post.title}</h3>
           <p>
-            <strong>Người đăng:</strong> {post.creator?.fullName || 'Không xác định'}
+            <span style={{fontWeight: 600}}> Người đăng: </span>
+           {post.creator?.fullName || 'Không xác định'}
           </p>
           <p>
-            <strong>Ngày đăng:</strong> {formatDate(post.createdAt)}
+            <span style={{fontWeight: 600}}>Ngày đăng: </span>
+             {formatDate(post.createdAt)}
           </p>
           <div className='post-detail__content'>
             <p>{post.description}</p>

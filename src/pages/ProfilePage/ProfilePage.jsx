@@ -68,7 +68,7 @@ const ProfilePage = () => {
   }
 
   if (!infoUser) {
-    return <div className='profile-loading'>Không thể tải dữ liệu người dùng.</div>
+    return <div className='profile-loading'></div>
   }
   const menuItems = [
     { key: 'info', label: 'Thông tin cá nhân' },
