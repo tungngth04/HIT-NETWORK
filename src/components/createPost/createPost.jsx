@@ -135,9 +135,6 @@ const CreatePost = ({ posts, onPostCreated }) => {
             <div className='modal-add-ons'>
               <span className='add-ons-title'>Thêm vào bài viết của bạn</span>
               <div className='add-ons-icons'>
-                <button className='icon-button'>
-                  <EmojiSmile size={24} />
-                </button>
                 <label htmlFor='file-upload' className='icon-button'>
                   <Image size={24} />
                 </label>
@@ -155,10 +152,8 @@ const CreatePost = ({ posts, onPostCreated }) => {
 
             <div className='modal-footer'>
               <div className='type-selector'>
-                <span>Type : </span>
-                <select>
-                  <option value='JOB'>Recruitment</option>
-                </select>
+                <p>Type : </p>
+                <p value='JOB'>Recruitment</p>
               </div>
               <button
                 onClick={handleSubmit}

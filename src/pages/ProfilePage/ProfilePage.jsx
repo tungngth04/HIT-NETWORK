@@ -275,6 +275,7 @@ const ProfilePage = () => {
                 layout='vertical'>
                 {/* Các Form.Item không thay đổi... */}
                 <Form.Item
+                  id='change-password-form'
                   label='Nhập mật khẩu cũ'
                   name='oldPassword'
                   rules={[{ required: true, message: 'Hãy nhập mật khẩu cũ' }]}>

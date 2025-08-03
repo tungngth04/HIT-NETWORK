@@ -61,15 +61,12 @@
     }
   }
   .footer-links {
-    a {
+    display: flex;
+    p {
       color: $light-text-color;
       font-size: $font-size-sm;
       text-decoration: none;
-      margin-left: 20px;
-
-      &:hover {
-        color: $primary-color;
-      }
+      margin-right: 26px;
     }
   }
 }

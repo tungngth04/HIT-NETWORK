@@ -201,12 +201,11 @@ $primary-orange-hover: #e57a00;
   .type-selector {
     font-size: 0.95rem;
     color: #333;
-    select {
-      margin-left: 8px;
-      border: 1px solid #ccc;
+    display: flex;
+    p {
+      margin-left: 4px;
       border-radius: 6px;
       padding: 4px 8px;
-      background-color: #f0f2f5;
       cursor: pointer;
       &:focus {
         outline: none;
