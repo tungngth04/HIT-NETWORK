@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { ChevronRight } from 'react-bootstrap-icons'
-import './SidebarWidget.scss'
+import './sidebarWidget.scss'
 
 const SidebarWidget = ({ title, items, type }) => {
   const filteredItems = useMemo(
