@@ -151,9 +151,9 @@
     align-items: center;
     justify-content: center;
     &--p {
-      display: grid;
-      grid-auto-flow: column;
-      grid-template-columns: 130px 200px;
+          display: grid;
+          grid-auto-flow: column;
+          grid-template-columns: 130px 200px;
     }
     p {
       margin: 0;
