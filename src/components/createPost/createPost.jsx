@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { EmojiSmile, Image, X } from 'react-bootstrap-icons'
 import { useSelector } from 'react-redux'
 import { createPostApi } from '../../apis/posts.api'
-import './CreatePost.scss'
+import './createPost.scss'
 import toast from 'react-hot-toast'
 import { info } from '../../apis/userProfile.api'
 
