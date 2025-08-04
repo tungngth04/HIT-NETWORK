@@ -1,4 +1,4 @@
-import { apiDefault } from '.'
+import { apiDefault, api } from '.'
 import { ApiConstants } from '../constants/api.constant'
 
 const authApi = () => ({
@@ -7,6 +7,17 @@ const authApi = () => ({
       username,
       password,
     }),
+  Me: () => apiDefault.get(ApiConstants.users.getMe),
+  forgotPassword: ({ username, email }) =>
+    apiDefault.post(ApiConstants.auth.forgotpassword, {
+      username,
+      email,
+    }),
+  changePassword: async ({ oldPassword, newPassword }) =>
+    api.put(ApiConstants.users.changePassword, {
+      oldPassword,
+      newPassword,
+    }),
 })
 
-export const { login } = authApi()
+export const { login, forgotPassword, changePassword } = authApi()
