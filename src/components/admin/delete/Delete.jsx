@@ -4,6 +4,7 @@ import { deleteEvents } from '../../../apis/events.api'
 import toast from 'react-hot-toast'
 import { deleteMembers } from '../../../apis/members.api'
 import { deletePost } from '../../../apis/postAdmin'
+import { deleteComment } from '../../../apis/commentAdmin'
 function DeleteMember({
   id,
   deletePopup,
@@ -12,6 +13,7 @@ function DeleteMember({
   username,
   fetchUsers,
   fetchPost,
+  fetchPostDetail
 }) {
   const handleClose = () => {
     setDeletePopup({
@@ -29,7 +31,13 @@ function DeleteMember({
         await deleteMembers(username)
         toast.success('Xoá thành viên thành công!')
         fetchUsers()
-      } else {
+      }
+       else if (deletePopup.type === 'comment') {
+        await deleteComment(id)
+        toast.success("Xóa comment thành công!")
+        fetchPostDetail()
+      } 
+      else {
         await deletePost(id)
         toast.success('Xoá bài đăng thành công!')
         fetchPost()
@@ -42,8 +50,10 @@ function DeleteMember({
           deletePopup.type === 'event'
             ? 'sự kiện'
             : deletePopup.type === 'user'
-            ? 'thành viên'
-            : 'bài đăng'
+              ? 'thành viên'
+              : deletePopup.type === 'comment'
+                ? 'comment'
+                : 'bài đăng'
         } thất bại!`,
       )
     }
@@ -62,6 +72,8 @@ function DeleteMember({
             ? 'Bạn có chắc chắn xóa tài khoản này không?'
             : deletePopup.type === 'event'
             ? 'Bạn có chắc chắn xóa sự kiện này không?'
+            : deletePopup.type === 'comment'
+            ? 'Bạn có chắc chắn xóa comment này không?'
             : 'Bạn có chắc chắn xóa bài đăng này không?'}
         </p>
         <div className='action'>

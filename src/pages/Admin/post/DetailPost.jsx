@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { getDetailpost } from '../../../apis/postAdmin'
+import { MdDelete } from 'react-icons/md'
 import './DetailPost.scss'
+import avatarDefault from '../../../assets/images/avatarDefault.jpg'
+import { FaCircleUser } from 'react-icons/fa6'
+import Delete from '../../../components/admin/delete/Delete'
 
 const PostDetail = () => {
   const [action, setAction] = useState('like')
   const [post, setPost] = useState(null)
   const { id } = useParams()
-
-  const fetchPost = async (id) => {
+  const [postId, setPostId] = useState()
+  const fetchPostDetail = async (id) => {
     try {
       const res = await getDetailpost(id)
       setPost(res?.data)
@@ -16,44 +20,66 @@ const PostDetail = () => {
       console.error('Lỗi khi lấy bài đăng:', error)
     }
   }
-
   useEffect(() => {
-    if (id) fetchPost(id)
+    if (id) fetchPostDetail(id)
   }, [id])
+
+  const [deletePopup, setDeletePopup] = useState({
+    open: false,
+    type: '', // 'user' hoặc 'event'
+  })
+  const handleDelete = (postId) => {
+    setPostId(postId)
+    setDeletePopup({
+      open: true,
+      type: 'comment',
+    })
+  }
 
   const formatDate = (iso) => {
     const d = new Date(iso)
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
+      d.getDate(),
+    ).padStart(2, '0')}`
   }
 
   if (!post) return <p>Đang tải dữ liệu bài đăng...</p>
 
   return (
     <div className='post-h2'>
-      <h2>Chi tiết bài đăng của người dùng</h2>
+      <h2 className='post-title'>Chi tiết bài đăng của người dùng</h2>
       <div className='post-detail'>
         <div className='post-detail__main'>
           <h3>{post.title}</h3>
           <p>
-            <span style={{fontWeight: 600}}> Người đăng: </span>
-           {post.creator?.fullName || 'Không xác định'}
+            <span style={{ fontWeight: 600 }}> Người đăng: </span>
+            {post.creator?.fullName || 'Không xác định'}
           </p>
           <p>
-            <span style={{fontWeight: 600}}>Ngày đăng: </span>
-             {formatDate(post.createdAt)}
+            <span style={{ fontWeight: 600 }}>Ngày đăng: </span>
+            {formatDate(post.createdAt)}
           </p>
           <div className='post-detail__content'>
-            <p>{post.description}</p>
+            <p style={{ lineHeight: '24px' }}>
+              <span style={{ fontWeight: 600 }}>Mô tả: </span>
+              {post.description}
+            </p>
           </div>
           <div className='image-wrapper'>
-            <img src={post.images?.[0]} alt='Hình ảnh bài đăng' />
+            {post.images?.[0] ? (
+              <img src={post.images[0]} alt='Hình ảnh bài đăng' />
+            ) : (
+              <p style={{ fontStyle: 'italic', color: '#888' }}>
+                Không có hình ảnh cho bài đăng này.
+              </p>
+            )}
           </div>
         </div>
 
         <div className='reaction'>
           <div className='reaction-action'>
             <p onClick={() => setAction('like')}>
-              <span className={action === 'like' ? 'change' : ''}>Like </span>
+              <span className={action === 'like' ? 'change' : ''}>Reaction </span>
               <span>̣({post.countReaction})</span>
             </p>
             <p onClick={() => setAction('comment')}>
@@ -69,9 +95,11 @@ const PostDetail = () => {
               ) : (
                 post.reactionResponseDTOS.map((r, i) => (
                   <div key={i} className='like'>
-                    <img src={r.avatarUrl || 'https://i.pravatar.cc/40'} alt='avatar' />
+                    <img src={r.userPostResponseDTO?.avatarUrl || avatarDefault} alt='avatar' />
                     <div className='like__info'>
-                      <p className='like__name'>{r.fullName}</p>
+                      <p className='like__name'>
+                        {r.userPostResponseDTO?.fullName || 'Người dùng ẩn danh'}
+                      </p>
                     </div>
                   </div>
                 ))
@@ -82,15 +110,39 @@ const PostDetail = () => {
               {post.commentResponseDTOS?.length === 0 ? (
                 <p>Chưa có bình luận nào.</p>
               ) : (
-                post.commentResponseDTOS.map((c, i) => (
-                  <div key={i} className='comment'>
-                    <img src={c.avatarUrl || 'https://i.pravatar.cc/40'} alt='avatar' />
+                post.commentResponseDTOS.map((c) => (
+                  <div key={c.commentId} className='comment'>
+                    {/* <img
+                      src={c.userPostResponseDTO?.avatarUrl || 'https://i.pravatar.cc/40'}
+                      alt='avatar'
+                    /> */}
                     <div className='comment__info'>
-                      <div>
-                        <p className='comment__name'>{c.fullName}</p>
-                        <p className='comment__time'>{formatDate(c.createdAt)}</p>
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'start',
+                          justifyContent: 'space-between',
+                          width: '100%',
+                        }}>
+                        <p className='comment__name'>
+                          <img
+                            src={c.userPostResponseDTO?.avatarUrl || avatarDefault}
+                            alt='avatar'
+                          />
+                          <div>
+                            {c.userPostResponseDTO?.fullName || 'Người dùng ẩn danh'}
+                            <p className='comment__time'>{formatDate(c.createdAt)}</p>
+                          </div>
+                        </p>
+                        <MdDelete
+                          size={25}
+                          color='#f5945c'
+                          className='comment__delete'
+                          onClick={() => handleDelete(c.commentId)}
+                        />
                       </div>
                       <p className='comment__text'>{c.content}</p>
+                      {/* <p className='comment__time'>{formatDate(c.createdAt)}</p> */}
                     </div>
                   </div>
                 ))
@@ -99,6 +151,16 @@ const PostDetail = () => {
           )}
         </div>
       </div>
+      {deletePopup.open && (
+        <Delete
+          id={postId}
+          // data={data}
+          // setData={setData}
+          setDeletePopup={setDeletePopup}
+          deletePopup={deletePopup}
+          fetchPostDetail={() => fetchPostDetail(id)}
+        />
+      )}
     </div>
   )
 }

@@ -47,6 +47,9 @@ export const ApiConstants = {
   adminPost: {
     getAllPost: '/user/jobs',
     getDetailpost: '/user/job',
-    deletePost: '/user/job'
+    deletePost: '/user/job',
+  },
+  adminComment: {
+    deleteComment: '/user/comment',
   },
 }
