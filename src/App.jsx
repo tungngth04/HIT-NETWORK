@@ -11,6 +11,8 @@ import Events from './pages/Admin/events/Events'
 import EventForm from './components/admin/event/EventForm'
 import LayoutAdmin from './layouts/LayoutAdmin/LayoutAdmin'
 import ProfilePage from './pages/ProfilePage/ProfilePage'
+import Post from './pages/Admin/post/Post'
+import DetailPost from './pages/Admin/post/DetailPost'
 import toast, { Toaster } from 'react-hot-toast'
 import EventPage from './pages/eventPage/eventPage'
 import JobPage from './pages/jobPage/jobPage'
@@ -19,24 +21,28 @@ import { useEffect } from 'react'
 function App() {
   const currentUser = useAuth()
   const role = currentUser.user?.role || []
-  const isAdmin = role.includes("BQT")
+  const isAdmin = role.includes('BQT')
   const location = useLocation()
   const path = location.pathname
   const naviagate = useNavigate()
-  console.log("role: ", role);
+  console.log('role: ', role)
   useEffect(() => {
-      if (!isAdmin && path.startsWith("/admin")) {
-        naviagate("/")
-      }
-  },[isAdmin, path, naviagate, role])
-  
+    if (!isAdmin && path.startsWith('/admin')) {
+      naviagate('/')
+    }
+  }, [isAdmin, path, naviagate, role])
+
   const elements = useRoutes([
     {
       path: '/admin',
-      element: isAdmin ? <LayoutAdmin /> : <MainLayout/>,
+      element: isAdmin ? <LayoutAdmin /> : <MainLayout />,
       children: [
         {
           path: '',
+          element: <Dashboard />,
+        },
+        {
+          path: 'dashboard',
           element: <Dashboard />,
         },
         {
@@ -63,10 +69,18 @@ function App() {
           path: 'events/edit/:id',
           element: <EventForm modal='edit' />,
         },
+        {
+          path: 'posts',
+          element: <Post/>
+        },
+        {
+          path: "post/detail/:id",
+          element: <DetailPost/>
+        }
       ],
     },
     {
-      path: '/login',
+      path: '/',
       element: <LoginPage />,
     },
     {
@@ -78,7 +92,7 @@ function App() {
       element: <MainLayout />,
       children: [
         {
-          path: '',
+          path: 'home',
           element: <UserHomePage />,
           index: true,
         },
@@ -91,7 +105,7 @@ function App() {
           element: <JobPage />,
         },
         {
-          path: '/profile',
+          path: 'profile',
           element: <ProfilePage />,
         },
       ],
@@ -99,9 +113,9 @@ function App() {
   ])
   return (
     <>
-      <Toaster position="top-right" reverseOrder={false} />
+      <Toaster position='top-right' reverseOrder={false} />
       {elements}
     </>
-  );
+  )
 }
 export default App

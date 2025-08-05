@@ -21,7 +21,7 @@ const Header = () => {
   const authen = useAuth()
   const handleLogout = () => {
     authen.clearUser()
-    navigate('/login')
+    navigate('/')
     toast.success('Đăng xuất thành công')
   }
   const handleInfor = () => {
@@ -57,19 +57,19 @@ const Header = () => {
             </NavLink>
           </li>
           <li>
-            <NavLink to='/home/EVENT' className={({ isActive }) => (isActive ? 'active' : '')}>
+            <NavLink to='/event' className={({ isActive }) => (isActive ? 'active' : '')}>
               Events
             </NavLink>
           </li>
           <li>
-            <NavLink to='/home/JOB' className={({ isActive }) => (isActive ? 'active' : '')}>
+            <NavLink to='/job' className={({ isActive }) => (isActive ? 'active' : '')}>
               Recruitment
             </NavLink>
           </li>
         </ul>
       </nav>
       <div className='header-right'>
-        <div className='search-icon'>
+        {/* <div className='search-icon'>
           <Search size={22} />
         </div>
         <div className='notification-icon'>
@@ -79,7 +79,7 @@ const Header = () => {
         <div className='messages-icon'>
           <Bell size={22} />
           <span className='badge'></span>
-        </div>
+        </div> */}
         <div className='profile-dropdown'>
           <div className='profile-avatar'>
             <img src={infoUser ? infoUser.avatarUrl : currentUser.avatarUrl} />

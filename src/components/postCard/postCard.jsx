@@ -9,7 +9,7 @@ import {
 } from 'react-bootstrap-icons'
 import toast from 'react-hot-toast'
 // import { likePostApi, applyToPostApi, bookmarkPostApi } from '../../apis/posts.api'
-import './PostCard.scss'
+import './postCard.scss'
 import { likePostApi, dellikePostApi } from '../../apis/posts.api'
 
 const PostCard = ({ post, onPostUpdate }) => {

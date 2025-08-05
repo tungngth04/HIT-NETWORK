@@ -58,12 +58,12 @@ const LoginPage = () => {
 
           <form className='login-form' onSubmit={handleSubmit}>
             <div className='input-group'>
-              <label htmlFor='msv'>MSV</label>
+              <label htmlFor='msv'>UserName</label>
               <input
                 type='text'
                 id='msv'
                 name='msv'
-                placeholder='Nhập mã sinh viên của bạn'
+                placeholder='Username'
                 onChange={(e) => setMsv(e.target.value)}
                 required
               />
@@ -76,7 +76,7 @@ const LoginPage = () => {
                   type={passwordShow ? 'text' : 'password'}
                   id='password'
                   name='password'
-                  placeholder='Nhập mật khẩu'
+                  placeholder='Password'
                   required
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={isLoading}

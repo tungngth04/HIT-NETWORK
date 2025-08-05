@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { EmojiSmile, Image, X } from 'react-bootstrap-icons'
 import { useSelector } from 'react-redux'
 import { createPostApi } from '../../apis/posts.api'
-import './CreatePost.scss'
+import './createPost.scss'
 import toast from 'react-hot-toast'
 import { info } from '../../apis/userProfile.api'
 
@@ -135,9 +135,6 @@ const CreatePost = ({ posts, onPostCreated }) => {
             <div className='modal-add-ons'>
               <span className='add-ons-title'>Thêm vào bài viết của bạn</span>
               <div className='add-ons-icons'>
-                <button className='icon-button'>
-                  <EmojiSmile size={24} />
-                </button>
                 <label htmlFor='file-upload' className='icon-button'>
                   <Image size={24} />
                 </label>
@@ -155,11 +152,8 @@ const CreatePost = ({ posts, onPostCreated }) => {
 
             <div className='modal-footer'>
               <div className='type-selector'>
-                <span>Type : </span>
-                <select>
-                  <option value='JOB'>Recruitment</option>
-
-                </select>
+                <p>Type : </p>
+                <p value='JOB'>Recruitment</p>
               </div>
               <button
                 onClick={handleSubmit}

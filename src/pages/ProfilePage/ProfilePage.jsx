@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { DatePicker, Form, Input, Radio, Space, Button, Spin, Upload } from 'antd'
 import dayjs from 'dayjs'
-// import { useUserProfile } from '../../hooks/userProfile'
-import avatar from '../../assets/images/hinh-anime-2.jpg'
 import './ProfilePage.scss'
 import { info, update } from '../../apis/userProfile.api'
+import { changePassword } from '../../apis/auth.api'
+import toast from 'react-hot-toast'
 
 const ProfilePage = () => {
   const [action, setAction] = useState('info')
   const [hoverIndex, setHoverIndex] = useState(null)
   const [infoUser, setInfoUser] = useState()
   const [editForm] = Form.useForm()
+  const [passwordForm] = Form.useForm()
+  const [isLoading, setIsLoading] = useState(true)
+
 
   // Get api lay thong tin nguoi dung
   const fetchGetUser = async () => {
@@ -36,13 +39,14 @@ const ProfilePage = () => {
       })
     } catch (error) {
       console.error('Lỗi: ', error)
+    } finally {
+      setIsLoading(false)
     }
   }
   useEffect(() => {
     fetchGetUser()
   }, [])
 
-  // PUT API chỉnh sửa thông
   const handleUpdateProfile = async (values) => {
     console.log(values.avatarUrl)
     const formData = new FormData()
@@ -51,7 +55,7 @@ const ProfilePage = () => {
     formData.append('dob', values.dob?.format('YYYY-MM-DD'))
     formData.append('email', values.email)
     formData.append('phone', values.phone)
-    const file = values.avatarUrl?.[0]?.originFileObj
+    const file =values.avatar?.[0]?.originFileObj
     if (file) {
       formData.append('avatar', file)
     }
@@ -60,15 +64,44 @@ const ProfilePage = () => {
       console.log('ádasd', formData)
       await fetchGetUser()
       setAction('info')
-      alert('Cập nhật thành công!')
+      toast.success("Cập nhật thông tin thành công!!")
     } catch {
-      alert('Cap nhat nguoi dung that bai')
-      console.log('ádasd', formData)
+      toast.error("Cập nhật thông tin thất bại!!")
+      // alert('Cap nhat nguoi dung that bai')
+      // console.log('ádasd', formData)
+    }
+  }
+  const handleChangePassword = async (values) => {
+    console.log('Đang thử đổi mật khẩu với giá trị:', values)
+    try {
+      await changePassword({
+        oldPassword: values.oldPassword,
+        newPassword: values.newPassword,
+      })
+      toast.success('Đổi mật khẩu thành công!')
+      passwordForm.resetFields()
+      setAction('info')
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại.'
+      toast.error(errorMessage)
     }
   }
 
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}>
+        <Spin size='large' />
+      </div>
+    )
+  }
   if (!infoUser) {
-    return <div className='profile-loading'>Không thể tải dữ liệu người dùng.</div>
+    return <div className='profile-loading'></div>
   }
   const menuItems = [
     { key: 'info', label: 'Thông tin cá nhân' },
@@ -85,7 +118,7 @@ const ProfilePage = () => {
           <img
             src={infoUser.avatarUrl}
             alt=''
-            style={{ width: '100px', height: '100px', borderRadius: '100%' }}
+            style={{ borderRadius: '100%' }}
           />
           <div className='user-details'>
             <p className='user-name'>{infoUser?.fullName}</p>
@@ -233,9 +266,58 @@ const ProfilePage = () => {
             </>
           )}
 
+          {/* Đổi mật khẩu */}
           {action === 'changePassword' && (
             <>
               <h4 className='content-title'>Đổi mật khẩu</h4>
+              <Form
+                form={passwordForm}
+                onFinish={handleChangePassword}
+                className='edit-form'
+                layout='vertical'>
+                {/* Các Form.Item không thay đổi... */}
+                <Form.Item
+                  id='change-password-form'
+
+                  label='Nhập mật khẩu cũ'
+                  name='oldPassword'
+                  rules={[{ required: true, message: 'Hãy nhập mật khẩu cũ' }]}>
+                  <Input.Password className='edit-input' />
+                </Form.Item>
+                <Form.Item
+                  label='Nhập mật khẩu mới'
+                  name='newPassword'
+                  rules={[{ required: true, message: 'Hãy nhập mật khẩu mới' }]}>
+                  <Input.Password className='edit-input' />
+                </Form.Item>
+                <Form.Item
+                  label='Xác nhận mật khẩu'
+                  name='confirmPassword'
+                  dependencies={['newPassword']}
+                  rules={[
+                    { required: true, message: 'Hãy xác nhận mật khẩu' },
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        if (!value || getFieldValue('newPassword') === value) {
+                          return Promise.resolve()
+                        }
+                        return Promise.reject(new Error('Mật khẩu mới không khớp!'))
+                      },
+                    }),
+                  ]}>
+                  <Input.Password className='edit-input' />
+                </Form.Item>
+                <Form.Item className='form-buttons'>
+                  <Space>
+                    <Button onClick={() => passwordForm.resetFields()} className='cancel-button'>
+                      Hủy
+                    </Button>
+                    <Button type='primary' htmlType='submit' className='submit-button'>
+                      Xác nhận
+                    </Button>
+                  </Space>
+                </Form.Item>
+              </Form>
             </>
           )}
         </div>

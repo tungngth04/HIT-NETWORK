@@ -28,8 +28,8 @@ const Footer = () => {
           </div>
         </div>
         <div className='footer-links'>
-          <a href='#'>Privacy Policy</a>
-          <a href='#'>Terms and Conditions</a>
+          <p>Privacy Policy</p>
+          <p>Terms and Conditions</p>
         </div>
       </div>
     </footer>
