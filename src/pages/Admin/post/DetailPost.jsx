@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { getDetailpost } from '../../../apis/postAdmin'
 import { MdDelete } from 'react-icons/md'
 import './DetailPost.scss'
 import avatarDefault from '../../../assets/images/avatarDefault.jpg'
-import { FaCircleUser } from 'react-icons/fa6'
+import { IoArrowBackSharp } from "react-icons/io5";
 import Delete from '../../../components/admin/delete/Delete'
 
 const PostDetail = () => {
   const [action, setAction] = useState('like')
   const [post, setPost] = useState(null)
   const { id } = useParams()
+  const navigate = useNavigate()
   const [postId, setPostId] = useState()
   const fetchPostDetail = async (id) => {
     try {
@@ -47,7 +48,11 @@ const PostDetail = () => {
 
   return (
     <div className='post-h2'>
-      <h2 className='post-title'>Chi tiết bài đăng của người dùng</h2>
+      <div className='title'>
+        <IoArrowBackSharp className='title__icon' onClick={() => navigate('/admin/posts')}/>
+        <h2 className='post-title'>Chi tiết bài đăng của người dùng</h2>
+      </div>
+      
       <div className='post-detail'>
         <div className='post-detail__main'>
           <h3>{post.title}</h3>

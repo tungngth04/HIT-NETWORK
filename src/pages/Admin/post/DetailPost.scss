@@ -1,6 +1,20 @@
+@use '../../../styles//index' as style;
+.title{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: style.$secondary-color;
+  margin-bottom: 20px;
+  &__icon{
+    font-size: 24px;
+    cursor: pointer;
+  }
+}
 .post-title {
   font-size: 24px;
-  margin-bottom: 8px;
+  margin-bottom: 0px;
+  padding-bottom: 0px;
+
 }
 .post-detail {
   display: flex;
