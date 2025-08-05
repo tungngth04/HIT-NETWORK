@@ -7,7 +7,7 @@ import { Pagination } from 'antd'
 import Import from '../../../components/admin/import/Import'
 import Delete from '../../../components/admin/delete/Delete'
 import { getAllEvents } from '../../../apis/events.api'
-import { current } from '@reduxjs/toolkit'
+import { IoMdAddCircle } from 'react-icons/io'
 import dayjs from 'dayjs'
 
 function Events() {
@@ -130,8 +130,7 @@ function Events() {
       setEvents(response?.data)
     } catch (error) {
       console.error(error)
-      console.log("Sai su kien get all events");
-      
+      console.log('Sai su kien get all events')
     } finally {
       setLoading(false)
     }
@@ -153,8 +152,7 @@ function Events() {
         item.title
           ?.toLowerCase()
           .split(' ')
-          .some((word) => word === value) ||
-        item.organizer?.toLowerCase().includes(value) 
+          .some((word) => word === value) || item.organizer?.toLowerCase().includes(value)
         // ||
         // item.email?.toLowerCase().includes(value)
       )
@@ -172,18 +170,24 @@ function Events() {
           />
         </div>
         <div className='members-toolbar__actions'>
-          <button className='button button--search' onClick={() => handleSearch()}>Tìm kiếm</button>
-          <div style={{ marginLeft: '400px' }}>
-            <button className='button button--add' onClick={handleCreate}>
+          <button className='button button--search' onClick={() => handleSearch()}>
+            Tìm kiếm
+          </button>
+          {/* <div> */}
+          {/* <button className='button button--add' onClick={handleCreate}>
               Thêm
-            </button>
-            <button
+            </button> */}
+          <div className='button-add' onClick={handleCreate}>
+            <IoMdAddCircle className='icon-add' />
+            <p className='title-add'>Thêm </p>
+          </div>
+          {/* <button
               className='button button--import'
               onClick={handleImport}
               style={{ marginLeft: '10px' }}>
               Import
-            </button>
-          </div>
+            </button> */}
+          {/* </div> */}
         </div>
       </div>
       <Table
@@ -201,7 +205,7 @@ function Events() {
         <Pagination
           align='end'
           defaultCurrent={pagination.current}
-          total={searchValue ? filteredData.length :events?.totalElements}
+          total={searchValue ? filteredData.length : events?.totalElements}
           pageSize={pagination.size}
           showSizeChanger
           onChange={handlePageChange}
