@@ -5,6 +5,7 @@ import CreatePost from '../../components/createPost/createPost'
 import { getJobApi } from '../../apis/posts.api'
 import './jobPage.scss'
 import JobPostCard from '../../components/jobPostCard/jobPostCard'
+import JobDetails from '../../components/jobDetails/jobDetails'
 
 const JobPage = () => {
   const [pagination, setPagination] = useState({
@@ -14,6 +15,7 @@ const JobPage = () => {
   const [posts, setPosts] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [totalPosts, setTotalPosts] = useState(0)
+  const [selectedPost, setSelectedPost] = useState(null)
 
   const fetchPosts = async () => {
     try {
@@ -50,6 +52,25 @@ const JobPage = () => {
       size: pageSize || prev.size,
     }))
   }
+  const handleViewPostDetail = (postToView) => {
+    console.log('UserHomePage nhận được post có ID:', postToView.postId)
+
+    setSelectedPost(postToView)
+  }
+  const handleCommentAdded = (targetPostId) => {
+    setPosts((currentPosts) =>
+      currentPosts.map((p) => {
+        if ((p.postId === targetPostId) === targetPostId) {
+          return { ...p, countComment: p.countComment + 1 }
+        }
+        return p
+      }),
+    )
+  }
+
+  const handleCloseModal = () => {
+    setSelectedPost(null)
+  }
 
   if (isLoading) {
     return <div>Đang tải bài viết...</div>
@@ -62,7 +83,9 @@ const JobPage = () => {
         {isLoading ? (
           <div className='loading-indicator'>Đang tải bài viết...</div>
         ) : posts && posts.length > 0 ? (
-          posts.map((post, index) => <JobPostCard key={post.id || index} post={post} />)
+          posts.map((post, index) => (
+            <JobPostCard key={post.id || index} post={post} onViewDetail={handleViewPostDetail} />
+          ))
         ) : (
           <div className='no-posts-message'>Chưa có bài đăng nào để hiển thị.</div>
         )}
@@ -78,6 +101,14 @@ const JobPage = () => {
             />
           )}
         </div>
+        {selectedPost && (
+          <JobDetails
+            key={selectedPost.postId || selectedPost.eventId}
+            post={selectedPost}
+            onClose={handleCloseModal}
+            onCommentAdded={handleCommentAdded}
+          />
+        )}
       </div>
     </div>
   )

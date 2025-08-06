@@ -1,31 +1,38 @@
-import React, { useState } from 'react'
-import {
-  HandThumbsUpFill,
-  HandThumbsUp,
-  Chat,
-  // BookmarkFill, // Bỏ import không dùng
-  // Bookmark, // Bỏ import không dùng
-  Handbag,
-} from 'react-bootstrap-icons'
+import React, { useEffect, useState } from 'react'
+import { HandThumbsUpFill, HandThumbsUp, Chat, Handbag } from 'react-bootstrap-icons'
 import toast from 'react-hot-toast'
 import './postCard.scss'
-// Bỏ import getPostsdetail không dùng
 import { likePostApi, dellikePostApi, createCommentApi } from '../../apis/posts.api'
 import ImportCvModal from '../importcv/importcv'
+import { info } from '../../apis/userProfile.api'
+import { useSelector } from 'react-redux'
 
 const PostCard = ({ post, onViewDetail }) => {
+  const authState = useSelector((state) => state.auth.auth)
+  const currentUser = authState
   const [isLoadingApply, setIsLoadingApply] = useState(false)
-  // Sử dụng optional chaining (?.) để phòng trường hợp post không có các thuộc tính này
   const [isLiked, setIsLiked] = useState(post?.checkReaction || false)
   const [likeCount, setLikeCount] = useState(post?.countReaction || 0)
   const [isCvModalOpen, setIsCvModalOpen] = useState(false)
+  const [infoUser, setInfoUser] = useState()
+  const fetchUser = async () => {
+    try {
+      const response = await info()
+      const userData = response?.data?.fullName
+      setInfoUser(userData)
+      console.log('userdata', response)
+    } catch (err) {
+      toast.error('Lỗi khi tải thông tin người dùng')
+    }
+  }
 
-  console.log('post', post)
+  useEffect(() => {
+    if (currentUser) {
+      fetchUser()
+    }
+  }, [currentUser])
 
   const handleOpenDetail = () => {
-    // Gọi hàm từ component cha và truyền `post` hiện tại lên
-    console.log('PostCard đang gửi lên ID:', post.postId || post.eventId)
-
     if (onViewDetail) {
       onViewDetail(post)
     }
@@ -35,38 +42,30 @@ const PostCard = ({ post, onViewDetail }) => {
     const originalLikedState = isLiked
     const originalLikeCount = likeCount
 
-    // --- SỬA LỖI LOGIC: Cập nhật cả isLiked và likeCount để UI phản hồi ngay lập tức ---
     setIsLiked(!originalLikedState)
     setLikeCount(originalLikedState ? likeCount - 1 : likeCount + 1)
 
     try {
       if (originalLikedState) {
-        // Người dùng hủy like
         await dellikePostApi({
           targetId: post.postId,
           targetType: post.targetType,
         })
-        // Có thể gọi onPostUpdate ở đây nếu cần cập nhật lại danh sách
         if (onPostUpdate) {
-          // Giả sử API không trả về dữ liệu mới, bạn có thể tự tạo hoặc fetch lại
         }
       } else {
-        // Người dùng nhấn like
-        // --- SỬA LỖI NGHIÊM TRỌNG: Gán kết quả API cho biến 'response' ---
         const response = await likePostApi({
           targetId: post.postId,
           targetType: post.targetType,
           emotionType: 'LIKE',
         })
 
-        // Kiểm tra và gọi onPostUpdate nếu có
         if (response?.data && onPostUpdate) {
           onPostUpdate(response.data)
         }
       }
     } catch (error) {
       toast.error('Đã có lỗi xảy ra khi thực hiện thao tác.')
-      // Nếu có lỗi, khôi phục lại trạng thái ban đầu
       setIsLiked(originalLikedState)
       setLikeCount(originalLikeCount)
     }
@@ -80,7 +79,7 @@ const PostCard = ({ post, onViewDetail }) => {
     <div className='post-card'>
       <div className='post-header'>
         <img
-          src={post?.creator?.avatarUrl} // Thêm optional chaining để an toàn hơn
+          src={post?.creator?.avatarUrl}
           alt={`${post?.creator?.fullName}'s avatar`}
           className='post-avatar'
         />
@@ -106,7 +105,7 @@ const PostCard = ({ post, onViewDetail }) => {
           <button onClick={handleOpenDetail} className='action-button'>
             <Chat /> <span>{post.countComment}</span>
           </button>
-          {post.targetType === 'JOB' && (
+          {post.targetType === 'JOB' && post?.creator?.fullName !== infoUser && (
             <button
               onClick={handleApply}
               className='action-button apply-button'
@@ -116,7 +115,6 @@ const PostCard = ({ post, onViewDetail }) => {
           )}
         </div>
       </div>
-      {/* Render Modal có điều kiện */}
       {isCvModalOpen && (
         <ImportCvModal postId={post.postId} onClose={() => setIsCvModalOpen(false)} />
       )}

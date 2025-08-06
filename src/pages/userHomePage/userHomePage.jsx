@@ -58,7 +58,6 @@ const UserHomePage = () => {
 
     setSelectedPost(postToView)
   }
-  // HÀM MỚI: Tăng số lượng bình luận của một bài đăng
   const handleCommentAdded = (targetPostId) => {
     setPosts((currentPosts) =>
       currentPosts.map((p) => {
@@ -70,7 +69,6 @@ const UserHomePage = () => {
     )
   }
 
-  // HÀM MỚI: Xử lý khi đóng modal
   const handleCloseModal = () => {
     setSelectedPost(null)
   }

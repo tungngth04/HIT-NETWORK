@@ -1,35 +1,18 @@
 import React, { useState } from 'react'
-import {
-  HandThumbsUpFill,
-  HandThumbsUp,
-  Chat,
-  BookmarkFill,
-  Bookmark,
-  Handbag,
-} from 'react-bootstrap-icons'
+import { HandThumbsUpFill, HandThumbsUp, Chat } from 'react-bootstrap-icons'
 import toast from 'react-hot-toast'
-// import { likePostApi, applyToPostApi, bookmarkPostApi } from '../../apis/posts.api'
 import './eventPostCard.scss'
 import { likePostApi, dellikePostApi } from '../../apis/posts.api'
 
-const EventPostCard = ({ post }) => {
-  const [isLoadingApply, setIsLoadingApply] = useState(false)
-  // Sử dụng optional chaining (?.) để phòng trường hợp post không có các thuộc tính này
+const EventPostCard = ({ post, onViewDetail }) => {
   const [isLiked, setIsLiked] = useState(post?.checkReaction || false)
   const [likeCount, setLikeCount] = useState(post?.countReaction || 0)
-  const [showComments, setShowComments] = useState(false) // Ẩn/hiện khu vực bình luận
-  const [comments, setComments] = useState([]) // Danh sách bình luận
-  const [isLoadingComments, setIsLoadingComments] = useState(false)
-  const [newComment, setNewComment] = useState('') // Nội dung bình luận mới
-  const [isSubmittingComment, setIsSubmittingComment] = useState(false)
-  const [isCvModalOpen, setIsCvModalOpen] = useState(false)
-  const [isUpdate, setIsupdate] = useState(false)
+
   console.log('post', post)
   const handleLike = async () => {
     const originalLikedState = isLiked
     const originalLikeCount = likeCount
 
-    // --- SỬA LỖI LOGIC: Cập nhật cả isLiked và likeCount để UI phản hồi ngay lập tức ---
     setIsLiked(!originalLikedState)
     setLikeCount(originalLikedState ? likeCount - 1 : likeCount + 1)
 
@@ -52,56 +35,23 @@ const EventPostCard = ({ post }) => {
           emotionType: 'LIKE',
         })
 
-        // Kiểm tra và gọi onPostUpdate nếu có
         if (response?.data && onPostUpdate) {
           onPostUpdate(response.data)
         }
       }
     } catch (error) {
       toast.error('Đã có lỗi xảy ra khi thực hiện thao tác.')
-      // Nếu có lỗi, khôi phục lại trạng thái ban đầu
       setIsLiked(originalLikedState)
       setLikeCount(originalLikeCount)
     }
   }
-  const handleCommentClick = async () => {
-    // Bật/tắt khu vực bình luận
-    const newShowCommentsState = !showComments
-    setShowComments(newShowCommentsState)
 
-    // Chỉ gọi API lần đầu tiên khi mở khu vực bình luận
-    if (newShowCommentsState && comments.length === 0) {
-      setIsLoadingComments(true)
-      try {
-        setComments(post.data.content || [])
-      } catch (error) {
-        toast.error('Không thể tải bình luận.')
-      } finally {
-        setIsLoadingComments(false)
-      }
-    }
-  }
-  const handleCommentSubmit = async (e) => {
-    e.preventDefault()
-    if (!newComment.trim()) return
+  const handleOpenDetail = () => {
+    console.log('PostCard đang gửi lên ID:', post.postId || post.eventId)
 
-    setIsSubmittingComment(true)
-    try {
-      const response = await createCommentApi({ postId: post.postId, content: newComment })
-      // Thêm bình luận mới vào đầu danh sách để người dùng thấy ngay lập tức
-      setComments((prevComments) => [response.data.data, ...prevComments])
-      setNewComment('') // Xóa nội dung trong ô input
-    } catch (error) {
-      toast.error('Gửi bình luận không thành công.')
-    } finally {
-      setIsSubmittingComment(false)
+    if (onViewDetail) {
+      onViewDetail(post)
     }
-  }
-  const handleApply = () => {
-    setIsCvModalOpen(true)
-  }
-  const handleUpdate = () => {
-    setIsupdate(true)
   }
 
   return (
@@ -116,7 +66,7 @@ const EventPostCard = ({ post }) => {
           <span className='post-user-name'>{post.creator.fullName}</span>
           <span className='post-user-details'>{new Date(post.createdAt).toLocaleDateString()}</span>
         </div>
-        {post.targetType === 'EVENT' && <span className='recruit-tag'>Event</span>}
+        <span className='recruit-tag'>Event</span>
       </div>
       <p className='post-title'> {post.title}</p>
       <p className='post-content'> {post.description}</p>
@@ -130,7 +80,7 @@ const EventPostCard = ({ post }) => {
           <button onClick={handleLike} className={`action-button ${isLiked ? 'active' : ''}`}>
             {isLiked ? <HandThumbsUpFill /> : <HandThumbsUp />} <span>{likeCount}</span>
           </button>
-          <button className='action-button'>
+          <button onClick={handleOpenDetail} className='action-button'>
             <Chat /> <span>{post.countComment}</span>
           </button>
         </div>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
-import { creatcv } from '../../apis/posts.api' // Import hàm API đã được cập nhật
+import { creatcv } from '../../apis/posts.api'
 import './importcv.scss'
 
 const ImportCvModal = ({ postId, onClose }) => {
@@ -21,18 +21,14 @@ const ImportCvModal = ({ postId, onClose }) => {
     }
     setIsLoading(true)
     try {
-      // --- Logic tạo FormData nằm trực tiếp trong component ---
-      // 1. Tạo một đối tượng FormData
       const formData = new FormData()
-      // 2. Thêm file CV vào formData với key là 'cv' (hoặc key mà backend yêu cầu)
       formData.append('file', cvFile)
-      formData.append('postId', postId) // <<< THÊM DÒNG NÀY
+      formData.append('postId', postId)
 
-      // 3. Gọi API và truyền postId cùng với formData
       await creatcv(formData)
 
       toast.success('Nộp CV thành công!')
-      onClose() // Đóng modal sau khi thành công
+      onClose()
     } catch (error) {
       toast.error(error.response?.data?.message || 'Nộp CV không thành công.')
     } finally {

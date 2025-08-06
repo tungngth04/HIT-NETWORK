@@ -3,10 +3,7 @@ import { ChevronRight } from 'react-bootstrap-icons'
 import './sidebarWidget.scss'
 
 const SidebarWidget = ({ title, items, type }) => {
-  const filteredItems = useMemo(
-    () => items.slice(0, 3), // Bỏ đi hàm .filter()
-    [items], // Bỏ 'type' khỏi dependency array vì không dùng đến nữa
-  )
+  const filteredItems = useMemo(() => items.slice(0, 3), [items])
 
   return (
     <div className='sidebar-widget'>

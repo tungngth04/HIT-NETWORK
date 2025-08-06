@@ -14,8 +14,6 @@ const ProfilePage = () => {
   const [passwordForm] = Form.useForm()
   const [isLoading, setIsLoading] = useState(true)
 
-
-  // Get api lay thong tin nguoi dung
   const fetchGetUser = async () => {
     try {
       const response = await info()
@@ -277,7 +275,6 @@ const ProfilePage = () => {
                 {/* Các Form.Item không thay đổi... */}
                 <Form.Item
                   id='change-password-form'
-
                   label='Nhập mật khẩu cũ'
                   name='oldPassword'
                   rules={[{ required: true, message: 'Hãy nhập mật khẩu cũ' }]}>

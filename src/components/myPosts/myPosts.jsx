@@ -8,16 +8,13 @@ import {
   Handbag,
 } from 'react-bootstrap-icons'
 import toast from 'react-hot-toast'
-// import { likePostApi, applyToPostApi, bookmarkPostApi } from '../../apis/posts.api'
 import './myPosts.scss'
 import { likePostApi, dellikePostApi } from '../../apis/posts.api'
-import ImportCvModal from '../importcv/importcv'
 import UpdatePost from '../updatePost/updatePost'
 import DownloadCvModal from '../downloadCv/downloadCv'
 
-const MyPosts = ({ post, onPostUpdated }) => {
+const MyPosts = ({ post, onPostUpdated, onViewDetail }) => {
   const [isLoadingApply, setIsLoadingApply] = useState(false)
-  // Sử dụng optional chaining (?.) để phòng trường hợp post không có các thuộc tính này
   const [isLiked, setIsLiked] = useState(post?.checkReaction || false)
   const [likeCount, setLikeCount] = useState(post?.countReaction || 0)
   const [isCvModalOpen, setIsCvModalOpen] = useState(false)
@@ -34,23 +31,19 @@ const MyPosts = ({ post, onPostUpdated }) => {
     const originalLikedState = isLiked
     const originalLikeCount = likeCount
 
-    // --- SỬA LỖI LOGIC: Cập nhật cả isLiked và likeCount để UI phản hồi ngay lập tức ---
     setIsLiked(!originalLikedState)
     setLikeCount(originalLikedState ? likeCount - 1 : likeCount + 1)
 
     try {
       if (originalLikedState) {
-        // Người dùng hủy like
         await dellikePostApi({
           targetId: post.postId,
           targetType: 'JOB',
         })
-        // Có thể gọi onPostUpdate ở đây nếu cần cập nhật lại danh sách
-        setIsLiked(false) // MỚI cập nhật UI
-        setLikeCount(likeCount - 1) // Điều này khiến UI bị phụ thuộc vào API
+
+        setIsLiked(false)
+        setLikeCount(likeCount - 1)
       } else {
-        // Người dùng nhấn like
-        // --- SỬA LỖI NGHIÊM TRỌNG: Gán kết quả API cho biến 'response' ---
         const response = await likePostApi({
           targetId: post.postId,
           targetType: 'JOB',
@@ -59,7 +52,6 @@ const MyPosts = ({ post, onPostUpdated }) => {
       }
     } catch (error) {
       toast.error('Đã có lỗi xảy ra khi thực hiện thao tác.')
-      // Nếu có lỗi, khôi phục lại trạng thái ban đầu
       setIsLiked(originalLikedState)
       setLikeCount(originalLikeCount)
     }
@@ -70,6 +62,13 @@ const MyPosts = ({ post, onPostUpdated }) => {
   }
   const handleUpdate = () => {
     setIsUpdate(true)
+  }
+  const handleOpenDetail = () => {
+    console.log('PostCard đang gửi lên ID:', post.postId || post.eventId)
+
+    if (onViewDetail) {
+      onViewDetail(post)
+    }
   }
 
   return (
@@ -98,7 +97,7 @@ const MyPosts = ({ post, onPostUpdated }) => {
           <button onClick={handleLike} className={`action-button ${isLiked ? 'active' : ''}`}>
             {isLiked ? <HandThumbsUpFill /> : <HandThumbsUp />} <span>{likeCount}</span>
           </button>
-          <button className='action-button'>
+          <button onClick={handleOpenDetail} className='action-button'>
             <Chat /> <span>{post.countComment}</span>
           </button>
 
@@ -113,17 +112,11 @@ const MyPosts = ({ post, onPostUpdated }) => {
           </a>
         </div>
       </div>
-      {/* Render Modal có điều kiện */}
       {isCvModalOpen && (
         <DownloadCvModal postId={post.postId} onClose={() => setIsCvModalOpen(false)} />
       )}
       {isUpdate && (
-        <UpdatePost
-          postId={post.postId}
-          onClose={() => setIsUpdate(false)}
-          // Truyền hàm xuống cho popup
-          onPostUpdated={onPostUpdated}
-        />
+        <UpdatePost post={post} onClose={() => setIsUpdate(false)} onPostUpdated={onPostUpdated} />
       )}
     </div>
   )

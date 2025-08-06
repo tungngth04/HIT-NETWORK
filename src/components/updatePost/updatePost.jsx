@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { EmojiSmile, Image as ImageIcon } from 'react-bootstrap-icons'
-// import { updatePostApi } from '../../apis/posts.api'
 import toast from 'react-hot-toast'
-import './updatePost.scss' // Dùng chung style với CreatePost hoặc tạo file riêng
+import './updatePost.scss'
 import { updatePost } from '../../apis/posts.api'
 
 const UpdatePost = ({ post, onPostUpdated, onClose }) => {
-  // State được khởi tạo với dữ liệu từ bài đăng cũ
   const [title, setTitle] = useState(post.title || '')
   const [content, setContent] = useState(post.description || '')
   const [imagePreview, setImagePreview] = useState(post.urlImage || '')

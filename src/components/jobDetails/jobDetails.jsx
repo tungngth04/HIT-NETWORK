@@ -1,20 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react'
 import toast from 'react-hot-toast'
 import { HandThumbsUp, Chat, HandThumbsUpFill, Handbag } from 'react-bootstrap-icons'
-import './PostDetailModal.scss'
-import {
-  dellikePostApi,
-  likePostApi,
-  getPostsdetail,
-  getJobPostAPI,
-  createCommentApi,
-} from '../../apis/posts.api'
+import './jobDetails.scss'
+import { dellikePostApi, likePostApi, getJobPostAPI, createCommentApi } from '../../apis/posts.api'
 import ImportCvModal from '../importcv/importcv'
+import { useSelector } from 'react-redux'
+import { info } from '../../apis/userProfile.api'
 
-const PostDetailModal = ({ post, onClose, onCommentAdded }) => {
+const JobDetails = ({ post, onClose, onCommentAdded }) => {
+  const authState = useSelector((state) => state.auth.auth)
+  const currentUser = authState
   const [isLiked, setIsLiked] = useState(post?.checkReaction || false)
   const [likeCount, setLikeCount] = useState(post?.countReaction || 0)
   const commentInputRef = useRef(null)
+  const [infoUser, setInfoUser] = useState()
 
   const [comments, setComments] = useState([])
   const [isLoadingComments, setIsLoadingComments] = useState(true)
@@ -22,6 +21,22 @@ const PostDetailModal = ({ post, onClose, onCommentAdded }) => {
   const [isSubmittingComment, setIsSubmittingComment] = useState(false)
   const [isCvModalOpen, setIsCvModalOpen] = useState(false)
   const [isLoadingApply, setIsLoadingApply] = useState(false)
+  const fetchUser = async () => {
+    try {
+      const response = await info()
+      const userData = response?.data?.fullName
+      setInfoUser(userData)
+      console.log('userdata', response)
+    } catch (err) {
+      toast.error('Lỗi khi tải thông tin người dùng')
+    }
+  }
+
+  useEffect(() => {
+    if (currentUser) {
+      fetchUser()
+    }
+  }, [currentUser])
 
   useEffect(() => {
     const fetchPostDetailsAndComments = async () => {
@@ -36,12 +51,11 @@ const PostDetailModal = ({ post, onClose, onCommentAdded }) => {
       console.log('targetId', targetId)
       try {
         let response
-        if (post.targetType === 'JOB') {
-          response = await getJobPostAPI(targetId)
-        } else if (post.targetType === 'EVENT') {
-          response = await getPostsdetail({ eventId: targetId })
-        }
+
+        response = await getJobPostAPI(targetId)
+
         console.log('idddddđ', targetId)
+
         const commentsData = response?.data?.commentResponseDTOS || []
         setComments(commentsData)
       } catch (error) {
@@ -68,8 +82,8 @@ const PostDetailModal = ({ post, onClose, onCommentAdded }) => {
     setLikeCount((prev) => (originalLikedState ? prev - 1 : prev + 1))
     try {
       const targetId = post.postId || post.eventId
-      if (originalLikedState) await dellikePostApi({ targetId, targetType: post.targetType })
-      else await likePostApi({ targetId, targetType: post.targetType, emotionType: 'LIKE' })
+      if (originalLikedState) await dellikePostApi({ targetId, targetType: 'JOB' })
+      else await likePostApi({ targetId, targetType: 'JOB', emotionType: 'LIKE' })
     } catch (error) {
       toast.error('Thao tác không thành công.')
       setIsLiked(originalLikedState)
@@ -85,7 +99,7 @@ const PostDetailModal = ({ post, onClose, onCommentAdded }) => {
       const targetId = post.postId || post.eventId
       const response = await createCommentApi({
         targetId,
-        targetType: post.targetType,
+        targetType: 'JOB',
         content: newComment,
       })
       setComments((prev) => [response.data, ...prev])
@@ -118,8 +132,7 @@ const PostDetailModal = ({ post, onClose, onCommentAdded }) => {
                   {new Date(post.createdAt).toLocaleDateString()}
                 </span>
               </div>
-              {post.targetType === 'JOB' && <span className='recruit-tag'>Recruitment</span>}
-              {post.targetType === 'EVENT' && <span className='recruit-tag event'>Event</span>}
+              <span className='recruit-tag'>Recruitment</span>
             </div>
             <p className='post-title'>{post.title}</p>
             <p className='post-content'>{post.description}</p>
@@ -136,7 +149,7 @@ const PostDetailModal = ({ post, onClose, onCommentAdded }) => {
                 <button onClick={handleFocusCommentInput} className='action-button'>
                   <Chat /> <span>{comments.length}</span>
                 </button>
-                {post.targetType === 'JOB' && (
+                {post?.creator?.fullName !== infoUser && (
                   <button onClick={handleApply} className='action-button apply-button'>
                     <Handbag /> <span>{isLoadingApply ? 'Applying...' : 'Apply'}</span>
                   </button>
@@ -192,4 +205,4 @@ const PostDetailModal = ({ post, onClose, onCommentAdded }) => {
   )
 }
 
-export default PostDetailModal
+export default JobDetails

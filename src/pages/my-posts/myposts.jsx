@@ -5,6 +5,7 @@ import CreatePost from '../../components/createPost/createPost'
 import { getmyposts } from '../../apis/posts.api'
 import './myposts.scss'
 import MyPosts from '../../components/myPosts/myPosts'
+import MyPostDtails from '../../components/myPostDetails/myPostDetails'
 
 const Myposts = () => {
   const [pagination, setPagination] = useState({
@@ -14,7 +15,7 @@ const Myposts = () => {
   const [posts, setPosts] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [totalPosts, setTotalPosts] = useState(0)
-  console.log('Cấu trúc của một bài đăng:', posts[0]) // Xem log này trong Console
+  const [selectedPost, setSelectedPost] = useState(null)
 
   const fetchPosts = async () => {
     try {
@@ -51,10 +52,26 @@ const Myposts = () => {
       size: pageSize || prev.size,
     }))
   }
-  // HÀM QUAN TRỌNG: Nhận bài đăng đã cập nhật và thay thế nó trong state
-  const handlePostUpdated = (updatedPost) => {
-    console.log('Myposts Page: Hàm handlePostUpdated ĐÃ ĐƯỢC GỌI với:', updatedPost)
+  const handleViewPostDetail = (postToView) => {
+    console.log('UserHomePage nhận được post có ID:', postToView.postId)
 
+    setSelectedPost(postToView)
+  }
+  const handleCommentAdded = (targetPostId) => {
+    setPosts((currentPosts) =>
+      currentPosts.map((p) => {
+        if ((p.postId === targetPostId) === targetPostId) {
+          return { ...p, countComment: p.countComment + 1 }
+        }
+        return p
+      }),
+    )
+  }
+
+  const handleCloseModal = () => {
+    setSelectedPost(null)
+  }
+  const handlePostUpdated = (updatedPost) => {
     setPosts((currentPosts) =>
       currentPosts.map((posts) => (posts.postId == updatedPost.postId ? updatedPost : posts)),
     )
@@ -73,7 +90,12 @@ const Myposts = () => {
           <div className='loading-indicator'>Đang tải bài viết...</div>
         ) : posts && posts.length > 0 ? (
           posts.map((post, index) => (
-            <MyPosts key={post.id || index} post={post} onPostUpdated={handlePostUpdated} />
+            <MyPosts
+              key={post.id || index}
+              post={post}
+              onPostUpdated={handlePostUpdated}
+              onViewDetail={handleViewPostDetail}
+            />
           ))
         ) : (
           <div className='no-posts-message'>Chưa có bài đăng nào để hiển thị.</div>
@@ -90,6 +112,14 @@ const Myposts = () => {
             />
           )}
         </div>
+        {selectedPost && (
+          <MyPostDtails
+            key={selectedPost.postId || selectedPost.eventId}
+            post={selectedPost}
+            onClose={handleCloseModal}
+            onCommentAdded={handleCommentAdded}
+          />
+        )}
       </div>
     </div>
   )

@@ -2,9 +2,10 @@ import React, { useState, useEffect, useCallback, use } from 'react'
 import { Pagination } from 'antd'
 import toast from 'react-hot-toast'
 import CreatePost from '../../components/createPost/createPost'
-import { getEventApi, getPostsApi } from '../../apis/posts.api'
+import { getEventApi } from '../../apis/posts.api'
 import './eventPage.scss'
 import EventPostCard from '../../components/eventPostCard/evenPostCard'
+import EventDetails from '../../components/eventDetails/evenDetails'
 
 const EventPage = () => {
   const [pagination, setPagination] = useState({
@@ -14,6 +15,7 @@ const EventPage = () => {
   const [posts, setPosts] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [totalPosts, setTotalPosts] = useState(0)
+  const [selectedPost, setSelectedPost] = useState(null)
 
   const fetchPosts = async () => {
     try {
@@ -50,6 +52,25 @@ const EventPage = () => {
       size: pageSize || prev.size,
     }))
   }
+  const handleViewPostDetail = (postToView) => {
+    console.log('UserHomePage nhận được post có ID:', postToView.postId)
+
+    setSelectedPost(postToView)
+  }
+  const handleCommentAdded = (targetPostId) => {
+    setPosts((currentPosts) =>
+      currentPosts.map((p) => {
+        if ((p.postId === targetPostId) === targetPostId) {
+          return { ...p, countComment: p.countComment + 1 }
+        }
+        return p
+      }),
+    )
+  }
+
+  const handleCloseModal = () => {
+    setSelectedPost(null)
+  }
 
   if (isLoading) {
     return <div>Đang tải bài viết...</div>
@@ -62,7 +83,9 @@ const EventPage = () => {
         {isLoading ? (
           <div className='loading-indicator'>Đang tải bài viết...</div>
         ) : posts && posts.length > 0 ? (
-          posts.map((post, index) => <EventPostCard key={post.id || index} post={post} />)
+          posts.map((post, index) => (
+            <EventPostCard key={post.id || index} post={post} onViewDetail={handleViewPostDetail} />
+          ))
         ) : (
           <div className='no-posts-message'>Chưa có bài đăng nào để hiển thị.</div>
         )}
@@ -78,6 +101,14 @@ const EventPage = () => {
             />
           )}
         </div>
+        {selectedPost && (
+          <EventDetails
+            key={selectedPost.postId || selectedPost.eventId}
+            post={selectedPost}
+            onClose={handleCloseModal}
+            onCommentAdded={handleCommentAdded}
+          />
+        )}
       </div>
     </div>
   )
