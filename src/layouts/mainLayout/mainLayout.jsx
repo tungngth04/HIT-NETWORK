@@ -14,10 +14,12 @@ const MainLayout = () => {
   const isProfilePage = location.pathname === '/profile'
   const fetchSidebarData = useCallback(async () => {
     try {
-      const jobResponse = await getPostsApi({ page: 0, limit: 3 })
-      setRecruitmentPosts(jobResponse.data.data.content || [])
-      const eventResponse = await getPostsApi({ page: 0, limit: 3 })
-      setUpcomingEvents(eventResponse.data.data.content || [])
+      const jobResponse = await getJobApi({ page: 0, size: 3 })
+      setRecruitmentPosts(jobResponse.data.content || [])
+      const eventResponse = await getEventApi({ page: 0, size: 3 })
+      setUpcomingEvents(eventResponse.data.content || [])
+      console.log('job', jobResponse)
+      console.log('event', eventResponse)
     } catch (error) {
       toast.error('Không thể tải dữ liệu cho sidebar:', error)
     }

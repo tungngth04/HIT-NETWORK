@@ -4,8 +4,8 @@ import './sidebarWidget.scss'
 
 const SidebarWidget = ({ title, items, type }) => {
   const filteredItems = useMemo(
-    () => items.filter((item) => item.targetType === type).slice(0, 3),
-    [items, type],
+    () => items.slice(0, 3), // Bỏ đi hàm .filter()
+    [items], // Bỏ 'type' khỏi dependency array vì không dùng đến nữa
   )
 
   return (

@@ -153,7 +153,9 @@ const CreatePost = ({ posts, onPostCreated }) => {
             <div className='modal-footer'>
               <div className='type-selector'>
                 <p>Type : </p>
-                <p value='JOB'>Recruitment</p>
+                <p className='type-posts' value='JOB'>
+                  Recruitment
+                </p>
               </div>
               <button
                 onClick={handleSubmit}

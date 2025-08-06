@@ -2,11 +2,11 @@ import React, { useState, useEffect, useCallback, use } from 'react'
 import { Pagination } from 'antd'
 import toast from 'react-hot-toast'
 import CreatePost from '../../components/createPost/createPost'
-import { getJobApi } from '../../apis/posts.api'
-import './jobPage.scss'
-import JobPostCard from '../../components/jobPostCard/jobPostCard'
+import { getmyposts } from '../../apis/posts.api'
+import './myposts.scss'
+import MyPosts from '../../components/myPosts/myPosts'
 
-const JobPage = () => {
+const Myposts = () => {
   const [pagination, setPagination] = useState({
     current: 0,
     size: 10,
@@ -14,10 +14,11 @@ const JobPage = () => {
   const [posts, setPosts] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [totalPosts, setTotalPosts] = useState(0)
+  console.log('Cấu trúc của một bài đăng:', posts[0]) // Xem log này trong Console
 
   const fetchPosts = async () => {
     try {
-      const response = await getJobApi({
+      const response = await getmyposts({
         page: pagination.current,
         size: pagination.size,
       })
@@ -50,6 +51,15 @@ const JobPage = () => {
       size: pageSize || prev.size,
     }))
   }
+  // HÀM QUAN TRỌNG: Nhận bài đăng đã cập nhật và thay thế nó trong state
+  const handlePostUpdated = (updatedPost) => {
+    console.log('Myposts Page: Hàm handlePostUpdated ĐÃ ĐƯỢC GỌI với:', updatedPost)
+
+    setPosts((currentPosts) =>
+      currentPosts.map((posts) => (posts.postId == updatedPost.postId ? updatedPost : posts)),
+    )
+    toast.success('Bài đăng đã được cập nhật!')
+  }
 
   if (isLoading) {
     return <div>Đang tải bài viết...</div>
@@ -62,7 +72,9 @@ const JobPage = () => {
         {isLoading ? (
           <div className='loading-indicator'>Đang tải bài viết...</div>
         ) : posts && posts.length > 0 ? (
-          posts.map((post, index) => <JobPostCard key={post.id || index} post={post} />)
+          posts.map((post, index) => (
+            <MyPosts key={post.id || index} post={post} onPostUpdated={handlePostUpdated} />
+          ))
         ) : (
           <div className='no-posts-message'>Chưa có bài đăng nào để hiển thị.</div>
         )}
@@ -83,4 +95,4 @@ const JobPage = () => {
   )
 }
 
-export default JobPage
+export default Myposts

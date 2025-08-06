@@ -4,7 +4,6 @@ import toast from 'react-hot-toast'
 import CreatePost from '../../components/createPost/createPost'
 import { getEventApi, getPostsApi } from '../../apis/posts.api'
 import './eventPage.scss'
-import { current } from '@reduxjs/toolkit'
 import EventPostCard from '../../components/eventPostCard/evenPostCard'
 
 const EventPage = () => {
