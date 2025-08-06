@@ -25,8 +25,9 @@ function DeleteMember({
     try {
       if (deletePopup.type === 'event') {
         await deleteEvents(id)
-        toast.success('Xoá sự kiện thành công!')
         fetchEvent()
+        toast.success('Xoá sự kiện thành công!')
+        
       } else if (deletePopup.type === 'user') {
         await deleteMembers(username)
         toast.success('Xoá thành viên thành công!')
