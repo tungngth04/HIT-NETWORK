@@ -112,10 +112,11 @@ $primary-orange-hover: #e57a00;
 }
 
 .modal-body {
-  padding: 16px 24px;
+  padding: 32px 24px;
   overflow-y: auto;
   flex-grow: 1;
   border-top: 1px solid $border-color;
+  padding-top: 10px;
 
   .modal-input-title,
   .modal-textarea-description {
@@ -203,13 +204,15 @@ $primary-orange-hover: #e57a00;
     color: #333;
     display: flex;
     p {
-      margin-left: 4px;
       border-radius: 6px;
       padding: 4px 8px;
       cursor: pointer;
       &:focus {
         outline: none;
       }
+    }
+    .type-posts {
+      font-weight: bold;
     }
   }
 

@@ -1,0 +1,186 @@
+// File này sử dụng chung các quy tắc style với CreatePost.scss
+// để đảm bảo giao diện nhất quán giữa việc tạo và sửa bài đăng.
+
+// Style cho Modal
+.create-post-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.create-post-modal-content {
+  background-color: #fff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 550px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  border-bottom: 1px solid #e0e0e0;
+
+  .modal-title-text {
+    font-weight: 600;
+    font-size: 1.25rem;
+  }
+
+  .close-button {
+    background: #e4e6eb;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #606770;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    &:hover {
+      background: #d8dadf;
+    }
+  }
+}
+
+.modal-user-info {
+  display: flex;
+  align-items: center;
+  padding: 16px 24px;
+
+  .modal-user-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    margin-right: 12px;
+  }
+
+  .user-details {
+    display: flex;
+    flex-direction: column;
+    .user-name {
+      font-weight: 600;
+    }
+    .post-audience {
+      font-size: 0.85rem;
+      color: #65676b;
+    }
+  }
+}
+
+.modal-body {
+  padding: 0 24px 16px 24px;
+  overflow-y: auto;
+  flex-grow: 1;
+
+  .modal-title-input {
+    width: 100%;
+    border: none;
+    font-size: 1.25rem;
+    font-weight: 600;
+    padding: 0 0 16px 0;
+    box-sizing: border-box;
+    font-family: inherit;
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .modal-textarea {
+    width: 100%;
+    border: none;
+    resize: none;
+    font-size: 1.1rem;
+    min-height: 150px;
+    box-sizing: border-box;
+    font-family: inherit;
+
+    &::placeholder {
+      color: #65676b;
+    }
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .image-preview {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 8px;
+    margin-top: 16px;
+    object-fit: cover;
+  }
+}
+
+.modal-add-ons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  border-top: 1px solid #e0e0e0;
+
+  .add-ons-title {
+    font-weight: 600;
+    color: #333;
+  }
+
+  .add-ons-icons {
+    display: flex;
+    gap: 8px;
+    .icon-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #65676b;
+      padding: 8px;
+      border-radius: 50%;
+      &:hover {
+        background-color: #f0f2f5;
+      }
+    }
+  }
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end; // Đẩy nút về phía bên phải
+  align-items: center;
+  padding: 16px 24px;
+  border-top: 1px solid #e0e0e0;
+
+  .modal-submit-button {
+    background-color: #ff8a00;
+    color: #fff;
+    border: none;
+    padding: 10px 32px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: #ff8a00;
+    }
+
+    &:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  }
+}
