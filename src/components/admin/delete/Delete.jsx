@@ -45,6 +45,9 @@ function DeleteMember({
       }
       handleClose()
     } catch (error) {
+<<<<<<< HEAD
+      toast.error(`Xóa ${deletePopup.type === 'event' ? 'sự kiện' : 'thành viên'} thất bại!`)
+=======
       console.error(error)
       toast.error(
         `Xóa ${
@@ -57,6 +60,7 @@ function DeleteMember({
                 : 'bài đăng'
         } thất bại!`,
       )
+>>>>>>> ee108720284756bceefa812d304a100a0e874732
     }
   }
 

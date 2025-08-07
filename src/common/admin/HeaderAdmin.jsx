@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react'
 import './HeaderAdmin.scss'
 import LogoReact from '../../assets/react.svg'
 import { getAdmin } from '../../apis/admin.api'
+<<<<<<< HEAD
+import toast from 'react-hot-toast'
+=======
 import { PiHandWavingLight } from "react-icons/pi";
+>>>>>>> ee108720284756bceefa812d304a100a0e874732
 function HeaderAdmin() {
   const [admin, setAdmin] = useState()
   const fetchGet = async () => {
@@ -10,7 +14,7 @@ function HeaderAdmin() {
       const res = await getAdmin()
       setAdmin(res?.data)
     } catch (error) {
-      console.error(error)
+      toast.error(error)
     }
   }
   useEffect(() => {

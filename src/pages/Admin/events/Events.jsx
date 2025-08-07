@@ -9,6 +9,7 @@ import Delete from '../../../components/admin/delete/Delete'
 import { getAllEvents } from '../../../apis/events.api'
 import { IoMdAddCircle } from 'react-icons/io'
 import dayjs from 'dayjs'
+import toast from 'react-hot-toast'
 
 function Events() {
   const navigate = useNavigate()
@@ -126,11 +127,9 @@ function Events() {
         page: pagination.current,
         size: pagination.size,
       })
-      console.log('Get All Events', response)
       setEvents(response?.data)
     } catch (error) {
-      console.error(error)
-      console.log('Sai su kien get all events')
+      toast.error(error)
     } finally {
       setLoading(false)
     }
@@ -173,10 +172,6 @@ function Events() {
           <button className='button button--search' onClick={() => handleSearch()}>
             Tìm kiếm
           </button>
-          {/* <div> */}
-          {/* <button className='button button--add' onClick={handleCreate}>
-              Thêm
-            </button> */}
           <div className='button-add' onClick={handleCreate}>
             <IoMdAddCircle className='icon-add' />
             <p className='title-add'>Thêm </p>

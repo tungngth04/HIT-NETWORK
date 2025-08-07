@@ -5,6 +5,8 @@ import CreatePost from '../../components/createPost/createPost'
 import PostCard from '../../components/postCard/postCard'
 import { getPostsApi } from '../../apis/posts.api'
 import './userHomePage.scss'
+import PostDetailModal from '../../components/PostDetailModal/PostDetailModal'
+import CircularProgress from '@mui/joy/CircularProgress'
 
 const UserHomePage = () => {
   const [pagination, setPagination] = useState({
@@ -14,6 +16,7 @@ const UserHomePage = () => {
   const [posts, setPosts] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [totalPosts, setTotalPosts] = useState(0)
+  const [selectedPost, setSelectedPost] = useState(null)
 
   const fetchPosts = async () => {
     try {
@@ -21,8 +24,8 @@ const UserHomePage = () => {
         page: pagination.current,
         size: pagination.size,
       })
-      setPosts(response?.data?.data?.content)
-      setTotalPosts(response?.data?.data?.totalElements || 0)
+      setPosts(response?.data?.content)
+      setTotalPosts(response?.data?.totalElements || 0)
       setIsLoading(false)
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (error) {
@@ -35,7 +38,6 @@ const UserHomePage = () => {
   useEffect(() => {
     fetchPosts()
   }, [pagination])
-  console.log('totalelement', totalPosts)
   const handlePostCreated = () => {
     if (pagination.current === 0) {
       fetchPosts()
@@ -51,14 +53,25 @@ const UserHomePage = () => {
       size: pageSize || prev.size,
     }))
   }
-  const handlePostUpdate = (updatedPost) => {
-    setPostsData((prevData) => ({
-      ...prevData,
-      content: prevData.content.map((post) => (post.id === updatedPost.id ? updatedPost : post)),
-    }))
+  const handleViewPostDetail = (postToView) => {
+    setSelectedPost(postToView)
+  }
+  const handleCommentAdded = (targetPostId) => {
+    setPosts((currentPosts) =>
+      currentPosts.map((p) => {
+        if (p.postId === targetPostId || p.eventId === targetPostId) {
+          return { ...p, countComment: p.countComment + 1 }
+        }
+        return p
+      }),
+    )
+  }
+
+  const handleCloseModal = () => {
+    setSelectedPost(null)
   }
   if (isLoading) {
-    return <div>Đang tải bài viết...</div>
+    return <CircularProgress color='warning' />
   }
 
   return (
@@ -69,7 +82,7 @@ const UserHomePage = () => {
           <div className='loading-indicator'>Đang tải bài viết...</div>
         ) : posts && posts.length > 0 ? (
           posts.map((post, index) => (
-            <PostCard key={post.id || index} post={post} onPostUpdate={handlePostCreated} />
+            <PostCard key={post.id || index} post={post} onViewDetail={handleViewPostDetail} />
           ))
         ) : (
           <div className='no-posts-message'>Chưa có bài đăng nào để hiển thị.</div>
@@ -86,6 +99,14 @@ const UserHomePage = () => {
             />
           )}
         </div>
+        {selectedPost && (
+          <PostDetailModal
+            key={selectedPost.postId || selectedPost.eventId}
+            post={selectedPost}
+            onClose={handleCloseModal}
+            onCommentAdded={handleCommentAdded}
+          />
+        )}
       </div>
     </div>
   )

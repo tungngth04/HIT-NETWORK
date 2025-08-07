@@ -7,8 +7,7 @@ import avatarDefault from '../../../assets/images/avatarDefault.jpg'
 import { IoArrowBackSharp } from "react-icons/io5";
 import Delete from '../../../components/admin/delete/Delete'
 import CircularProgress from '@mui/joy/CircularProgress';
-
-
+import toast from 'react-hot-toast'
 const PostDetail = () => {
   const [action, setAction] = useState('like')
   const [post, setPost] = useState(null)
@@ -20,7 +19,7 @@ const PostDetail = () => {
       const res = await getDetailpost(id)
       setPost(res?.data)
     } catch (error) {
-      console.error('Lỗi khi lấy bài đăng:', error)
+      toast.error("Lấy dữ liệu bài đăng thất bại")
     }
   }
   useEffect(() => {

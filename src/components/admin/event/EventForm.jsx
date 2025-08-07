@@ -38,7 +38,7 @@ function EventForm({ modal }) {
       setEvent(filledEvent)
       form.setFieldsValue(filledEvent)
     } catch (error) {
-      console.error(error)
+      toast.error(error)
     }
   }
   useEffect(() => {

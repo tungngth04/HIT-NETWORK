@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 import dayjs from 'dayjs'
 import Delete from '../../../components/admin/delete/Delete'
+import toast from 'react-hot-toast'
 
 function Post() {
   const navigate = useNavigate()
@@ -35,7 +36,7 @@ function Post() {
       })
       setPost(res?.data)
     } catch (error) {
-      console.error(error)
+      toast.error("Lấy danh sách bài đăng thất bại!")
     } finally {
       setLoading(false)
     }
@@ -131,7 +132,6 @@ function Post() {
         // item.email?.toLowerCase().includes(value)
       )
     }) || []
-  console.log('Du lieu bang post', filteredData)
 
   return (
     <div className='post-page'>
