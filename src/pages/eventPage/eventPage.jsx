@@ -6,6 +6,7 @@ import { getEventApi } from '../../apis/posts.api'
 import './eventPage.scss'
 import EventPostCard from '../../components/eventPostCard/evenPostCard'
 import EventDetails from '../../components/eventDetails/evenDetails'
+import Loading from '../../components/loading/loading'
 
 const EventPage = () => {
   const [pagination, setPagination] = useState({
@@ -53,8 +54,6 @@ const EventPage = () => {
     }))
   }
   const handleViewPostDetail = (postToView) => {
-    console.log('UserHomePage nhận được post có ID:', postToView.postId)
-
     setSelectedPost(postToView)
   }
   const handleCommentAdded = (targetPostId) => {
@@ -73,11 +72,11 @@ const EventPage = () => {
   }
 
   if (isLoading) {
-    return <div>Đang tải bài viết...</div>
+    return <Loading isLoading={true} />
   }
 
   return (
-    <div className='user-homepage-container'>
+    <div className='user-homepage-container '>
       <div className='main-content'>
         <CreatePost posts={posts} onPostCreated={handlePostCreated} />
         {isLoading ? (

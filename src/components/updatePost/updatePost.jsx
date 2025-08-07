@@ -32,8 +32,6 @@ const UpdatePost = ({ post, onPostUpdated, onClose }) => {
       const response = await updatePost(post.postId, updateData)
 
       const updatedPostData = response?.data?.data || response?.data
-      console.log('UpdatePost: Chuẩn bị gọi onPostUpdated với dữ liệu:', updatedPostData)
-
       if (typeof onPostUpdated === 'function' && updatedPostData) {
         onPostUpdated(updatedPostData)
       } else {
@@ -48,8 +46,6 @@ const UpdatePost = ({ post, onPostUpdated, onClose }) => {
       setIsLoading(false)
     }
   }
-  console.log('post', post)
-
   return (
     <div className='create-post-modal-overlay' onClick={onClose}>
       <div className='create-post-modal-content' onClick={(e) => e.stopPropagation()}>

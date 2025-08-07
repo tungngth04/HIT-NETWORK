@@ -8,7 +8,6 @@ const EventPostCard = ({ post, onViewDetail }) => {
   const [isLiked, setIsLiked] = useState(post?.checkReaction || false)
   const [likeCount, setLikeCount] = useState(post?.countReaction || 0)
 
-  console.log('post', post)
   const handleLike = async () => {
     const originalLikedState = isLiked
     const originalLikeCount = likeCount
@@ -47,8 +46,6 @@ const EventPostCard = ({ post, onViewDetail }) => {
   }
 
   const handleOpenDetail = () => {
-    console.log('PostCard đang gửi lên ID:', post.postId || post.eventId)
-
     if (onViewDetail) {
       onViewDetail(post)
     }

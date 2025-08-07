@@ -2,8 +2,13 @@ import React, { useMemo } from 'react'
 import { ChevronRight } from 'react-bootstrap-icons'
 import './sidebarWidget.scss'
 
-const SidebarWidget = ({ title, items, type }) => {
+const SidebarWidget = ({ title, items, type, onViewItemDetail }) => {
   const filteredItems = useMemo(() => items.slice(0, 3), [items])
+  const handleItemClick = (item) => {
+    if (onViewItemDetail) {
+      onViewItemDetail(item)
+    }
+  }
 
   return (
     <div className='sidebar-widget'>
@@ -20,7 +25,7 @@ const SidebarWidget = ({ title, items, type }) => {
             const date = new Date(item.createdAt)
 
             return (
-              <li key={item.id} className='widget-item'>
+              <li onClick={() => handleItemClick(item)} key={item.id} className='widget-item'>
                 <div className='item-date'>
                   <span className='date-day'>{date.getDate()}</span>
                   <span className='date-month'>

@@ -6,6 +6,7 @@ import { getmyposts } from '../../apis/posts.api'
 import './myposts.scss'
 import MyPosts from '../../components/myPosts/myPosts'
 import MyPostDtails from '../../components/myPostDetails/myPostDetails'
+import Loading from '../../components/loading/loading'
 
 const Myposts = () => {
   const [pagination, setPagination] = useState({
@@ -53,8 +54,6 @@ const Myposts = () => {
     }))
   }
   const handleViewPostDetail = (postToView) => {
-    console.log('UserHomePage nhận được post có ID:', postToView.postId)
-
     setSelectedPost(postToView)
   }
   const handleCommentAdded = (targetPostId) => {
@@ -79,7 +78,7 @@ const Myposts = () => {
   }
 
   if (isLoading) {
-    return <div>Đang tải bài viết...</div>
+    return <Loading isLoading={true} />
   }
 
   return (

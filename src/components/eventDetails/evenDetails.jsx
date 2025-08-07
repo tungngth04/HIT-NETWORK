@@ -31,17 +31,13 @@ const EventDetails = ({ post, onClose, onCommentAdded }) => {
       }
 
       setIsLoadingComments(true)
-
-      console.log('targetId', targetId)
       try {
         let response
         response = await getPostsdetail({ eventId: targetId })
-        console.log('idddddđ', targetId)
         const commentsData = response?.data?.commentResponseDTOS || []
         setComments(commentsData)
       } catch (error) {
         toast.error('Không thể tải chi tiết bài đăng và bình luận.')
-        console.error('Lỗi khi fetch chi tiết:', error)
       } finally {
         setIsLoadingComments(false)
       }

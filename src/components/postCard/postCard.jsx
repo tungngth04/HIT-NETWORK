@@ -20,7 +20,6 @@ const PostCard = ({ post, onViewDetail }) => {
       const response = await info()
       const userData = response?.data?.fullName
       setInfoUser(userData)
-      console.log('userdata', response)
     } catch (err) {
       toast.error('Lỗi khi tải thông tin người dùng')
     }

@@ -6,6 +6,7 @@ import PostCard from '../../components/postCard/postCard'
 import { getPostsApi } from '../../apis/posts.api'
 import './userHomePage.scss'
 import PostDetailModal from '../../components/PostDetailModal/PostDetailModal'
+import Loading from '../../components/loading/loading'
 
 const UserHomePage = () => {
   const [pagination, setPagination] = useState({
@@ -37,7 +38,6 @@ const UserHomePage = () => {
   useEffect(() => {
     fetchPosts()
   }, [pagination])
-  console.log('totalelement', totalPosts)
   const handlePostCreated = () => {
     if (pagination.current === 0) {
       fetchPosts()
@@ -54,8 +54,6 @@ const UserHomePage = () => {
     }))
   }
   const handleViewPostDetail = (postToView) => {
-    console.log('UserHomePage nhận được post có ID:', postToView.postId || postToView.eventId)
-
     setSelectedPost(postToView)
   }
   const handleCommentAdded = (targetPostId) => {
@@ -73,7 +71,7 @@ const UserHomePage = () => {
     setSelectedPost(null)
   }
   if (isLoading) {
-    return <div>Đang tải bài viết...</div>
+    return <Loading isLoading={true} />
   }
 
   return (

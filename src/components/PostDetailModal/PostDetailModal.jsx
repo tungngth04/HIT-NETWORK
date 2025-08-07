@@ -33,7 +33,6 @@ const PostDetailModal = ({ post, onClose, onCommentAdded }) => {
 
       setIsLoadingComments(true)
 
-      console.log('targetId', targetId)
       try {
         let response
         if (post.targetType === 'JOB') {
@@ -41,7 +40,6 @@ const PostDetailModal = ({ post, onClose, onCommentAdded }) => {
         } else if (post.targetType === 'EVENT') {
           response = await getPostsdetail({ eventId: targetId })
         }
-        console.log('idddddđ', targetId)
         const commentsData = response?.data?.commentResponseDTOS || []
         setComments(commentsData)
       } catch (error) {

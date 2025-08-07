@@ -27,7 +27,6 @@ const MyPostDtails = ({ post, onClose, onCommentAdded }) => {
       const response = await info()
       const userData = response?.data?.fullName
       setInfoUser(userData)
-      console.log('userdata', response)
     } catch (err) {
       toast.error('Lỗi khi tải thông tin người dùng')
     }
@@ -46,16 +45,10 @@ const MyPostDtails = ({ post, onClose, onCommentAdded }) => {
         setIsLoadingComments(false)
         return
       }
-
       setIsLoadingComments(true)
-
-      console.log('targetId', targetId)
       try {
         let response
-
         response = await getJobPostAPI(targetId)
-
-        console.log('idddddđ', targetId)
         const commentsData = response?.data?.commentResponseDTOS || []
         setComments(commentsData)
       } catch (error) {

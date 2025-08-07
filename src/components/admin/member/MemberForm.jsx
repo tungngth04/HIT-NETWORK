@@ -38,8 +38,6 @@ function MemberForm({ modal }) {
       ...values,
       dob: values.dob?.format('YYYY-MM-DD'),
     }
-    console.log('Du lieu gui len api ', payload)
-
     try {
       if (modal === 'add') {
         await createMembers(payload)

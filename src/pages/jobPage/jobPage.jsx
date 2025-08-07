@@ -6,6 +6,7 @@ import { getJobApi } from '../../apis/posts.api'
 import './jobPage.scss'
 import JobPostCard from '../../components/jobPostCard/jobPostCard'
 import JobDetails from '../../components/jobDetails/jobDetails'
+import Loading from '../../components/loading/loading'
 
 const JobPage = () => {
   const [pagination, setPagination] = useState({
@@ -53,8 +54,6 @@ const JobPage = () => {
     }))
   }
   const handleViewPostDetail = (postToView) => {
-    console.log('UserHomePage nhận được post có ID:', postToView.postId)
-
     setSelectedPost(postToView)
   }
   const handleCommentAdded = (targetPostId) => {
@@ -73,9 +72,8 @@ const JobPage = () => {
   }
 
   if (isLoading) {
-    return <div>Đang tải bài viết...</div>
+    return <Loading isLoading={true} />
   }
-
   return (
     <div className='user-homepage-container'>
       <div className='main-content'>

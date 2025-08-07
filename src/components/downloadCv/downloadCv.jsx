@@ -10,10 +10,6 @@ const DownloadCvModal = ({ postId, onClose, onPostUpdated }) => {
     setIsLoading(true)
     try {
       const response = await dowloadCvAPI(postId)
-      console.log('Toàn bộ đối tượng response:', response)
-      console.log('Toàn bộ headers:', response?.headers)
-      console.log('Kiểu dữ liệu của response.data:', typeof response?.data)
-
       const disposition = response.headers?.['content-disposition']
       let filename = `CVs-Post-${postId}.zip`
       if (disposition && disposition.indexOf('attachment') !== -1) {

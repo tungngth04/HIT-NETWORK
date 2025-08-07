@@ -27,7 +27,6 @@ const Header = () => {
       const response = await info()
       const userData = response?.data
       setInfoUser(userData)
-      console.log('data-user', userData)
     } catch (err) {
       toast.error('lỗi')
     }

@@ -17,9 +17,6 @@ const JobPostCard = ({ post, onViewDetail }) => {
   const [isCvModalOpen, setIsCvModalOpen] = useState(false)
   const [isUpdate, setIsupdate] = useState(false)
   const [infoUser, setInfoUser] = useState()
-
-  console.log('post', post)
-
   const handleLike = async () => {
     const originalLikedState = isLiked
     const originalLikeCount = likeCount
@@ -57,7 +54,6 @@ const JobPostCard = ({ post, onViewDetail }) => {
       const response = await info()
       const userData = response?.data?.fullName
       setInfoUser(userData)
-      console.log('userdata', response)
     } catch (err) {
       toast.error('Lỗi khi tải thông tin người dùng')
     }
@@ -77,8 +73,6 @@ const JobPostCard = ({ post, onViewDetail }) => {
   }
 
   const handleOpenDetail = () => {
-    console.log('PostCard đang gửi lên ID:', post.postId || post.eventId)
-
     if (onViewDetail) {
       onViewDetail(post)
     }

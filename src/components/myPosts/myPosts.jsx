@@ -20,13 +20,6 @@ const MyPosts = ({ post, onPostUpdated, onViewDetail }) => {
   const [isCvModalOpen, setIsCvModalOpen] = useState(false)
   const [isUpdate, setIsUpdate] = useState(false)
 
-  console.log(
-    `MyPosts Card (ID: ${post.postId}): Nhận được onPostUpdated là một:`,
-    typeof onPostUpdated,
-  )
-
-  console.log('post', post)
-
   const handleLike = async () => {
     const originalLikedState = isLiked
     const originalLikeCount = likeCount
@@ -64,8 +57,6 @@ const MyPosts = ({ post, onPostUpdated, onViewDetail }) => {
     setIsUpdate(true)
   }
   const handleOpenDetail = () => {
-    console.log('PostCard đang gửi lên ID:', post.postId || post.eventId)
-
     if (onViewDetail) {
       onViewDetail(post)
     }
