@@ -6,6 +6,7 @@ import { AiFillHome } from "react-icons/ai";
 import { FaUserGroup } from "react-icons/fa6";
 import { BiSolidCalendarMinus } from "react-icons/bi";
 import { RiLogoutBoxRFill } from "react-icons/ri";
+import { FaPen } from "react-icons/fa";
 import useAuth from '../../../hooks/useAuth';
 import toast from 'react-hot-toast';
 const Sidebar = () => {
@@ -22,9 +23,10 @@ const Sidebar = () => {
         <img src={Logo} alt="Logo clb"/>
       </div>
       <ul className='admin__sidebar__menu'>
-        <li onClick={() => navigate('/admin/dashboard')}><AiFillHome size={30}/> <p>Dashboard</p></li>
+        <li onClick={() => navigate('/admin/dashboard')}><AiFillHome size={30}/> <p>Thống kê</p></li>
         <li onClick={() => navigate('/admin/members')}> <FaUserGroup size={30}/> <p>Quản lý thành viên</p></li>
         <li onClick={() => navigate('/admin/events')}><BiSolidCalendarMinus size={30}/> <p>Quản lý sự kiện</p></li>
+        <li onClick={() => navigate('/admin/posts')}><FaPen size={23}/> <p>Quản lý bài đăng</p></li>
         <li onClick={handleLogOut}><RiLogoutBoxRFill size={30}/> <p>Đăng xuất</p> </li>
       </ul> 
     </div>

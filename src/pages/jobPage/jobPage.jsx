@@ -3,6 +3,7 @@ import { Pagination } from 'antd'
 import toast from 'react-hot-toast'
 import CreatePost from '../../components/createPost/createPost'
 import { getJobApi } from '../../apis/posts.api'
+
 import './jobPage.scss'
 import JobPostCard from '../../components/jobPostCard/jobPostCard'
 import JobDetails from '../../components/jobDetails/jobDetails'

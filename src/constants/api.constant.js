@@ -49,4 +49,12 @@ export const ApiConstants = {
     info: '/users/me',
     update: '/users/me',
   },
+  adminPost: {
+    getAllPost: '/user/jobs',
+    getDetailpost: '/user/job',
+    deletePost: '/user/job',
+  },
+  adminComment: {
+    deleteComment: '/user/comment',
+  },
 }
