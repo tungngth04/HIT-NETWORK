@@ -28,9 +28,10 @@ export const ApiConstants = {
     changePassword: '/users/change-password',
     createJob: '/user/job',
     users: '/users/me',
+    creatCv: '/user/cv',
   },
   home: {
-    posts: '/auth/home',
+    posts: '/users/home',
   },
   posts: {
     getEventPosts: '/user/events',
@@ -39,6 +40,10 @@ export const ApiConstants = {
     getlike: '/reaction/get-all',
     dellike: '/reaction/delete',
     getdetail: '/user/event',
+    createcomment: 'user/comment',
+    getmypost: 'user/job/my-jobs',
+    updatepost: 'user/job',
+    downloadCv: 'user/cv/download',
   },
   user: {
     info: '/users/me',

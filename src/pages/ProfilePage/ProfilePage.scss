@@ -220,10 +220,10 @@
   .ant-form-item-has-error {
     .ant-input-affix-wrapper {
       border-color: $primary-orange !important;
+      &:hover {
+        border-color: $primary-orange !important;
+      }
 
-      // &:hover {
-      //   border-color: $primary-orange !important;
-      // }
     }
 
     .ant-input-affix-wrapper-focused {
@@ -231,6 +231,7 @@
     }
   }
 }
+
 
 @media (max-width: 990px) {
   .profile-main-section {
@@ -344,3 +345,4 @@
     word-break: break-all;
   }
 }
+

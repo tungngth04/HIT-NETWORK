@@ -1,37 +1,7 @@
-// Biến để dễ quản lý
-$border-color: #e0e0e0;
-$placeholder-color: #65676b;
-$primary-orange: #ff8a00;
-$primary-orange-hover: #e57a00;
+// File này sử dụng chung các quy tắc style với CreatePost.scss
+// để đảm bảo giao diện nhất quán giữa việc tạo và sửa bài đăng.
 
-.create-post-card {
-  background-color: #fff;
-  border-radius: 14px;
-  padding: 28px;
-  margin-bottom: 24px;
-  display: flex;
-  align-items: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background-color: #f9f9f9;
-  }
-
-  .create-post-avatar {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    margin-right: 24px;
-  }
-
-  .create-post-placeholder {
-    color: #555;
-    font-size: 1rem;
-  }
-}
-
+// Style cho Modal
 .create-post-modal-overlay {
   position: fixed;
   top: 0;
@@ -61,21 +31,29 @@ $primary-orange-hover: #e57a00;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 24px;
+  padding: 12px 24px;
+  border-bottom: 1px solid #e0e0e0;
+
+  .modal-title-text {
+    font-weight: 600;
+    font-size: 1.25rem;
+  }
 
   .close-button {
-    background: none;
+    background: #e4e6eb;
     border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    font-size: 1.5rem;
     cursor: pointer;
     color: #606770;
-    padding: 4px;
-    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-
+    line-height: 1;
     &:hover {
-      background: #f0f2f5;
+      background: #d8dadf;
     }
   }
 }
@@ -83,6 +61,7 @@ $primary-orange-hover: #e57a00;
 .modal-user-info {
   display: flex;
   align-items: center;
+  padding: 16px 24px;
 
   .modal-user-avatar {
     width: 48px;
@@ -94,62 +73,57 @@ $primary-orange-hover: #e57a00;
   .user-details {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-
     .user-name {
       font-weight: 600;
     }
-
-    .post-audience-text {
+    .post-audience {
       font-size: 0.85rem;
-      color: $placeholder-color;
-      background-color: #e4e6eb;
-      padding: 2px 8px;
-      border-radius: 4px;
-      margin-top: 4px;
+      color: #65676b;
     }
   }
 }
 
 .modal-body {
-  padding: 32px 24px;
+  padding: 0 24px 16px 24px;
   overflow-y: auto;
   flex-grow: 1;
-  border-top: 1px solid $border-color;
-  padding-top: 10px;
 
-  .modal-input-title,
-  .modal-textarea-description {
+  .modal-title-input {
+    width: 100%;
+    border: none;
+    font-size: 1.25rem;
+    font-weight: 600;
+    padding: 0 0 16px 0;
+    box-sizing: border-box;
+    font-family: inherit;
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .modal-textarea {
     width: 100%;
     border: none;
     resize: none;
-    font-family: inherit;
-    padding: 0;
+    font-size: 1.1rem;
+    min-height: 150px;
     box-sizing: border-box;
+    font-family: inherit;
 
     &::placeholder {
-      color: $placeholder-color;
+      color: #65676b;
     }
     &:focus {
       outline: none;
     }
   }
 
-  .modal-input-title {
-    font-size: 1.5rem; // Tiêu đề to hơn
-    font-weight: 600;
-    margin-bottom: 16px;
-  }
-
-  .modal-textarea-description {
-    font-size: 1.1rem;
-    min-height: 120px;
-  }
-
   .image-preview {
     max-width: 100%;
+    max-height: 300px;
     border-radius: 8px;
     margin-top: 16px;
+    object-fit: cover;
   }
 }
 
@@ -158,7 +132,7 @@ $primary-orange-hover: #e57a00;
   justify-content: space-between;
   align-items: center;
   padding: 12px 24px;
-  border-top: 1px solid $border-color;
+  border-top: 1px solid #e0e0e0;
 
   .add-ons-title {
     font-weight: 600;
@@ -172,12 +146,9 @@ $primary-orange-hover: #e57a00;
       background: none;
       border: none;
       cursor: pointer;
-      color: $placeholder-color;
+      color: #65676b;
       padding: 8px;
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       &:hover {
         background-color: #f0f2f5;
       }
@@ -185,39 +156,15 @@ $primary-orange-hover: #e57a00;
   }
 }
 
-.modal-error {
-  color: #d8000c;
-  font-size: 0.9rem;
-  padding: 0 24px;
-  margin-top: 10px;
-}
-
 .modal-footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end; // Đẩy nút về phía bên phải
   align-items: center;
   padding: 16px 24px;
-  border-top: 1px solid $border-color;
-
-  .type-selector {
-    font-size: 0.95rem;
-    color: #333;
-    display: flex;
-    p {
-      border-radius: 6px;
-      padding: 4px 8px;
-      cursor: pointer;
-      &:focus {
-        outline: none;
-      }
-    }
-    .type-posts {
-      font-weight: bold;
-    }
-  }
+  border-top: 1px solid #e0e0e0;
 
   .modal-submit-button {
-    background-color: $primary-orange;
+    background-color: #ff8a00;
     color: #fff;
     border: none;
     padding: 10px 32px;
@@ -228,7 +175,7 @@ $primary-orange-hover: #e57a00;
     transition: background-color 0.2s ease;
 
     &:hover {
-      background-color: $primary-orange-hover;
+      background-color: #ff8a00;
     }
 
     &:disabled {

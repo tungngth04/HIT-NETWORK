@@ -10,7 +10,6 @@ const api = axios.create({
 })
 api.interceptors.request.use((config) => {
   const accessToken = JSON.parse(localStorage.getItem(LocalStorage.auth))?.token
-  console.log(accessToken)
   config.headers.Authorization = `Bearer ${accessToken}`
   return config
 }, Promise.reject)
@@ -59,5 +58,31 @@ apiDefaultUpload.interceptors.response.use(
     return Promise.reject(error)
   },
 )
+const apiDefaultDownload = axios.create({
+  baseURL: `${import.meta.env.VITE_API_SERVER}`,
+  headers: {
+    'Content-Type': 'Application/json',
+  },
+  responseType: 'blob',
+})
 
-export { apiDefault, api, apiDefaultUpload }
+apiDefaultDownload.interceptors.request.use((config) => {
+  const accessToken = JSON.parse(localStorage.getItem(LocalStorage.auth))?.token
+  config.headers.Authorization = `Bearer ${accessToken}`
+  return config
+}, Promise.reject)
+
+apiDefaultDownload.interceptors.response.use(
+  (value) => value,
+  (error) => {
+    if (error.code === 401) {
+      const navigate = useNavigate()
+      localStorage.removeItem(LocalStorage.auth)
+      navigate('/login')
+    }
+    return Promise.reject(error)
+  },
+)
+
+export { apiDefault, api, apiDefaultUpload, apiDefaultDownload }
+

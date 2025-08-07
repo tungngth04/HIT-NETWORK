@@ -5,6 +5,13 @@ import './ProfilePage.scss'
 import { info, update } from '../../apis/userProfile.api'
 import { changePassword } from '../../apis/auth.api'
 import toast from 'react-hot-toast'
+<<<<<<< HEAD
+import CircularProgress from '@mui/joy/CircularProgress'
+=======
+
+import Loading from '../../components/loading/loading'
+>>>>>>> ee108720284756bceefa812d304a100a0e874732
+
 
 const ProfilePage = () => {
   const [action, setAction] = useState('info')
@@ -14,8 +21,6 @@ const ProfilePage = () => {
   const [passwordForm] = Form.useForm()
   const [isLoading, setIsLoading] = useState(true)
 
-
-  // Get api lay thong tin nguoi dung
   const fetchGetUser = async () => {
     try {
       const response = await info()
@@ -38,7 +43,6 @@ const ProfilePage = () => {
           : [],
       })
     } catch (error) {
-      console.error('Lỗi: ', error)
     } finally {
       setIsLoading(false)
     }
@@ -48,7 +52,6 @@ const ProfilePage = () => {
   }, [])
 
   const handleUpdateProfile = async (values) => {
-    console.log(values.avatarUrl)
     const formData = new FormData()
     formData.append('fullName', values.fullName)
     formData.append('gender', values.gender)
@@ -61,18 +64,16 @@ const ProfilePage = () => {
     }
     try {
       await update(formData)
-      console.log('ádasd', formData)
       await fetchGetUser()
       setAction('info')
       toast.success("Cập nhật thông tin thành công!!")
     } catch {
-      toast.error("Cập nhật thông tin thất bại!!")
-      // alert('Cap nhat nguoi dung that bai')
-      // console.log('ádasd', formData)
+
+      alert('Cap nhat nguoi dung that bai')
     }
   }
   const handleChangePassword = async (values) => {
-    console.log('Đang thử đổi mật khẩu với giá trị:', values)
+
     try {
       await changePassword({
         oldPassword: values.oldPassword,
@@ -88,17 +89,12 @@ const ProfilePage = () => {
   }
 
   if (isLoading) {
-    return (
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh',
-        }}>
-        <Spin size='large' />
-      </div>
-    )
+<<<<<<< HEAD
+    return <CircularProgress color='warning' />
+=======
+    return <Loading isLoading={true} />
+
+>>>>>>> ee108720284756bceefa812d304a100a0e874732
   }
   if (!infoUser) {
     return <div className='profile-loading'></div>
@@ -278,7 +274,6 @@ const ProfilePage = () => {
                 {/* Các Form.Item không thay đổi... */}
                 <Form.Item
                   id='change-password-form'
-
                   label='Nhập mật khẩu cũ'
                   name='oldPassword'
                   rules={[{ required: true, message: 'Hãy nhập mật khẩu cũ' }]}>

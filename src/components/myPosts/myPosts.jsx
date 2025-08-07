@@ -1,22 +1,25 @@
-import React, { useEffect, useState } from 'react'
-import { HandThumbsUpFill, HandThumbsUp, Chat, Handbag } from 'react-bootstrap-icons'
+import React, { useState } from 'react'
+import {
+  HandThumbsUpFill,
+  HandThumbsUp,
+  Chat,
+  BookmarkFill,
+  Bookmark,
+  Handbag,
+} from 'react-bootstrap-icons'
 import toast from 'react-hot-toast'
-// import { likePostApi, applyToPostApi, bookmarkPostApi } from '../../apis/posts.api'
-import './jobPostCard.scss'
+import './myPosts.scss'
 import { likePostApi, dellikePostApi } from '../../apis/posts.api'
-import ImportCvModal from '../importcv/importcv'
-import { useSelector } from 'react-redux'
-import { info } from '../../apis/userProfile.api'
+import UpdatePost from '../updatePost/updatePost'
+import DownloadCvModal from '../downloadCv/downloadCv'
 
-const JobPostCard = ({ post, onViewDetail }) => {
-  const authState = useSelector((state) => state.auth.auth)
-  const currentUser = authState
+const MyPosts = ({ post, onPostUpdated, onViewDetail }) => {
   const [isLoadingApply, setIsLoadingApply] = useState(false)
   const [isLiked, setIsLiked] = useState(post?.checkReaction || false)
   const [likeCount, setLikeCount] = useState(post?.countReaction || 0)
   const [isCvModalOpen, setIsCvModalOpen] = useState(false)
-  const [isUpdate, setIsupdate] = useState(false)
-  const [infoUser, setInfoUser] = useState()
+  const [isUpdate, setIsUpdate] = useState(false)
+
   const handleLike = async () => {
     const originalLikedState = isLiked
     const originalLikeCount = likeCount
@@ -30,18 +33,12 @@ const JobPostCard = ({ post, onViewDetail }) => {
           targetId: post.postId,
           targetType: 'JOB',
         })
-        setIsLiked(false)
-        setLikeCount(likeCount - 1)
       } else {
         const response = await likePostApi({
           targetId: post.postId,
           targetType: 'JOB',
           emotionType: 'LIKE',
         })
-
-        if (response?.data && onPostUpdate) {
-          onPostUpdate(response.data)
-        }
       }
     } catch (error) {
       toast.error('Đã có lỗi xảy ra khi thực hiện thao tác.')
@@ -49,29 +46,13 @@ const JobPostCard = ({ post, onViewDetail }) => {
       setLikeCount(originalLikeCount)
     }
   }
-  const fetchUser = async () => {
-    try {
-      const response = await info()
-      const userData = response?.data?.fullName
-      setInfoUser(userData)
-    } catch (err) {
-      toast.error('Lỗi khi tải thông tin người dùng')
-    }
-  }
-
-  useEffect(() => {
-    if (currentUser) {
-      fetchUser()
-    }
-  }, [currentUser])
 
   const handleApply = () => {
     setIsCvModalOpen(true)
   }
   const handleUpdate = () => {
-    setIsupdate(true)
+    setIsUpdate(true)
   }
-
   const handleOpenDetail = () => {
     if (onViewDetail) {
       onViewDetail(post)
@@ -108,22 +89,25 @@ const JobPostCard = ({ post, onViewDetail }) => {
             <Chat /> <span>{post.countComment}</span>
           </button>
 
-          {post?.creator?.fullName !== infoUser && (
-            <button
-              onClick={handleApply}
-              className='action-button apply-button'
-              disabled={isLoadingApply}>
-              <Handbag /> <span>{isLoadingApply ? 'Applying...' : 'Apply'}</span>
-            </button>
-          )}
+          <button
+            onClick={handleApply}
+            className='action-button apply-button'
+            disabled={isLoadingApply}>
+            <Handbag /> <span>{isLoadingApply ? 'Downloading...' : 'Download'}</span>
+          </button>
+          <a onClick={handleUpdate} className={`action-button-update `}>
+            chỉnh sửa
+          </a>
         </div>
       </div>
-
       {isCvModalOpen && (
-        <ImportCvModal postId={post.postId} onClose={() => setIsCvModalOpen(false)} />
+        <DownloadCvModal postId={post.postId} onClose={() => setIsCvModalOpen(false)} />
+      )}
+      {isUpdate && (
+        <UpdatePost post={post} onClose={() => setIsUpdate(false)} onPostUpdated={onPostUpdated} />
       )}
     </div>
   )
 }
 
-export default JobPostCard
+export default MyPosts

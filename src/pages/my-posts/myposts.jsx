@@ -2,14 +2,13 @@ import React, { useState, useEffect, useCallback, use } from 'react'
 import { Pagination } from 'antd'
 import toast from 'react-hot-toast'
 import CreatePost from '../../components/createPost/createPost'
-import { getJobApi } from '../../apis/posts.api'
-
-import './jobPage.scss'
-import JobPostCard from '../../components/jobPostCard/jobPostCard'
-import JobDetails from '../../components/jobDetails/jobDetails'
+import { getmyposts } from '../../apis/posts.api'
+import './myposts.scss'
+import MyPosts from '../../components/myPosts/myPosts'
+import MyPostDtails from '../../components/myPostDetails/myPostDetails'
 import CircularProgress from '@mui/joy/CircularProgress'
 
-const JobPage = () => {
+const Myposts = () => {
   const [pagination, setPagination] = useState({
     current: 0,
     size: 10,
@@ -21,7 +20,7 @@ const JobPage = () => {
 
   const fetchPosts = async () => {
     try {
-      const response = await getJobApi({
+      const response = await getmyposts({
         page: pagination.current,
         size: pagination.size,
       })
@@ -38,7 +37,7 @@ const JobPage = () => {
   }
   useEffect(() => {
     fetchPosts()
-  }, [pagination])
+  }, [pagination, posts])
   const handlePostCreated = () => {
     if (pagination.current === 0) {
       fetchPosts()
@@ -71,10 +70,17 @@ const JobPage = () => {
   const handleCloseModal = () => {
     setSelectedPost(null)
   }
+  const handlePostUpdated = (updatedPost) => {
+    setPosts((currentPosts) =>
+      currentPosts.map((posts) => (posts.postId == updatedPost.postId ? updatedPost : posts)),
+    )
+    toast.success('Bài đăng đã được cập nhật!')
+  }
 
   if (isLoading) {
     return <CircularProgress color='warning' />
   }
+
   return (
     <div className='user-homepage-container'>
       <div className='main-content'>
@@ -83,7 +89,12 @@ const JobPage = () => {
           <div className='loading-indicator'>Đang tải bài viết...</div>
         ) : posts && posts.length > 0 ? (
           posts.map((post, index) => (
-            <JobPostCard key={post.id || index} post={post} onViewDetail={handleViewPostDetail} />
+            <MyPosts
+              key={post.id || index}
+              post={post}
+              onPostUpdated={handlePostUpdated}
+              onViewDetail={handleViewPostDetail}
+            />
           ))
         ) : (
           <div className='no-posts-message'>Chưa có bài đăng nào để hiển thị.</div>
@@ -101,7 +112,7 @@ const JobPage = () => {
           )}
         </div>
         {selectedPost && (
-          <JobDetails
+          <MyPostDtails
             key={selectedPost.postId || selectedPost.eventId}
             post={selectedPost}
             onClose={handleCloseModal}
@@ -113,4 +124,4 @@ const JobPage = () => {
   )
 }
 
-export default JobPage
+export default Myposts

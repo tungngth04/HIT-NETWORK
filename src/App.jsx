@@ -18,6 +18,9 @@ import EventPage from './pages/eventPage/eventPage'
 import JobPage from './pages/jobPage/jobPage'
 import useAuth from './hooks/useAuth'
 import { useEffect } from 'react'
+import Myposts from './pages/my-posts/myposts'
+import { CircularProgressbar } from 'react-circular-progressbar'
+
 function App() {
   const currentUser = useAuth()
   const role = currentUser.user?.role || []
@@ -25,7 +28,6 @@ function App() {
   const location = useLocation()
   const path = location.pathname
   const naviagate = useNavigate()
-  console.log('role: ', role)
   useEffect(() => {
     if (!isAdmin && path.startsWith('/admin')) {
       naviagate('/')
@@ -108,12 +110,16 @@ function App() {
           path: 'profile',
           element: <ProfilePage />,
         },
+        {
+          path: 'my-posts',
+          element: <Myposts />,
+        },
       ],
     },
   ])
   return (
     <>
-      <Toaster position='top-right' reverseOrder={false} />
+      <Toaster position='top-left`' reverseOrder={false} />
       {elements}
     </>
   )

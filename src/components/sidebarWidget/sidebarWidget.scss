@@ -47,6 +47,9 @@ $text-light: #888;
   list-style: none;
   padding: 0;
   margin: 0;
+  &hover {
+    background-color: #f06d25;
+  }
 }
 
 .widget-item {
@@ -55,6 +58,10 @@ $text-light: #888;
   gap: 16px;
   padding: 12px 0;
   border-top: 1px solid #f0f2f5;
+  cursor: pointer;
+  &hover {
+    background-color: #f06d25;
+  }
 }
 
 .item-date {

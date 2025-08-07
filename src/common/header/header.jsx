@@ -1,15 +1,10 @@
 import './header.scss'
 import logo from '../../assets/images/logo.png'
-import avatar from '../../assets/images/hinh-anime-2.jpg'
-import { Search } from 'react-bootstrap-icons'
-import { Bell } from 'react-bootstrap-icons'
-import { Envelope } from 'react-bootstrap-icons'
 import { CaretDown } from 'react-bootstrap-icons'
 import { useNavigate } from 'react-router-dom'
 import { NavLink } from 'react-router-dom'
 import useAuth from '../../hooks/useAuth'
 import toast from 'react-hot-toast'
-import { clearAuth } from '../../store/auth.store'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { info } from '../../apis/userProfile.api'
@@ -32,7 +27,6 @@ const Header = () => {
       const response = await info()
       const userData = response?.data
       setInfoUser(userData)
-      console.log('data-user', userData)
     } catch (err) {
       toast.error('lỗi')
     }
@@ -54,6 +48,11 @@ const Header = () => {
           <li>
             <NavLink to='/home' end className={({ isActive }) => (isActive ? 'active' : '')}>
               Home
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to='/my-posts' end className={({ isActive }) => (isActive ? 'active' : '')}>
+              My Posts
             </NavLink>
           </li>
           <li>
