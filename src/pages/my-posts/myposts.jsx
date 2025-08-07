@@ -6,7 +6,7 @@ import { getmyposts } from '../../apis/posts.api'
 import './myposts.scss'
 import MyPosts from '../../components/myPosts/myPosts'
 import MyPostDtails from '../../components/myPostDetails/myPostDetails'
-import Loading from '../../components/loading/loading'
+import CircularProgress from '@mui/joy/CircularProgress'
 
 const Myposts = () => {
   const [pagination, setPagination] = useState({
@@ -37,7 +37,7 @@ const Myposts = () => {
   }
   useEffect(() => {
     fetchPosts()
-  }, [pagination])
+  }, [pagination, posts])
   const handlePostCreated = () => {
     if (pagination.current === 0) {
       fetchPosts()
@@ -78,7 +78,7 @@ const Myposts = () => {
   }
 
   if (isLoading) {
-    return <Loading isLoading={true} />
+    return <CircularProgress color='warning' />
   }
 
   return (

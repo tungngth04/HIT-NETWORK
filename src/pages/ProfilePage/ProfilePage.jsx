@@ -5,7 +5,7 @@ import './ProfilePage.scss'
 import { info, update } from '../../apis/userProfile.api'
 import { changePassword } from '../../apis/auth.api'
 import toast from 'react-hot-toast'
-import Loading from '../../components/loading/loading'
+import CircularProgress from '@mui/joy/CircularProgress'
 
 const ProfilePage = () => {
   const [action, setAction] = useState('info')
@@ -37,7 +37,6 @@ const ProfilePage = () => {
           : [],
       })
     } catch (error) {
-      console.error('Lỗi: ', error)
     } finally {
       setIsLoading(false)
     }
@@ -82,7 +81,7 @@ const ProfilePage = () => {
   }
 
   if (isLoading) {
-    return <Loading isLoading={true} />
+    return <CircularProgress color='warning' />
   }
   if (!infoUser) {
     return <div className='profile-loading'>Không thể tải dữ liệu người dùng.</div>

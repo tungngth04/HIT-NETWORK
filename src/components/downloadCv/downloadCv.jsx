@@ -35,7 +35,6 @@ const DownloadCvModal = ({ postId, onClose, onPostUpdated }) => {
       onClose()
     } catch (error) {
       toast.error(error.response?.data?.message || 'Tải file không thành công.')
-      console.error('Download failed:', error)
     } finally {
       setIsLoading(false)
     }

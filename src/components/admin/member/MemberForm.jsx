@@ -24,7 +24,7 @@ function MemberForm({ modal }) {
       }
       form.setFieldsValue(filledEvent)
     } catch (error) {
-      console.error(error)
+      toast.error(error)
     }
   }
   useEffect(() => {
@@ -58,8 +58,6 @@ function MemberForm({ modal }) {
       } else {
         toast.error('Cập nhật người dùng thất bại!')
       }
-
-      console.error('Lỗi từ server:', errMsg)
     }
 
     navigate('/admin/members')

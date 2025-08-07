@@ -50,8 +50,6 @@ const PostCard = ({ post, onViewDetail }) => {
           targetId: post.postId,
           targetType: post.targetType,
         })
-        if (onPostUpdate) {
-        }
       } else {
         const response = await likePostApi({
           targetId: post.postId,

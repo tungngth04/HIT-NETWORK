@@ -53,7 +53,6 @@ const MyPostDtails = ({ post, onClose, onCommentAdded }) => {
         setComments(commentsData)
       } catch (error) {
         toast.error('Không thể tải chi tiết bài đăng và bình luận.')
-        console.error('Lỗi khi fetch chi tiết:', error)
       } finally {
         setIsLoadingComments(false)
       }

@@ -6,7 +6,7 @@ import PostCard from '../../components/postCard/postCard'
 import { getPostsApi } from '../../apis/posts.api'
 import './userHomePage.scss'
 import PostDetailModal from '../../components/PostDetailModal/PostDetailModal'
-import Loading from '../../components/loading/loading'
+import CircularProgress from '@mui/joy/CircularProgress'
 
 const UserHomePage = () => {
   const [pagination, setPagination] = useState({
@@ -71,7 +71,7 @@ const UserHomePage = () => {
     setSelectedPost(null)
   }
   if (isLoading) {
-    return <Loading isLoading={true} />
+    return <CircularProgress color='warning' />
   }
 
   return (

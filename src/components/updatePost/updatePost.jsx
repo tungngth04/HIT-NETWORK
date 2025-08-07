@@ -35,13 +35,11 @@ const UpdatePost = ({ post, onPostUpdated, onClose }) => {
       if (typeof onPostUpdated === 'function' && updatedPostData) {
         onPostUpdated(updatedPostData)
       } else {
-        console.error('Update response did not contain post data.', response)
         toast.error('Không nhận được dữ liệu cập nhật.')
       }
       onClose()
     } catch (err) {
       toast.error('Không thể cập nhật bài đăng.')
-      console.error(err)
     } finally {
       setIsLoading(false)
     }

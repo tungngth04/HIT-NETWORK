@@ -6,7 +6,7 @@ import { getJobApi } from '../../apis/posts.api'
 import './jobPage.scss'
 import JobPostCard from '../../components/jobPostCard/jobPostCard'
 import JobDetails from '../../components/jobDetails/jobDetails'
-import Loading from '../../components/loading/loading'
+import CircularProgress from '@mui/joy/CircularProgress'
 
 const JobPage = () => {
   const [pagination, setPagination] = useState({
@@ -72,7 +72,7 @@ const JobPage = () => {
   }
 
   if (isLoading) {
-    return <Loading isLoading={true} />
+    return <CircularProgress color='warning' />
   }
   return (
     <div className='user-homepage-container'>

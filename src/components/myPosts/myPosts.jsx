@@ -33,9 +33,6 @@ const MyPosts = ({ post, onPostUpdated, onViewDetail }) => {
           targetId: post.postId,
           targetType: 'JOB',
         })
-
-        setIsLiked(false)
-        setLikeCount(likeCount - 1)
       } else {
         const response = await likePostApi({
           targetId: post.postId,

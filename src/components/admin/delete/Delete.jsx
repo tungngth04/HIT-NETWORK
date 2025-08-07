@@ -23,7 +23,6 @@ function DeleteMember({ id, deletePopup, setDeletePopup, fetchEvent, username, f
       }
       handleClose()
     } catch (error) {
-      console.error(error)
       toast.error(`Xóa ${deletePopup.type === 'event' ? 'sự kiện' : 'thành viên'} thất bại!`)
     }
   }

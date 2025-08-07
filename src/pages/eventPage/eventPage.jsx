@@ -6,7 +6,7 @@ import { getEventApi } from '../../apis/posts.api'
 import './eventPage.scss'
 import EventPostCard from '../../components/eventPostCard/evenPostCard'
 import EventDetails from '../../components/eventDetails/evenDetails'
-import Loading from '../../components/loading/loading'
+import CircularProgress from '@mui/joy/CircularProgress'
 
 const EventPage = () => {
   const [pagination, setPagination] = useState({
@@ -72,7 +72,7 @@ const EventPage = () => {
   }
 
   if (isLoading) {
-    return <Loading isLoading={true} />
+    return <CircularProgress color='warning' />
   }
 
   return (
