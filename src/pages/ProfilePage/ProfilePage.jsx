@@ -2,15 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { DatePicker, Form, Input, Radio, Space, Button, Spin, Upload } from 'antd'
 import dayjs from 'dayjs'
 import './ProfilePage.scss'
-import { info, update } from '../../apis/userProfile.api'
+import { info, total, update } from '../../apis/userProfile.api'
 import { changePassword } from '../../apis/auth.api'
 import toast from 'react-hot-toast'
-<<<<<<< HEAD
 import CircularProgress from '@mui/joy/CircularProgress'
-=======
+// import Loading from '../../components/loading/loading'
 
-import Loading from '../../components/loading/loading'
->>>>>>> ee108720284756bceefa812d304a100a0e874732
 
 
 const ProfilePage = () => {
@@ -19,8 +16,10 @@ const ProfilePage = () => {
   const [infoUser, setInfoUser] = useState()
   const [editForm] = Form.useForm()
   const [passwordForm] = Form.useForm()
+  const [totalData, setTotalData] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
 
+  // Get api lay thong tin nguoi dung
   const fetchGetUser = async () => {
     try {
       const response = await info()
@@ -58,7 +57,7 @@ const ProfilePage = () => {
     formData.append('dob', values.dob?.format('YYYY-MM-DD'))
     formData.append('email', values.email)
     formData.append('phone', values.phone)
-    const file =values.avatar?.[0]?.originFileObj
+    const file = values.avatar?.[0]?.originFileObj
     if (file) {
       formData.append('avatar', file)
     }
@@ -66,10 +65,9 @@ const ProfilePage = () => {
       await update(formData)
       await fetchGetUser()
       setAction('info')
-      toast.success("Cập nhật thông tin thành công!!")
+      toast.success('Cập nhật thông tin thành công!!')
     } catch {
-
-      alert('Cap nhat nguoi dung that bai')
+      toast.error('Cập nhật thông tin thất bại!!')
     }
   }
   const handleChangePassword = async (values) => {
@@ -88,13 +86,20 @@ const ProfilePage = () => {
     }
   }
 
+  const handleTotalProfile = async () => {
+    try {
+      const res = await total()
+      setTotalData(res.data)
+    } catch (error) {
+      console.error('Loi lay du lieu thong ke: ', error)
+    }
+  }
+  useEffect(() => {
+    handleTotalProfile()
+  }, [])
   if (isLoading) {
-<<<<<<< HEAD
     return <CircularProgress color='warning' />
-=======
-    return <Loading isLoading={true} />
-
->>>>>>> ee108720284756bceefa812d304a100a0e874732
+//     return <Loading isLoading={true} />
   }
   if (!infoUser) {
     return <div className='profile-loading'></div>
@@ -111,11 +116,7 @@ const ProfilePage = () => {
       <div className='profile-header-card'>
         <div className='header-user-info'>
           {/* <img src={avatar} alt='avatar' className='user-avatar' /> */}
-          <img
-            src={infoUser.avatarUrl}
-            alt=''
-            style={{ borderRadius: '100%' }}
-          />
+          <img src={infoUser.avatarUrl} alt='' style={{ borderRadius: '100%' }} />
           <div className='user-details'>
             <p className='user-name'>{infoUser?.fullName}</p>
             <p className='user-email'>{infoUser?.email}</p>
@@ -123,15 +124,15 @@ const ProfilePage = () => {
         </div>
         <div className='header-stats'>
           <div className='stats-item'>
-            <p>20</p>
+            <p>{totalData?.countPost ?? 0}</p>
             <p>Posts</p>
           </div>
           <div className='stats-item'>
-            <p>30</p>
+            <p>{totalData?.countRecruitment ?? 0}</p>
             <p>Recruitment</p>
           </div>
           <div className='stats-item'>
-            <p>50</p>
+            <p>{totalData?.countApply ?? 0}</p>
             <p>Apply</p>
           </div>
         </div>
