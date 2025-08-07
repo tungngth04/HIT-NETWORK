@@ -43,5 +43,6 @@ export const ApiConstants = {
   user: {
     info: '/users/me',
     update: '/users/me',
+    total: '/users',
   },
 }
