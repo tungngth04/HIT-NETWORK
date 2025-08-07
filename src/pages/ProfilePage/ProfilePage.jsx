@@ -5,7 +5,13 @@ import './ProfilePage.scss'
 import { info, update } from '../../apis/userProfile.api'
 import { changePassword } from '../../apis/auth.api'
 import toast from 'react-hot-toast'
+<<<<<<< HEAD
 import CircularProgress from '@mui/joy/CircularProgress'
+=======
+
+import Loading from '../../components/loading/loading'
+>>>>>>> ee108720284756bceefa812d304a100a0e874732
+
 
 const ProfilePage = () => {
   const [action, setAction] = useState('info')
@@ -52,7 +58,7 @@ const ProfilePage = () => {
     formData.append('dob', values.dob?.format('YYYY-MM-DD'))
     formData.append('email', values.email)
     formData.append('phone', values.phone)
-    const file = values.avatarUrl?.[0]?.originFileObj
+    const file =values.avatar?.[0]?.originFileObj
     if (file) {
       formData.append('avatar', file)
     }
@@ -60,12 +66,14 @@ const ProfilePage = () => {
       await update(formData)
       await fetchGetUser()
       setAction('info')
-      alert('Cập nhật thành công!')
+      toast.success("Cập nhật thông tin thành công!!")
     } catch {
+
       alert('Cap nhat nguoi dung that bai')
     }
   }
   const handleChangePassword = async (values) => {
+
     try {
       await changePassword({
         oldPassword: values.oldPassword,
@@ -81,10 +89,15 @@ const ProfilePage = () => {
   }
 
   if (isLoading) {
+<<<<<<< HEAD
     return <CircularProgress color='warning' />
+=======
+    return <Loading isLoading={true} />
+
+>>>>>>> ee108720284756bceefa812d304a100a0e874732
   }
   if (!infoUser) {
-    return <div className='profile-loading'>Không thể tải dữ liệu người dùng.</div>
+    return <div className='profile-loading'></div>
   }
   const menuItems = [
     { key: 'info', label: 'Thông tin cá nhân' },
@@ -101,7 +114,7 @@ const ProfilePage = () => {
           <img
             src={infoUser.avatarUrl}
             alt=''
-            style={{ width: '100px', height: '100px', borderRadius: '100%' }}
+            style={{ borderRadius: '100%' }}
           />
           <div className='user-details'>
             <p className='user-name'>{infoUser?.fullName}</p>

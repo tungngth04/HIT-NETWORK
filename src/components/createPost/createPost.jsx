@@ -156,6 +156,7 @@ const CreatePost = ({ posts, onPostCreated }) => {
                 <p className='type-posts' value='JOB'>
                   Recruitment
                 </p>
+
               </div>
               <button
                 onClick={handleSubmit}

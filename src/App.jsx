@@ -11,6 +11,8 @@ import Events from './pages/Admin/events/Events'
 import EventForm from './components/admin/event/EventForm'
 import LayoutAdmin from './layouts/LayoutAdmin/LayoutAdmin'
 import ProfilePage from './pages/ProfilePage/ProfilePage'
+import Post from './pages/Admin/post/Post'
+import DetailPost from './pages/Admin/post/DetailPost'
 import toast, { Toaster } from 'react-hot-toast'
 import EventPage from './pages/eventPage/eventPage'
 import JobPage from './pages/jobPage/jobPage'
@@ -42,6 +44,10 @@ function App() {
           element: <Dashboard />,
         },
         {
+          path: 'dashboard',
+          element: <Dashboard />,
+        },
+        {
           path: 'members',
           element: <Members />,
         },
@@ -65,6 +71,14 @@ function App() {
           path: 'events/edit/:id',
           element: <EventForm modal='edit' />,
         },
+        {
+          path: 'posts',
+          element: <Post/>
+        },
+        {
+          path: "post/detail/:id",
+          element: <DetailPost/>
+        }
       ],
     },
     {
