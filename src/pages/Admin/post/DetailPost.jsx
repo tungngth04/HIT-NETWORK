@@ -6,6 +6,8 @@ import './DetailPost.scss'
 import avatarDefault from '../../../assets/images/avatarDefault.jpg'
 import { IoArrowBackSharp } from "react-icons/io5";
 import Delete from '../../../components/admin/delete/Delete'
+import CircularProgress from '@mui/joy/CircularProgress';
+
 
 const PostDetail = () => {
   const [action, setAction] = useState('like')
@@ -44,9 +46,10 @@ const PostDetail = () => {
     ).padStart(2, '0')}`
   }
 
-  if (!post) return <p>Đang tải dữ liệu bài đăng...</p>
+  if (!post) return <CircularProgress /> 
 
   return (
+    
     <div className='post-h2'>
       <div className='title'>
         <IoArrowBackSharp className='title__icon' onClick={() => navigate('/admin/posts')}/>
