@@ -7,7 +7,7 @@ import { Pagination } from 'antd'
 import Import from '../../../components/admin/import/Import'
 import Delete from '../../../components/admin/delete/Delete'
 import { getAllEvents } from '../../../apis/events.api'
-import { current } from '@reduxjs/toolkit'
+import { IoMdAddCircle } from 'react-icons/io'
 import dayjs from 'dayjs'
 import toast from 'react-hot-toast'
 
@@ -172,17 +172,17 @@ function Events() {
           <button className='button button--search' onClick={() => handleSearch()}>
             Tìm kiếm
           </button>
-          <div style={{ marginLeft: '400px' }}>
-            <button className='button button--add' onClick={handleCreate}>
-              Thêm
-            </button>
-            <button
+          <div className='button-add' onClick={handleCreate}>
+            <IoMdAddCircle className='icon-add' />
+            <p className='title-add'>Thêm </p>
+          </div>
+          {/* <button
               className='button button--import'
               onClick={handleImport}
               style={{ marginLeft: '10px' }}>
               Import
-            </button>
-          </div>
+            </button> */}
+          {/* </div> */}
         </div>
       </div>
       <Table
