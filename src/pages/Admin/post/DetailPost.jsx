@@ -46,7 +46,13 @@ const PostDetail = () => {
     ).padStart(2, '0')}`
   }
 
-  if (!post) return <CircularProgress /> 
+  if (!post)
+  return (
+    <div className="loading">
+      <CircularProgress />
+    </div>
+  );
+
 
   return (
     
