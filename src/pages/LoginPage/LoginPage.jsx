@@ -21,14 +21,8 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsLoading(true)
-
     try {
       const response = await login({ username: msv, password: password })
-      // nếu có token thì authen.saveUser({token: response.token})
-      // kiểm tra biến role vừa lấy có phải là BQT không
-      //dùng role.includes('BQT') để kiểm tra
-      // nếu là BQT thì chuyển hướng đến tran admin
-      // nếu là TV thì chuyển hướng đến trang home
       if (response && response.data.data.token) {
         authen.saveUser({ token: response.data.data.token, role: response.data.data.role })
         if (response.data.data.role.includes('BQT')) {
@@ -64,12 +58,12 @@ const LoginPage = () => {
 
           <form className='login-form' onSubmit={handleSubmit}>
             <div className='input-group'>
-              <label htmlFor='msv'>MSV</label>
+              <label htmlFor='msv'>UserName</label>
               <input
                 type='text'
                 id='msv'
                 name='msv'
-                placeholder='Nhập mã sinh viên của bạn'
+                placeholder='Username'
                 onChange={(e) => setMsv(e.target.value)}
                 required
               />
@@ -82,7 +76,7 @@ const LoginPage = () => {
                   type={passwordShow ? 'text' : 'password'}
                   id='password'
                   name='password'
-                  placeholder='Nhập mật khẩu'
+                  placeholder='Password'
                   required
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={isLoading}

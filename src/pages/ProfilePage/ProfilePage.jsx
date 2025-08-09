@@ -1,93 +1,106 @@
-import React from 'react'
-import { DatePicker, Form, Input, Radio, Space, Button, Spin } from 'antd'
+import React, { useEffect, useState } from 'react'
+import { DatePicker, Form, Input, Radio, Space, Button, Spin, Upload } from 'antd'
 import dayjs from 'dayjs'
-import { useState, useEffect } from 'react'
-import { changePassword } from '../../apis/changePassword.api'
-import avatar from '../../assets/images/hinh-anime-2.jpg'
 import './ProfilePage.scss'
+import { info, total, update } from '../../apis/userProfile.api'
+import { changePassword } from '../../apis/auth.api'
 import toast from 'react-hot-toast'
+import CircularProgress from '@mui/joy/CircularProgress'
+// import Loading from '../../components/loading/loading'
 
 const ProfilePage = () => {
-  const [user, setUser] = useState(null)
-  const [isLoading, setIsLoading] = useState(true)
   const [action, setAction] = useState('info')
   const [hoverIndex, setHoverIndex] = useState(null)
-
+  const [infoUser, setInfoUser] = useState()
   const [editForm] = Form.useForm()
   const [passwordForm] = Form.useForm()
+  const [totalData, setTotalData] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
 
-  const getUserProfileApi = async () => {
-    // Mock API call to fetch user profile
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          hoten: 'Nguyen Van A',
-          gioitinh: 'Nam',
-          ngaysinh: '1990-01-01',
-          email: '',
-          tentaikhoan: 'nguyenvana',
-          stats: {
-            posts: 10,
-            recruitments: 5,
-            applies: 3,
-          },
-        })
-      }, 1000)
-    })
-  }
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const userData = await getUserProfileApi()
-        setUser(userData)
-        editForm.setFieldsValue({
-          hoten: userData.hoten,
-          gioitinh: userData.gioitinh,
-
-          ngaysinh: userData.ngaysinh ? dayjs(userData.ngaysinh) : null,
-        })
-      } catch (error) {
-        console.error('Failed to fetch user profile', error)
-      } finally {
-        setIsLoading(false)
-      }
+  // Get api lay thong tin nguoi dung
+  const fetchGetUser = async () => {
+    try {
+      const response = await info()
+      const userData = response?.data
+      setInfoUser(userData)
+      editForm.setFieldsValue({
+        fullName: userData.fullName || '',
+        gender: userData.gender || '',
+        dob: userData.dob ? dayjs(userData.dob) : null,
+        email: userData.email || '',
+        username: userData.username || '',
+        phone: userData.phone || '',
+        avatar: userData.avatarUrl
+          ? [
+              {
+                name: 'avatar.jpg',
+                url: userData.avatarUrl,
+              },
+            ]
+          : [],
+      })
+    } catch (error) {
+    } finally {
+      setIsLoading(false)
     }
-    fetchUser()
-  }, [editForm])
+  }
+  useEffect(() => {
+    fetchGetUser()
+  }, [])
 
-  const handleUpdateProfile = async () => {}
-
-  const handleChangePassword = async (values) => {
-    console.log('Submitting password change:', values)
-    if (values.newPassword !== values.confirmPassword) {
-      passwordForm.setFields([
-        { name: 'confirmPassword', errors: ['Mật khẩu xác nhận không khớp!'] },
-      ])
-      return
+  const handleUpdateProfile = async (values) => {
+    const formData = new FormData()
+    formData.append('fullName', values.fullName)
+    formData.append('gender', values.gender)
+    formData.append('dob', values.dob?.format('YYYY-MM-DD'))
+    formData.append('email', values.email)
+    formData.append('phone', values.phone)
+    const file = values.avatar?.[0]?.originFileObj
+    if (file) {
+      formData.append('avatar', file)
     }
     try {
-      await changePassword(values)
+      await update(formData)
+      await fetchGetUser()
+      setAction('info')
+      toast.success('Cập nhật thông tin thành công!!')
+    } catch {
+      toast.error('Cập nhật thông tin thất bại!!')
+    }
+  }
+  const handleChangePassword = async (values) => {
+    try {
+      await changePassword({
+        oldPassword: values.oldPassword,
+        newPassword: values.newPassword,
+      })
       toast.success('Đổi mật khẩu thành công!')
       passwordForm.resetFields()
       setAction('info')
     } catch (error) {
-      toast.error('Có lỗi xảy ra, vui lòng thử lại.')
+      const errorMessage = error.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại.'
+      toast.error(errorMessage)
     }
   }
 
+  const handleTotalProfile = async () => {
+    try {
+      const res = await total()
+      setTotalData(res.data)
+    } catch (error) {
+      console.error('Loi lay du lieu thong ke: ', error)
+    }
+  }
+  useEffect(() => {
+    handleTotalProfile()
+  }, [])
   if (isLoading) {
-    return (
-      <div className='profile-loading'>
-        <Spin size='large' />
-      </div>
-    )
+    return <CircularProgress color='warning' />
+    //     return <Loading isLoading={true} />
   }
-
-  if (!user) {
-    return <div className='profile-loading'>Không thể tải dữ liệu người dùng.</div>
+  if (!infoUser) {
+    return <div className='profile-loading'></div>
   }
-
   const menuItems = [
     { key: 'info', label: 'Thông tin cá nhân' },
     { key: 'edit', label: 'Chỉnh sửa thông tin' },
@@ -99,23 +112,24 @@ const ProfilePage = () => {
       {/* Phần header card */}
       <div className='profile-header-card'>
         <div className='header-user-info'>
-          <img src={avatar} alt='avatar' className='user-avatar' />
+          {/* <img src={avatar} alt='avatar' className='user-avatar' /> */}
+          <img src={infoUser.avatarUrl} alt='' style={{ borderRadius: '100%' }} />
           <div className='user-details'>
-            <p className='user-name'>{user.hoten}</p>
-            <p className='user-email'>{user.email}</p>
+            <p className='user-name'>{infoUser?.fullName}</p>
+            <p className='user-email'>{infoUser?.email}</p>
           </div>
         </div>
         <div className='header-stats'>
           <div className='stats-item'>
-            <p>{user.stats.posts}</p>
+            <p>{totalData?.countPost ?? 0}</p>
             <p>Posts</p>
           </div>
           <div className='stats-item'>
-            <p>{user.stats.recruitments}</p>
+            <p>{totalData?.countRecruitment ?? 0}</p>
             <p>Recruitment</p>
           </div>
           <div className='stats-item'>
-            <p>{user.stats.applies}</p>
+            <p>{totalData?.countApply ?? 0}</p>
             <p>Apply</p>
           </div>
         </div>
@@ -141,36 +155,47 @@ const ProfilePage = () => {
           </ul>
         </div>
 
-        {/* Content Area */}
         <div className='profile-content-area'>
+          {/* Xem thong tin tai khoan */}
           {action === 'info' && (
             <>
               <h4 className='content-title'>Thông tin cá nhân</h4>
               <div className='info-display'>
                 <div className='info-item'>
-                  <p>Họ và tên:</p>
-                  <p>{user.hoten}</p>
+                  <div className='info-item--p'>
+                    <p>Họ và tên:</p>
+                    <p>{infoUser?.fullName}</p>
+                  </div>
                 </div>
                 <div className='info-item'>
-                  <p>Giới tính:</p>
-                  <p>{user.gioitinh}</p>
+                  <div className='info-item--p'>
+                    <p>Giới tính:</p>
+                    <p>{infoUser?.gender}</p>
+                  </div>
                 </div>
                 <div className='info-item'>
-                  <p>Ngày sinh:</p>
-                  <p>{dayjs(user.ngaysinh).format('DD/MM/YYYY')}</p>
+                  <div className='info-item--p'>
+                    <p>Ngày sinh:</p>
+                    <p>{dayjs(infoUser?.dob).format('DD/MM/YYYY')}</p>
+                  </div>
                 </div>
                 <div className='info-item'>
-                  <p>Email:</p>
-                  <p>{user.email}</p>
+                  <div className='info-item--p'>
+                    <p>Email:</p>
+                    <p>{infoUser?.email}</p>
+                  </div>
                 </div>
                 <div className='info-item'>
-                  <p>Tên tài khoản:</p>
-                  <p>{user.tentaikhoan}</p>
+                  <div className='info-item--p'>
+                    <p>Tên tài khoản:</p>
+                    <p>{infoUser?.username}</p>
+                  </div>
                 </div>
               </div>
             </>
           )}
 
+          {/* Chỉnh sủa thông tin người dùng */}
           {action === 'edit' && (
             <>
               <h4 className='content-title'>Chỉnh sửa thông tin cá nhân</h4>
@@ -181,28 +206,45 @@ const ProfilePage = () => {
                 layout='vertical'>
                 <Form.Item
                   label='Họ và tên'
-                  name='hoten'
+                  name='fullName'
                   rules={[{ required: true, message: 'Hãy nhập họ và tên' }]}>
                   <Input className='edit-input' placeholder='Nhập họ và tên' />
                 </Form.Item>
-                <Form.Item label='Giới tính' name='gioitinh'>
+                <Form.Item label='Giới tính' name='gender'>
                   <Radio.Group>
-                    <Radio value='Nam'>Nam</Radio>
-                    <Radio value='Nữ'>Nữ</Radio>
-                    <Radio value='Khác'>Khác</Radio>
+                    <Radio value='MALE'>Nam</Radio>
+                    <Radio value='FEMALE'>Nữ</Radio>
+                    <Radio value='OTHER'>Khác</Radio>
                   </Radio.Group>
                 </Form.Item>
                 <Form.Item
                   label='Ngày sinh'
-                  name='ngaysinh'
+                  name='dob'
                   rules={[{ required: true, message: 'Vui lòng chọn ngày sinh' }]}>
                   <DatePicker className='edit-datepicker' placeholder='Chọn ngày sinh' />
                 </Form.Item>
-                <Form.Item label='Email'>
-                  <Input className='edit-input' disabled value={user.email} />
+                <Form.Item
+                  label='Số điện thoại'
+                  name='phone'
+                  rules={[{ required: true, message: 'Vui lòng nhập số điện thoại' }]}>
+                  <Input className='edit-input' placeholder='Nhập số điện thoại' />
                 </Form.Item>
-                <Form.Item label='Tên tài khoản'>
-                  <Input className='edit-input' disabled value={user.tentaikhoan} />
+
+                <Form.Item
+                  label='Ảnh đại diện'
+                  name='avatar'
+                  valuePropName='fileList'
+                  getValueFromEvent={(e) => e && e.fileList}>
+                  <Upload listType='picture' maxCount={1} beforeUpload={() => false}>
+                    <Button>Chọn ảnh</Button>
+                  </Upload>
+                </Form.Item>
+
+                <Form.Item label='Email' name='email'>
+                  <Input className='edit-input' disabled />
+                </Form.Item>
+                <Form.Item label='Tên tài khoản' name='username'>
+                  <Input className='edit-input' disabled />
                 </Form.Item>
                 <Form.Item className='form-buttons'>
                   <Space>
@@ -218,6 +260,7 @@ const ProfilePage = () => {
             </>
           )}
 
+          {/* Đổi mật khẩu */}
           {action === 'changePassword' && (
             <>
               <h4 className='content-title'>Đổi mật khẩu</h4>
@@ -226,7 +269,9 @@ const ProfilePage = () => {
                 onFinish={handleChangePassword}
                 className='edit-form'
                 layout='vertical'>
+                {/* Các Form.Item không thay đổi... */}
                 <Form.Item
+                  id='change-password-form'
                   label='Nhập mật khẩu cũ'
                   name='oldPassword'
                   rules={[{ required: true, message: 'Hãy nhập mật khẩu cũ' }]}>

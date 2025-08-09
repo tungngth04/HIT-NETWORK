@@ -1,48 +1,120 @@
-import React from 'react'
-import { HandThumbsUp, Chat, Bookmark, Handbag } from 'react-bootstrap-icons'
-import './PostCard.scss'
+import React, { useEffect, useState } from 'react'
+import { HandThumbsUpFill, HandThumbsUp, Chat, Handbag } from 'react-bootstrap-icons'
+import toast from 'react-hot-toast'
+import './postCard.scss'
+import { likePostApi, dellikePostApi, createCommentApi } from '../../apis/posts.api'
+import ImportCvModal from '../importcv/importcv'
+import { info } from '../../apis/userProfile.api'
+import { useSelector } from 'react-redux'
 
-const PostCard = ({ post }) => {
-  const { user, content, media, stats, type } = post
+const PostCard = ({ post, onViewDetail }) => {
+  const authState = useSelector((state) => state.auth.auth)
+  const currentUser = authState
+  const [isLoadingApply, setIsLoadingApply] = useState(false)
+  const [isLiked, setIsLiked] = useState(post?.checkReaction || false)
+  const [likeCount, setLikeCount] = useState(post?.countReaction || 0)
+  const [isCvModalOpen, setIsCvModalOpen] = useState(false)
+  const [infoUser, setInfoUser] = useState()
+  const fetchUser = async () => {
+    try {
+      const response = await info()
+      const userData = response?.data?.fullName
+      setInfoUser(userData)
+    } catch (err) {
+      toast.error('Lỗi khi tải thông tin người dùng')
+    }
+  }
+
+  useEffect(() => {
+    if (currentUser) {
+      fetchUser()
+    }
+  }, [currentUser])
+
+  const handleOpenDetail = () => {
+    if (onViewDetail) {
+      onViewDetail(post)
+    }
+  }
+
+  const handleLike = async () => {
+    const originalLikedState = isLiked
+    const originalLikeCount = likeCount
+
+    setIsLiked(!originalLikedState)
+    setLikeCount(originalLikedState ? likeCount - 1 : likeCount + 1)
+
+    try {
+      if (originalLikedState) {
+        await dellikePostApi({
+          targetId: post.postId,
+          targetType: post.targetType,
+        })
+      } else {
+        const response = await likePostApi({
+          targetId: post.postId,
+          targetType: post.targetType,
+          emotionType: 'LIKE',
+        })
+
+        if (response?.data && onPostUpdate) {
+          onPostUpdate(response.data)
+        }
+      }
+    } catch (error) {
+      toast.error('Đã có lỗi xảy ra khi thực hiện thao tác.')
+      setIsLiked(originalLikedState)
+      setLikeCount(originalLikeCount)
+    }
+  }
+
+  const handleApply = () => {
+    setIsCvModalOpen(true)
+  }
 
   return (
     <div className='post-card'>
       <div className='post-header'>
-        <img src={user.avatar} alt={`${user.name}'s avatar`} className='post-avatar' />
+        <img
+          src={post?.creator?.avatarUrl}
+          alt={`${post?.creator?.fullName}'s avatar`}
+          className='post-avatar'
+        />
         <div className='post-user-info'>
-          <span className='post-user-name'>{user.name}</span>
-          <span className='post-user-details'>
-            {user.title} • {user.timestamp}
-          </span>
+          <span className='post-user-name'>{post?.creator?.fullName}</span>
+          <span className='post-user-create'>{new Date(post.createdAt).toLocaleDateString()}</span>
         </div>
-
-        {/* {type === 'Recruit' && <span className='recruit-tag'>Recruitment</span>} */}
+        {post.targetType === 'JOB' && <span className='recruit-tag'>Recruitment</span>}
+        {post.targetType === 'EVENT' && <span className='recruit-tag'>Event</span>}
       </div>
-      <p className='post-content'>{content}</p>
-      {media && (
+      <p className='post-title'>{post.title}</p>
+      <p className='post-content'>{post.description}</p>
+      {post.urlImage && post.urlImage.length > 0 && (
         <div className='post-media-container'>
-          <img src={media} alt='Post media' className='post-media' />
+          <img src={post.urlImage} alt='Post media' className='post-media' />
         </div>
       )}
       <div className='post-actions'>
         <div className='action-group'>
-          <button className='action-button'>
-            <HandThumbsUp /> <span>{stats.likes}</span>
+          <button onClick={handleLike} className={`action-button ${isLiked ? 'active' : ''}`}>
+            {isLiked ? <HandThumbsUpFill /> : <HandThumbsUp />} <span>{likeCount}</span>
           </button>
-          <button className='action-button'>
-            <Chat /> <span>{stats.comments}</span>
+          <button onClick={handleOpenDetail} className='action-button'>
+            <Chat /> <span>{post.countComment}</span>
           </button>
-
-          {type === 'Recruit' && (
-            <button className='action-button apply-button'>
-              <Handbag /> <span>Apply {stats.applies ?? 0}</span>
+          {post.targetType === 'JOB' && post?.creator?.fullName !== infoUser && (
+            <button
+              onClick={handleApply}
+              className='action-button apply-button'
+              disabled={isLoadingApply}>
+              <Handbag /> <span>{isLoadingApply ? 'Applying...' : 'Apply'}</span>
             </button>
           )}
         </div>
-        <button className='action-button'>
-          <Bookmark />
-        </button>
       </div>
+      {isCvModalOpen && (
+        <ImportCvModal postId={post.postId} onClose={() => setIsCvModalOpen(false)} />
+      )}
     </div>
   )
 }

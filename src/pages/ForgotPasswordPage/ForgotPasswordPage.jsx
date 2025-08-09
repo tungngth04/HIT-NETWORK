@@ -8,6 +8,7 @@ const ForgotPasswordPage = () => {
   const [msv, setMsv] = useState('')
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState('')
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -76,7 +77,7 @@ const ForgotPasswordPage = () => {
 
           <div className='login-link'>
             <p>
-              Bạn đã có tài khoản? <Link to='/login'>Đăng nhập</Link>
+              Bạn đã có tài khoản? <Link to='/'>Đăng nhập</Link>
             </p>
           </div>
         </div>

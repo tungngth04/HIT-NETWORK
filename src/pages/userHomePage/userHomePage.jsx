@@ -1,54 +1,118 @@
-import React from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
+import { Pagination } from 'antd'
+import toast from 'react-hot-toast'
 import CreatePost from '../../components/createPost/createPost'
 import PostCard from '../../components/postCard/postCard'
-import SidebarWidget from '../../components/sidebarWidget/sidebarWidget'
-import Pagination from '../../components/pagination/pagination'
-import { usePosts } from '../../hooks/userPosts'
+import { getPostsApi } from '../../apis/posts.api'
 import './userHomePage.scss'
-
-const recruitmentPosts = [
-  {
-    id: 1,
-    date: { day: '03', month: 'Dec' },
-    title: 'Design Thinking',
-    subtitle: 'Creative Town Hall',
-  },
-  {
-    id: 2,
-    date: { day: '12', month: 'Dec' },
-    title: 'Information Architecture',
-    subtitle: 'Creative Town Hall',
-  },
-]
-const upcomingEvents = [
-  {
-    id: 1,
-    date: { day: '03', month: 'Dec' },
-    title: 'Design Thinking',
-    subtitle: 'Creative Town Hall',
-  },
-]
+import PostDetailModal from '../../components/PostDetailModal/PostDetailModal'
+import CircularProgress from '@mui/joy/CircularProgress'
 
 const UserHomePage = () => {
-  const { posts, isLoading, currentPage, totalPages, addPost, goToPage } = usePosts()
+  const [pagination, setPagination] = useState({
+    current: 0,
+    size: 10,
+  })
+  const [posts, setPosts] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [totalPosts, setTotalPosts] = useState(0)
+  const [selectedPost, setSelectedPost] = useState(null)
+
+  const fetchPosts = async () => {
+    try {
+      const response = await getPostsApi({
+        page: pagination.current,
+        size: pagination.size,
+      })
+      setPosts(response?.data?.content)
+      setTotalPosts(response?.data?.totalElements || 0)
+      setIsLoading(false)
+    } catch (error) {
+      toast.error('Không thể tải bài đăng. Vui lòng thử lại sau.')
+      setIsLoading(false)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+  useEffect(() => {
+    fetchPosts()
+  }, [pagination])
+  const handlePostCreated = () => {
+    if (pagination.current === 0) {
+      fetchPosts()
+    } else {
+      setPagination((prev) => ({ ...prev, current: 0 }))
+    }
+  }
+
+  const handlePageChange = (pageCurrent, pageSize) => {
+    setPagination((prev) => ({
+      ...prev,
+      current: pageCurrent - 1,
+      size: pageSize || prev.size,
+    }))
+  }
+  const handleViewPostDetail = (postToView) => {
+    setSelectedPost(postToView)
+  }
+  const handleCommentAdded = (targetPostId) => {
+    setPosts((currentPosts) =>
+      currentPosts.map((p) => {
+        if (p.postId === targetPostId || p.eventId === targetPostId) {
+          return { ...p, countComment: p.countComment + 1 }
+        }
+        return p
+      }),
+    )
+  }
+
+  const handleCloseModal = () => {
+    setSelectedPost(null)
+  }
 
   return (
     <div className='user-homepage-container'>
       <div className='main-content'>
-        <CreatePost onPostCreated={addPost} />
+        {!isLoading && <CreatePost posts={posts} onPostCreated={handlePostCreated} />}
 
         {isLoading ? (
-          <div className='loading-indicator'>Đang tải bài viết...</div>
+          <div className='loading-container'>
+            <CircularProgress color='warning' />
+          </div>
+        ) : posts && posts.length > 0 ? (
+          posts.map((post) => (
+            <PostCard
+              key={post.postId || post.eventId}
+              post={post}
+              onViewDetail={handleViewPostDetail}
+            />
+
+          ))
         ) : (
-          posts.map((post) => <PostCard key={post.id} post={post} />)
+          <div className='no-posts-message'>Chưa có bài đăng nào để hiển thị.</div>
         )}
 
-        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={goToPage} />
+        <div className='pagination-wrapper'>
+          {!isLoading && totalPosts > 0 && (
+            <Pagination
+              current={pagination.current + 1}
+              total={totalPosts}
+              pageSize={pagination.size}
+              showSizeChanger
+              onChange={handlePageChange}
+              onShowSizeChange={handlePageChange}
+            />
+          )}
+        </div>
+        {selectedPost && (
+          <PostDetailModal
+            key={selectedPost.postId || selectedPost.eventId}
+            post={selectedPost}
+            onClose={handleCloseModal}
+            onCommentAdded={handleCommentAdded}
+          />
+        )}
       </div>
-      <aside className='sidebar'>
-        <SidebarWidget title='Recruitment Posts' items={recruitmentPosts} />
-        <SidebarWidget title='Upcoming Events' items={upcomingEvents} />
-      </aside>
     </div>
   )
 }
