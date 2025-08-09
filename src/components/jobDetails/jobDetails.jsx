@@ -1,8 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react'
 import toast from 'react-hot-toast'
-import { HandThumbsUp, Chat, HandThumbsUpFill, Handbag } from 'react-bootstrap-icons'
+import { HandThumbsUp, Chat, HandThumbsUpFill, Handbag, Trash } from 'react-bootstrap-icons'
 import './jobDetails.scss'
-import { dellikePostApi, likePostApi, getJobPostAPI, createCommentApi } from '../../apis/posts.api'
+import {
+  dellikePostApi,
+  likePostApi,
+  getJobPostAPI,
+  createCommentApi,
+  deleteCommentApi,
+} from '../../apis/posts.api'
 import ImportCvModal from '../importcv/importcv'
 import { useSelector } from 'react-redux'
 import { info } from '../../apis/userProfile.api'
@@ -36,6 +42,22 @@ const JobDetails = ({ post, onClose, onCommentAdded }) => {
       fetchUser()
     }
   }, [currentUser])
+  const handleDeleteComment = async (commentIdToDelete) => {
+    if (!window.confirm('Bạn có chắc chắn muốn xóa bình luận này không?')) {
+      return
+    }
+    try {
+      await deleteCommentApi(commentIdToDelete)
+
+      setComments((prevComments) =>
+        prevComments.filter((comment) => comment.commentId !== commentIdToDelete),
+      )
+
+      toast.success('Đã xóa bình luận.')
+    } catch (error) {
+      toast.error('Xóa bình luận thất bại.')
+    }
+  }
 
   useEffect(() => {
     const fetchPostDetailsAndComments = async () => {
@@ -184,6 +206,13 @@ const JobDetails = ({ post, onClose, onCommentAdded }) => {
                       <span className='comment-author'>{comment.userPostResponseDTO.fullName}</span>
                       <p className='comment-text'>{comment.content}</p>
                     </div>
+                    {infoUser === comment?.userPostResponseDTO?.fullName && (
+                      <button
+                        onClick={() => handleDeleteComment(comment.commentId)}
+                        className='delete-comment-btn'>
+                        <Trash />
+                      </button>
+                    )}
                   </div>
                 ))
               )}

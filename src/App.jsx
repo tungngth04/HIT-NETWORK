@@ -19,7 +19,7 @@ import JobPage from './pages/jobPage/jobPage'
 import useAuth from './hooks/useAuth'
 import { useEffect } from 'react'
 import Myposts from './pages/my-posts/myposts'
-import { CircularProgressbar } from 'react-circular-progressbar'
+import ScrollToTopButton from './components/ScrollToTopButton/ScrollToTopButton'
 
 function App() {
   const currentUser = useAuth()
@@ -73,12 +73,12 @@ function App() {
         },
         {
           path: 'posts',
-          element: <Post/>
+          element: <Post />,
         },
         {
-          path: "post/detail/:id",
-          element: <DetailPost/>
-        }
+          path: 'post/detail/:id',
+          element: <DetailPost />,
+        },
       ],
     },
     {
@@ -119,8 +119,9 @@ function App() {
   ])
   return (
     <>
-      <Toaster position='top-left`' reverseOrder={false} />
+      <Toaster position='top-right`' reverseOrder={false} />
       {elements}
+      <ScrollToTopButton />
     </>
   )
 }

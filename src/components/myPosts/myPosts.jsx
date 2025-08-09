@@ -1,12 +1,5 @@
 import React, { useState } from 'react'
-import {
-  HandThumbsUpFill,
-  HandThumbsUp,
-  Chat,
-  BookmarkFill,
-  Bookmark,
-  Handbag,
-} from 'react-bootstrap-icons'
+import { HandThumbsUpFill, HandThumbsUp, Chat, Handbag } from 'react-bootstrap-icons'
 import toast from 'react-hot-toast'
 import './myPosts.scss'
 import { likePostApi, dellikePostApi } from '../../apis/posts.api'
@@ -23,22 +16,13 @@ const MyPosts = ({ post, onPostUpdated, onViewDetail }) => {
   const handleLike = async () => {
     const originalLikedState = isLiked
     const originalLikeCount = likeCount
-
     setIsLiked(!originalLikedState)
     setLikeCount(originalLikedState ? likeCount - 1 : likeCount + 1)
-
     try {
       if (originalLikedState) {
-        await dellikePostApi({
-          targetId: post.postId,
-          targetType: 'JOB',
-        })
+        await dellikePostApi({ targetId: post.postId, targetType: 'JOB' })
       } else {
-        const response = await likePostApi({
-          targetId: post.postId,
-          targetType: 'JOB',
-          emotionType: 'LIKE',
-        })
+        await likePostApi({ targetId: post.postId, targetType: 'JOB', emotionType: 'LIKE' })
       }
     } catch (error) {
       toast.error('Đã có lỗi xảy ra khi thực hiện thao tác.')
@@ -47,12 +31,8 @@ const MyPosts = ({ post, onPostUpdated, onViewDetail }) => {
     }
   }
 
-  const handleApply = () => {
-    setIsCvModalOpen(true)
-  }
-  const handleUpdate = () => {
-    setIsUpdate(true)
-  }
+  const handleApply = () => setIsCvModalOpen(true)
+  const handleUpdate = () => setIsUpdate(true)
   const handleOpenDetail = () => {
     if (onViewDetail) {
       onViewDetail(post)
@@ -73,14 +53,15 @@ const MyPosts = ({ post, onPostUpdated, onViewDetail }) => {
         </div>
         <span className='recruit-tag'>Recruitment</span>
       </div>
-      <p className='post-title'>{post.title} </p>
-      <p className='post-content'>{post.description} </p>
+      <p className='post-title'>{post.title}</p>
+      <p className='post-content'>{post.description}</p>
       {post.urlImage && post.urlImage.length > 0 && (
         <div className='post-media-container'>
           <img src={post.urlImage} alt='Post media' className='post-media' />
         </div>
       )}
       <div className='post-actions'>
+        {/* Nhóm các nút bên trái */}
         <div className='action-group'>
           <button onClick={handleLike} className={`action-button ${isLiked ? 'active' : ''}`}>
             {isLiked ? <HandThumbsUpFill /> : <HandThumbsUp />} <span>{likeCount}</span>
@@ -88,16 +69,19 @@ const MyPosts = ({ post, onPostUpdated, onViewDetail }) => {
           <button onClick={handleOpenDetail} className='action-button'>
             <Chat /> <span>{post.countComment}</span>
           </button>
-
           <button
             onClick={handleApply}
             className='action-button apply-button'
             disabled={isLoadingApply}>
             <Handbag /> <span>{isLoadingApply ? 'Downloading...' : 'Download'}</span>
           </button>
-          <a onClick={handleUpdate} className={`action-button-update `}>
-            chỉnh sửa
-          </a>
+        </div>
+
+        {/* Nút chỉnh sửa bên phải */}
+        <div className='post-edit-action'>
+          <button onClick={handleUpdate} className='post-edit-button'>
+            Chỉnh sửa
+          </button>
         </div>
       </div>
       {isCvModalOpen && (

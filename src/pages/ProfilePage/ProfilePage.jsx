@@ -5,13 +5,7 @@ import './ProfilePage.scss'
 import { info, update } from '../../apis/userProfile.api'
 import { changePassword } from '../../apis/auth.api'
 import toast from 'react-hot-toast'
-<<<<<<< HEAD
 import CircularProgress from '@mui/joy/CircularProgress'
-=======
-
-import Loading from '../../components/loading/loading'
->>>>>>> ee108720284756bceefa812d304a100a0e874732
-
 
 const ProfilePage = () => {
   const [action, setAction] = useState('info')
@@ -58,7 +52,7 @@ const ProfilePage = () => {
     formData.append('dob', values.dob?.format('YYYY-MM-DD'))
     formData.append('email', values.email)
     formData.append('phone', values.phone)
-    const file =values.avatar?.[0]?.originFileObj
+    const file = values.avatar?.[0]?.originFileObj
     if (file) {
       formData.append('avatar', file)
     }
@@ -66,14 +60,12 @@ const ProfilePage = () => {
       await update(formData)
       await fetchGetUser()
       setAction('info')
-      toast.success("Cập nhật thông tin thành công!!")
+      toast.success('Cập nhật thông tin thành công!!')
     } catch {
-
       alert('Cap nhat nguoi dung that bai')
     }
   }
   const handleChangePassword = async (values) => {
-
     try {
       await changePassword({
         oldPassword: values.oldPassword,
@@ -88,17 +80,6 @@ const ProfilePage = () => {
     }
   }
 
-  if (isLoading) {
-<<<<<<< HEAD
-    return <CircularProgress color='warning' />
-=======
-    return <Loading isLoading={true} />
-
->>>>>>> ee108720284756bceefa812d304a100a0e874732
-  }
-  if (!infoUser) {
-    return <div className='profile-loading'></div>
-  }
   const menuItems = [
     { key: 'info', label: 'Thông tin cá nhân' },
     { key: 'edit', label: 'Chỉnh sửa thông tin' },
@@ -107,216 +88,225 @@ const ProfilePage = () => {
 
   return (
     <div className='profile-page'>
-      {/* Phần header card */}
-      <div className='profile-header-card'>
-        <div className='header-user-info'>
-          {/* <img src={avatar} alt='avatar' className='user-avatar' /> */}
-          <img
-            src={infoUser.avatarUrl}
-            alt=''
-            style={{ borderRadius: '100%' }}
-          />
-          <div className='user-details'>
-            <p className='user-name'>{infoUser?.fullName}</p>
-            <p className='user-email'>{infoUser?.email}</p>
-          </div>
+      {isLoading ? (
+        <div className='loading-container'>
+          <CircularProgress color='warning' />
         </div>
-        <div className='header-stats'>
-          <div className='stats-item'>
-            <p>20</p>
-            <p>Posts</p>
-          </div>
-          <div className='stats-item'>
-            <p>30</p>
-            <p>Recruitment</p>
-          </div>
-          <div className='stats-item'>
-            <p>50</p>
-            <p>Apply</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Phần nội dung chính */}
-      <div className='profile-main-section'>
-        {/* Sidebar */}
-        <div className='profile-sidebar'>
-          <ul className='sidebar-menu'>
-            {menuItems.map((item, index) => (
-              <li
-                key={item.key}
-                className={`menu-item ${hoverIndex === index ? 'hovered' : ''} ${
-                  action === item.key && hoverIndex === null ? 'active' : ''
-                }`}
-                onClick={() => setAction(item.key)}
-                onMouseEnter={() => setHoverIndex(index)}
-                onMouseLeave={() => setHoverIndex(null)}>
-                {item.label}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className='profile-content-area'>
-          {/* Xem thong tin tai khoan */}
-          {action === 'info' && (
-            <>
-              <h4 className='content-title'>Thông tin cá nhân</h4>
-              <div className='info-display'>
-                <div className='info-item'>
-                  <div className='info-item--p'>
-                    <p>Họ và tên:</p>
-                    <p>{infoUser?.fullName}</p>
-                  </div>
-                </div>
-                <div className='info-item'>
-                  <div className='info-item--p'>
-                    <p>Giới tính:</p>
-                    <p>{infoUser?.gender}</p>
-                  </div>
-                </div>
-                <div className='info-item'>
-                  <div className='info-item--p'>
-                    <p>Ngày sinh:</p>
-                    <p>{dayjs(infoUser?.dob).format('DD/MM/YYYY')}</p>
-                  </div>
-                </div>
-                <div className='info-item'>
-                  <div className='info-item--p'>
-                    <p>Email:</p>
-                    <p>{infoUser?.email}</p>
-                  </div>
-                </div>
-                <div className='info-item'>
-                  <div className='info-item--p'>
-                    <p>Tên tài khoản:</p>
-                    <p>{infoUser?.username}</p>
-                  </div>
-                </div>
+      ) : !infoUser ? (
+        // Nếu không loading nhưng không có dữ liệu người dùng
+        <div className='profile-loading'>Không thể tải thông tin người dùng.</div>
+      ) : (
+        <>
+          {/* Phần header card */}
+          <div className='profile-header-card'>
+            <div className='header-user-info'>
+              {/* <img src={avatar} alt='avatar' className='user-avatar' /> */}
+              <img src={infoUser.avatarUrl} alt='' style={{ borderRadius: '100%' }} />
+              <div className='user-details'>
+                <p className='user-name'>{infoUser?.fullName}</p>
+                <p className='user-email'>{infoUser?.email}</p>
               </div>
-            </>
-          )}
+            </div>
+            <div className='header-stats'>
+              <div className='stats-item'>
+                <p>20</p>
+                <p>Posts</p>
+              </div>
+              <div className='stats-item'>
+                <p>30</p>
+                <p>Recruitment</p>
+              </div>
+              <div className='stats-item'>
+                <p>50</p>
+                <p>Apply</p>
+              </div>
+            </div>
+          </div>
 
-          {/* Chỉnh sủa thông tin người dùng */}
-          {action === 'edit' && (
-            <>
-              <h4 className='content-title'>Chỉnh sửa thông tin cá nhân</h4>
-              <Form
-                form={editForm}
-                onFinish={handleUpdateProfile}
-                className='edit-form'
-                layout='vertical'>
-                <Form.Item
-                  label='Họ và tên'
-                  name='fullName'
-                  rules={[{ required: true, message: 'Hãy nhập họ và tên' }]}>
-                  <Input className='edit-input' placeholder='Nhập họ và tên' />
-                </Form.Item>
-                <Form.Item label='Giới tính' name='gender'>
-                  <Radio.Group>
-                    <Radio value='MALE'>Nam</Radio>
-                    <Radio value='FEMALE'>Nữ</Radio>
-                    <Radio value='OTHER'>Khác</Radio>
-                  </Radio.Group>
-                </Form.Item>
-                <Form.Item
-                  label='Ngày sinh'
-                  name='dob'
-                  rules={[{ required: true, message: 'Vui lòng chọn ngày sinh' }]}>
-                  <DatePicker className='edit-datepicker' placeholder='Chọn ngày sinh' />
-                </Form.Item>
-                <Form.Item
-                  label='Số điện thoại'
-                  name='phone'
-                  rules={[{ required: true, message: 'Vui lòng nhập số điện thoại' }]}>
-                  <Input className='edit-input' placeholder='Nhập số điện thoại' />
-                </Form.Item>
+          {/* Phần nội dung chính */}
+          <div className='profile-main-section'>
+            {/* Sidebar */}
+            <div className='profile-sidebar'>
+              <ul className='sidebar-menu'>
+                {menuItems.map((item, index) => (
+                  <li
+                    key={item.key}
+                    className={`menu-item ${hoverIndex === index ? 'hovered' : ''} ${
+                      action === item.key && hoverIndex === null ? 'active' : ''
+                    }`}
+                    onClick={() => setAction(item.key)}
+                    onMouseEnter={() => setHoverIndex(index)}
+                    onMouseLeave={() => setHoverIndex(null)}>
+                    {item.label}
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-                <Form.Item
-                  label='Ảnh đại diện'
-                  name='avatar'
-                  valuePropName='fileList'
-                  getValueFromEvent={(e) => e && e.fileList}>
-                  <Upload listType='picture' maxCount={1} beforeUpload={() => false}>
-                    <Button>Chọn ảnh</Button>
-                  </Upload>
-                </Form.Item>
+            <div className='profile-content-area'>
+              {/* Xem thong tin tai khoan */}
+              {action === 'info' && (
+                <>
+                  <h4 className='content-title'>Thông tin cá nhân</h4>
+                  <div className='info-display'>
+                    <div className='info-item'>
+                      <div className='info-item--p'>
+                        <p>Họ và tên:</p>
+                        <p>{infoUser?.fullName}</p>
+                      </div>
+                    </div>
+                    <div className='info-item'>
+                      <div className='info-item--p'>
+                        <p>Giới tính:</p>
+                        <p>{infoUser?.gender}</p>
+                      </div>
+                    </div>
+                    <div className='info-item'>
+                      <div className='info-item--p'>
+                        <p>Ngày sinh:</p>
+                        <p>{dayjs(infoUser?.dob).format('DD/MM/YYYY')}</p>
+                      </div>
+                    </div>
+                    <div className='info-item'>
+                      <div className='info-item--p'>
+                        <p>Email:</p>
+                        <p>{infoUser?.email}</p>
+                      </div>
+                    </div>
+                    <div className='info-item'>
+                      <div className='info-item--p'>
+                        <p>Tên tài khoản:</p>
+                        <p>{infoUser?.username}</p>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
 
-                <Form.Item label='Email' name='email'>
-                  <Input className='edit-input' disabled />
-                </Form.Item>
-                <Form.Item label='Tên tài khoản' name='username'>
-                  <Input className='edit-input' disabled />
-                </Form.Item>
-                <Form.Item className='form-buttons'>
-                  <Space>
-                    <Button onClick={() => editForm.resetFields()} className='cancel-button'>
-                      Hủy
-                    </Button>
-                    <Button type='primary' htmlType='submit' className='submit-button'>
-                      Xác nhận
-                    </Button>
-                  </Space>
-                </Form.Item>
-              </Form>
-            </>
-          )}
+              {/* Chỉnh sủa thông tin người dùng */}
+              {action === 'edit' && (
+                <>
+                  <h4 className='content-title'>Chỉnh sửa thông tin cá nhân</h4>
+                  <Form
+                    form={editForm}
+                    onFinish={handleUpdateProfile}
+                    className='edit-form'
+                    layout='vertical'>
+                    <Form.Item
+                      label='Họ và tên'
+                      name='fullName'
+                      rules={[{ required: true, message: 'Hãy nhập họ và tên' }]}>
+                      <Input className='edit-input' placeholder='Nhập họ và tên' />
+                    </Form.Item>
+                    <Form.Item label='Giới tính' name='gender'>
+                      <Radio.Group>
+                        <Radio value='MALE'>Nam</Radio>
+                        <Radio value='FEMALE'>Nữ</Radio>
+                        <Radio value='OTHER'>Khác</Radio>
+                      </Radio.Group>
+                    </Form.Item>
+                    <Form.Item
+                      label='Ngày sinh'
+                      name='dob'
+                      rules={[{ required: true, message: 'Vui lòng chọn ngày sinh' }]}>
+                      <DatePicker className='edit-datepicker' placeholder='Chọn ngày sinh' />
+                    </Form.Item>
+                    <Form.Item
+                      label='Số điện thoại'
+                      name='phone'
+                      rules={[{ required: true, message: 'Vui lòng nhập số điện thoại' }]}>
+                      <Input className='edit-input' placeholder='Nhập số điện thoại' />
+                    </Form.Item>
 
-          {/* Đổi mật khẩu */}
-          {action === 'changePassword' && (
-            <>
-              <h4 className='content-title'>Đổi mật khẩu</h4>
-              <Form
-                form={passwordForm}
-                onFinish={handleChangePassword}
-                className='edit-form'
-                layout='vertical'>
-                {/* Các Form.Item không thay đổi... */}
-                <Form.Item
-                  id='change-password-form'
-                  label='Nhập mật khẩu cũ'
-                  name='oldPassword'
-                  rules={[{ required: true, message: 'Hãy nhập mật khẩu cũ' }]}>
-                  <Input.Password className='edit-input' />
-                </Form.Item>
-                <Form.Item
-                  label='Nhập mật khẩu mới'
-                  name='newPassword'
-                  rules={[{ required: true, message: 'Hãy nhập mật khẩu mới' }]}>
-                  <Input.Password className='edit-input' />
-                </Form.Item>
-                <Form.Item
-                  label='Xác nhận mật khẩu'
-                  name='confirmPassword'
-                  dependencies={['newPassword']}
-                  rules={[
-                    { required: true, message: 'Hãy xác nhận mật khẩu' },
-                    ({ getFieldValue }) => ({
-                      validator(_, value) {
-                        if (!value || getFieldValue('newPassword') === value) {
-                          return Promise.resolve()
-                        }
-                        return Promise.reject(new Error('Mật khẩu mới không khớp!'))
-                      },
-                    }),
-                  ]}>
-                  <Input.Password className='edit-input' />
-                </Form.Item>
-                <Form.Item className='form-buttons'>
-                  <Space>
-                    <Button onClick={() => passwordForm.resetFields()} className='cancel-button'>
-                      Hủy
-                    </Button>
-                    <Button type='primary' htmlType='submit' className='submit-button'>
-                      Xác nhận
-                    </Button>
-                  </Space>
-                </Form.Item>
-              </Form>
-            </>
-          )}
-        </div>
-      </div>
+                    <Form.Item
+                      label='Ảnh đại diện'
+                      name='avatar'
+                      valuePropName='fileList'
+                      getValueFromEvent={(e) => e && e.fileList}>
+                      <Upload listType='picture' maxCount={1} beforeUpload={() => false}>
+                        <Button>Chọn ảnh</Button>
+                      </Upload>
+                    </Form.Item>
+
+                    <Form.Item label='Email' name='email'>
+                      <Input className='edit-input' disabled />
+                    </Form.Item>
+                    <Form.Item label='Tên tài khoản' name='username'>
+                      <Input className='edit-input' disabled />
+                    </Form.Item>
+                    <Form.Item className='form-buttons'>
+                      <Space>
+                        <Button onClick={() => editForm.resetFields()} className='cancel-button'>
+                          Hủy
+                        </Button>
+                        <Button type='primary' htmlType='submit' className='submit-button'>
+                          Xác nhận
+                        </Button>
+                      </Space>
+                    </Form.Item>
+                  </Form>
+                </>
+              )}
+
+              {/* Đổi mật khẩu */}
+              {action === 'changePassword' && (
+                <>
+                  <h4 className='content-title'>Đổi mật khẩu</h4>
+                  <Form
+                    form={passwordForm}
+                    onFinish={handleChangePassword}
+                    className='edit-form'
+                    layout='vertical'>
+                    {/* Các Form.Item không thay đổi... */}
+                    <Form.Item
+                      id='change-password-form'
+                      label='Nhập mật khẩu cũ'
+                      name='oldPassword'
+                      rules={[{ required: true, message: 'Hãy nhập mật khẩu cũ' }]}>
+                      <Input.Password className='edit-input' />
+                    </Form.Item>
+                    <Form.Item
+                      label='Nhập mật khẩu mới'
+                      name='newPassword'
+                      rules={[{ required: true, message: 'Hãy nhập mật khẩu mới' }]}>
+                      <Input.Password className='edit-input' />
+                    </Form.Item>
+                    <Form.Item
+                      label='Xác nhận mật khẩu'
+                      name='confirmPassword'
+                      dependencies={['newPassword']}
+                      rules={[
+                        { required: true, message: 'Hãy xác nhận mật khẩu' },
+                        ({ getFieldValue }) => ({
+                          validator(_, value) {
+                            if (!value || getFieldValue('newPassword') === value) {
+                              return Promise.resolve()
+                            }
+                            return Promise.reject(new Error('Mật khẩu mới không khớp!'))
+                          },
+                        }),
+                      ]}>
+                      <Input.Password className='edit-input' />
+                    </Form.Item>
+                    <Form.Item className='form-buttons'>
+                      <Space>
+                        <Button
+                          onClick={() => passwordForm.resetFields()}
+                          className='cancel-button'>
+                          Hủy
+                        </Button>
+                        <Button type='primary' htmlType='submit' className='submit-button'>
+                          Xác nhận
+                        </Button>
+                      </Space>
+                    </Form.Item>
+                  </Form>
+                </>
+              )}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }

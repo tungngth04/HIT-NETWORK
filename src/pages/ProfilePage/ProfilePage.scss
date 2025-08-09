@@ -223,7 +223,6 @@
       &:hover {
         border-color: $primary-orange !important;
       }
-
     }
 
     .ant-input-affix-wrapper-focused {
@@ -231,7 +230,6 @@
     }
   }
 }
-
 
 @media (max-width: 990px) {
   .profile-main-section {
@@ -345,4 +343,10 @@
     word-break: break-all;
   }
 }
-
+.loading-container {
+  display: flex;
+  justify-content: center; // Căn giữa theo chiều ngang
+  align-items: center; // Căn giữa theo chiều dọc
+  width: 100%;
+  min-height: 60vh; // Chiều cao tối thiểu để spinner có không gian căn giữa
+}
