@@ -1,17 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react'
 import toast from 'react-hot-toast'
-import { HandThumbsUp, Chat, HandThumbsUpFill, Handbag } from 'react-bootstrap-icons'
+
+import { HandThumbsUp, Chat, HandThumbsUpFill, Handbag, Trash } from 'react-bootstrap-icons'
+
 import './eventDetails.scss'
 import {
   dellikePostApi,
   likePostApi,
   getPostsdetail,
-  getJobPostAPI,
   createCommentApi,
+  deleteCommentApi,
 } from '../../apis/posts.api'
-import ImportCvModal from '../importcv/importcv'
+import { info } from '../../apis/userProfile.api'
+import { useSelector } from 'react-redux'
 
 const EventDetails = ({ post, onClose, onCommentAdded }) => {
+  const authState = useSelector((state) => state.auth.auth)
+  const currentUser = authState
+
   const [isLiked, setIsLiked] = useState(post?.checkReaction || false)
   const [likeCount, setLikeCount] = useState(post?.countReaction || 0)
   const commentInputRef = useRef(null)
@@ -20,7 +26,39 @@ const EventDetails = ({ post, onClose, onCommentAdded }) => {
   const [isLoadingComments, setIsLoadingComments] = useState(true)
   const [newComment, setNewComment] = useState('')
   const [isSubmittingComment, setIsSubmittingComment] = useState(false)
-  const [isLoadingApply, setIsLoadingApply] = useState(false)
+  const [infoUser, setInfoUser] = useState()
+
+  const fetchUser = async () => {
+    try {
+      const response = await info()
+      const userData = response?.data
+      setInfoUser(userData)
+    } catch (err) {
+      toast.error('Lỗi khi tải thông tin người dùng')
+    }
+  }
+
+  useEffect(() => {
+    if (currentUser) {
+      fetchUser()
+    }
+  }, [currentUser])
+  const handleDeleteComment = async (commentIdToDelete) => {
+    if (!window.confirm('Bạn có chắc chắn muốn xóa bình luận này không?')) {
+      return
+    }
+    try {
+      await deleteCommentApi(commentIdToDelete)
+
+      setComments((prevComments) =>
+        prevComments.filter((comment) => comment.commentId !== commentIdToDelete),
+      )
+
+      toast.success('Đã xóa bình luận.')
+    } catch (error) {
+      toast.error('Xóa bình luận thất bại.')
+    }
+  }
 
   useEffect(() => {
     const fetchPostDetailsAndComments = async () => {
@@ -160,6 +198,14 @@ const EventDetails = ({ post, onClose, onCommentAdded }) => {
                       <span className='comment-author'>{comment.userPostResponseDTO.fullName}</span>
                       <p className='comment-text'>{comment.content}</p>
                     </div>
+                    {infoUser?.fullName === comment?.userPostResponseDTO?.fullName && (
+                      <button
+                        onClick={() => handleDeleteComment(comment.commentId)}
+                        className='delete-comment-btn'>
+                        <Trash />
+                      </button>
+                    )}
+
                   </div>
                 ))
               )}

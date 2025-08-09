@@ -172,17 +172,17 @@ function Events() {
           <button className='button button--search' onClick={() => handleSearch()}>
             Tìm kiếm
           </button>
-          <div className='button-add' onClick={handleCreate}>
-            <IoMdAddCircle className='icon-add' />
-            <p className='title-add'>Thêm </p>
-          </div>
-          {/* <button
+          <div style={{ marginLeft: '400px' }}>
+            <button className='button button--add' onClick={handleCreate}>
+              Thêm
+            </button>
+            <button
               className='button button--import'
               onClick={handleImport}
               style={{ marginLeft: '10px' }}>
               Import
-            </button> */}
-          {/* </div> */}
+            </button> 
+           </div> 
         </div>
       </div>
       <Table

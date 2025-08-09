@@ -13,7 +13,7 @@ function DeleteMember({
   username,
   fetchUsers,
   fetchPost,
-  fetchPostDetail
+  fetchPostDetail,
 }) {
   const handleClose = () => {
     setDeletePopup({
@@ -32,13 +32,11 @@ function DeleteMember({
         await deleteMembers(username)
         toast.success('Xoá thành viên thành công!')
         fetchUsers()
-      }
-       else if (deletePopup.type === 'comment') {
+      } else if (deletePopup.type === 'comment') {
         await deleteComment(id)
-        toast.success("Xóa comment thành công!")
+        toast.success('Xóa comment thành công!')
         fetchPostDetail()
-      } 
-      else {
+      } else {
         await deletePost(id)
         toast.success('Xoá bài đăng thành công!')
         fetchPost()
@@ -54,10 +52,10 @@ function DeleteMember({
           deletePopup.type === 'event'
             ? 'sự kiện'
             : deletePopup.type === 'user'
-              ? 'thành viên'
-              : deletePopup.type === 'comment'
-                ? 'comment'
-                : 'bài đăng'
+            ? 'thành viên'
+            : deletePopup.type === 'comment'
+            ? 'comment'
+            : 'bài đăng'
         } thất bại!`,
       )
 >>>>>>> ee108720284756bceefa812d304a100a0e874732

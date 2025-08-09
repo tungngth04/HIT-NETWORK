@@ -1,9 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react'
 import toast from 'react-hot-toast'
-import { HandThumbsUp, Chat, HandThumbsUpFill, Handbag } from 'react-bootstrap-icons'
+import { HandThumbsUp, Chat, HandThumbsUpFill, Handbag, Trash } from 'react-bootstrap-icons'
 import './myPostDetails.scss'
-import { dellikePostApi, likePostApi, getJobPostAPI, createCommentApi } from '../../apis/posts.api'
-import ImportCvModal from '../importcv/importcv'
+import {
+  dellikePostApi,
+  likePostApi,
+  getJobPostAPI,
+  createCommentApi,
+  deleteCommentApi,
+} from '../../apis/posts.api'
 import { useSelector } from 'react-redux'
 import { info } from '../../apis/userProfile.api'
 import DownloadCvModal from '../downloadCv/downloadCv'
@@ -105,6 +110,23 @@ const MyPostDtails = ({ post, onClose, onCommentAdded }) => {
       setIsSubmittingComment(false)
     }
   }
+  const handleDeleteComment = async (commentIdToDelete) => {
+    if (!window.confirm('Bạn có chắc chắn muốn xóa bình luận này không?')) {
+      return
+    }
+    try {
+      await deleteCommentApi(commentIdToDelete)
+
+      setComments((prevComments) =>
+        prevComments.filter((comment) => comment.commentId !== commentIdToDelete),
+      )
+
+      toast.success('Đã xóa bình luận.')
+    } catch (error) {
+      toast.error('Xóa bình luận thất bại.')
+    }
+  }
+
 
   const handleContentClick = (e) => e.stopPropagation()
 
@@ -180,6 +202,14 @@ const MyPostDtails = ({ post, onClose, onCommentAdded }) => {
                       <span className='comment-author'>{comment.userPostResponseDTO.fullName}</span>
                       <p className='comment-text'>{comment.content}</p>
                     </div>
+                    {infoUser === comment?.userPostResponseDTO?.fullName && (
+                      <button
+                        onClick={() => handleDeleteComment(comment.commentId)}
+                        className='delete-comment-btn'>
+                        <Trash />
+                      </button>
+                    )}
+
                   </div>
                 ))
               )}

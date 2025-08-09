@@ -8,6 +8,7 @@ import './mainLayout.scss'
 import toast from 'react-hot-toast'
 import JobDetails from '../../components/jobDetails/jobDetails'
 import EventDetails from '../../components/eventDetails/evenDetails'
+import ScrollToTopButton from '../../components/ScrollToTopButton/ScrollToTopButton'
 
 const MainLayout = () => {
   const [recruitmentPosts, setRecruitmentPosts] = useState([])
@@ -82,6 +83,7 @@ const MainLayout = () => {
             />
           </aside>
         )}
+        <ScrollToTopButton />
       </div>
       <Footer />
     </div>

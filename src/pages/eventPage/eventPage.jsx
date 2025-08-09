@@ -28,7 +28,6 @@ const EventPage = () => {
       setPosts(response?.data?.content)
       setTotalPosts(response?.data?.totalElements || 0)
       setIsLoading(false)
-      window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (error) {
       toast.error('Không thể tải bài đăng. Vui lòng thử lại sau.')
       setIsLoading(false)
@@ -68,6 +67,7 @@ const EventPage = () => {
     )
   }
 
+
   const handleCloseModal = () => {
     setSelectedPost(null)
   }
@@ -79,10 +79,14 @@ const EventPage = () => {
   return (
     <div className='user-homepage-container '>
       <div className='main-content'>
-        <CreatePost posts={posts} onPostCreated={handlePostCreated} />
+        {!isLoading && <CreatePost posts={posts} onPostCreated={handlePostCreated} />}
+
         {isLoading ? (
-          <div className='loading-indicator'>Đang tải bài viết...</div>
+          <div className='loading-container'>
+            <CircularProgress color='warning' />
+          </div>
         ) : posts && posts.length > 0 ? (
+
           posts.map((post, index) => (
             <EventPostCard key={post.id || index} post={post} onViewDetail={handleViewPostDetail} />
           ))
