@@ -25,8 +25,9 @@ function DeleteMember({
     try {
       if (deletePopup.type === 'event') {
         await deleteEvents(id)
-        toast.success('Xoá sự kiện thành công!')
         fetchEvent()
+        toast.success('Xoá sự kiện thành công!')
+        
       } else if (deletePopup.type === 'user') {
         await deleteMembers(username)
         toast.success('Xoá thành viên thành công!')
@@ -42,6 +43,9 @@ function DeleteMember({
       }
       handleClose()
     } catch (error) {
+<<<<<<< HEAD
+      toast.error(`Xóa ${deletePopup.type === 'event' ? 'sự kiện' : 'thành viên'} thất bại!`)
+=======
       console.error(error)
       toast.error(
         `Xóa ${
@@ -54,6 +58,7 @@ function DeleteMember({
             : 'bài đăng'
         } thất bại!`,
       )
+>>>>>>> ee108720284756bceefa812d304a100a0e874732
     }
   }
 

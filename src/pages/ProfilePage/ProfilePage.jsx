@@ -2,17 +2,17 @@ import React, { useEffect, useState } from 'react'
 import { DatePicker, Form, Input, Radio, Space, Button, Spin, Upload } from 'antd'
 import dayjs from 'dayjs'
 import './ProfilePage.scss'
-import { info, update } from '../../apis/userProfile.api'
+import { info, total, update } from '../../apis/userProfile.api'
 import { changePassword } from '../../apis/auth.api'
 import toast from 'react-hot-toast'
 import CircularProgress from '@mui/joy/CircularProgress'
-
 const ProfilePage = () => {
   const [action, setAction] = useState('info')
   const [hoverIndex, setHoverIndex] = useState(null)
   const [infoUser, setInfoUser] = useState()
   const [editForm] = Form.useForm()
   const [passwordForm] = Form.useForm()
+  const [totalData, setTotalData] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
 
   const fetchGetUser = async () => {
@@ -66,6 +66,7 @@ const ProfilePage = () => {
     }
   }
   const handleChangePassword = async (values) => {
+
     try {
       await changePassword({
         oldPassword: values.oldPassword,
@@ -80,6 +81,25 @@ const ProfilePage = () => {
     }
   }
 
+
+  const handleTotalProfile = async () => {
+    try {
+      const res = await total()
+      setTotalData(res.data)
+    } catch (error) {
+      console.error('Loi lay du lieu thong ke: ', error)
+    }
+  }
+  useEffect(() => {
+    handleTotalProfile()
+  }, [])
+  if (isLoading) {
+    return <CircularProgress color='warning' />
+//     return <Loading isLoading={true} />
+  }
+  if (!infoUser) {
+    return <div className='profile-loading'></div>
+  }
   const menuItems = [
     { key: 'info', label: 'Thông tin cá nhân' },
     { key: 'edit', label: 'Chỉnh sửa thông tin' },
@@ -88,39 +108,28 @@ const ProfilePage = () => {
 
   return (
     <div className='profile-page'>
-      {isLoading ? (
-        <div className='loading-container'>
-          <CircularProgress color='warning' />
+      {/* Phần header card */}
+      <div className='profile-header-card'>
+        <div className='header-user-info'>
+          {/* <img src={avatar} alt='avatar' className='user-avatar' /> */}
+          <img src={infoUser.avatarUrl} alt='' style={{ borderRadius: '100%' }} />
+          <div className='user-details'>
+            <p className='user-name'>{infoUser?.fullName}</p>
+            <p className='user-email'>{infoUser?.email}</p>
+          </div>
         </div>
-      ) : !infoUser ? (
-        // Nếu không loading nhưng không có dữ liệu người dùng
-        <div className='profile-loading'>Không thể tải thông tin người dùng.</div>
-      ) : (
-        <>
-          {/* Phần header card */}
-          <div className='profile-header-card'>
-            <div className='header-user-info'>
-              {/* <img src={avatar} alt='avatar' className='user-avatar' /> */}
-              <img src={infoUser.avatarUrl} alt='' style={{ borderRadius: '100%' }} />
-              <div className='user-details'>
-                <p className='user-name'>{infoUser?.fullName}</p>
-                <p className='user-email'>{infoUser?.email}</p>
-              </div>
-            </div>
-            <div className='header-stats'>
-              <div className='stats-item'>
-                <p>20</p>
-                <p>Posts</p>
-              </div>
-              <div className='stats-item'>
-                <p>30</p>
-                <p>Recruitment</p>
-              </div>
-              <div className='stats-item'>
-                <p>50</p>
-                <p>Apply</p>
-              </div>
-            </div>
+        <div className='header-stats'>
+          <div className='stats-item'>
+            <p>{totalData?.countPost ?? 0}</p>
+            <p>Posts</p>
+          </div>
+          <div className='stats-item'>
+            <p>{totalData?.countRecruitment ?? 0}</p>
+            <p>Recruitment</p>
+          </div>
+          <div className='stats-item'>
+            <p>{totalData?.countApply ?? 0}</p>
+            <p>Apply</p>
           </div>
 
           {/* Phần nội dung chính */}
@@ -228,85 +237,61 @@ const ProfilePage = () => {
                       </Upload>
                     </Form.Item>
 
-                    <Form.Item label='Email' name='email'>
-                      <Input className='edit-input' disabled />
-                    </Form.Item>
-                    <Form.Item label='Tên tài khoản' name='username'>
-                      <Input className='edit-input' disabled />
-                    </Form.Item>
-                    <Form.Item className='form-buttons'>
-                      <Space>
-                        <Button onClick={() => editForm.resetFields()} className='cancel-button'>
-                          Hủy
-                        </Button>
-                        <Button type='primary' htmlType='submit' className='submit-button'>
-                          Xác nhận
-                        </Button>
-                      </Space>
-                    </Form.Item>
-                  </Form>
-                </>
-              )}
-
-              {/* Đổi mật khẩu */}
-              {action === 'changePassword' && (
-                <>
-                  <h4 className='content-title'>Đổi mật khẩu</h4>
-                  <Form
-                    form={passwordForm}
-                    onFinish={handleChangePassword}
-                    className='edit-form'
-                    layout='vertical'>
-                    {/* Các Form.Item không thay đổi... */}
-                    <Form.Item
-                      id='change-password-form'
-                      label='Nhập mật khẩu cũ'
-                      name='oldPassword'
-                      rules={[{ required: true, message: 'Hãy nhập mật khẩu cũ' }]}>
-                      <Input.Password className='edit-input' />
-                    </Form.Item>
-                    <Form.Item
-                      label='Nhập mật khẩu mới'
-                      name='newPassword'
-                      rules={[{ required: true, message: 'Hãy nhập mật khẩu mới' }]}>
-                      <Input.Password className='edit-input' />
-                    </Form.Item>
-                    <Form.Item
-                      label='Xác nhận mật khẩu'
-                      name='confirmPassword'
-                      dependencies={['newPassword']}
-                      rules={[
-                        { required: true, message: 'Hãy xác nhận mật khẩu' },
-                        ({ getFieldValue }) => ({
-                          validator(_, value) {
-                            if (!value || getFieldValue('newPassword') === value) {
-                              return Promise.resolve()
-                            }
-                            return Promise.reject(new Error('Mật khẩu mới không khớp!'))
-                          },
-                        }),
-                      ]}>
-                      <Input.Password className='edit-input' />
-                    </Form.Item>
-                    <Form.Item className='form-buttons'>
-                      <Space>
-                        <Button
-                          onClick={() => passwordForm.resetFields()}
-                          className='cancel-button'>
-                          Hủy
-                        </Button>
-                        <Button type='primary' htmlType='submit' className='submit-button'>
-                          Xác nhận
-                        </Button>
-                      </Space>
-                    </Form.Item>
-                  </Form>
-                </>
-              )}
-            </div>
-          </div>
-        </>
-      )}
+          {/* Đổi mật khẩu */}
+          {action === 'changePassword' && (
+            <>
+              <h4 className='content-title'>Đổi mật khẩu</h4>
+              <Form
+                form={passwordForm}
+                onFinish={handleChangePassword}
+                className='edit-form'
+                layout='vertical'>
+                {/* Các Form.Item không thay đổi... */}
+                <Form.Item
+                  id='change-password-form'
+                  label='Nhập mật khẩu cũ'
+                  name='oldPassword'
+                  rules={[{ required: true, message: 'Hãy nhập mật khẩu cũ' }]}>
+                  <Input.Password className='edit-input' />
+                </Form.Item>
+                <Form.Item
+                  label='Nhập mật khẩu mới'
+                  name='newPassword'
+                  rules={[{ required: true, message: 'Hãy nhập mật khẩu mới' }]}>
+                  <Input.Password className='edit-input' />
+                </Form.Item>
+                <Form.Item
+                  label='Xác nhận mật khẩu'
+                  name='confirmPassword'
+                  dependencies={['newPassword']}
+                  rules={[
+                    { required: true, message: 'Hãy xác nhận mật khẩu' },
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        if (!value || getFieldValue('newPassword') === value) {
+                          return Promise.resolve()
+                        }
+                        return Promise.reject(new Error('Mật khẩu mới không khớp!'))
+                      },
+                    }),
+                  ]}>
+                  <Input.Password className='edit-input' />
+                </Form.Item>
+                <Form.Item className='form-buttons'>
+                  <Space>
+                    <Button onClick={() => passwordForm.resetFields()} className='cancel-button'>
+                      Hủy
+                    </Button>
+                    <Button type='primary' htmlType='submit' className='submit-button'>
+                      Xác nhận
+                    </Button>
+                  </Space>
+                </Form.Item>
+              </Form>
+            </>
+          )}
+        </div>
+      </div>
     </div>
   )
 }

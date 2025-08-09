@@ -86,6 +86,7 @@ const UserHomePage = () => {
               post={post}
               onViewDetail={handleViewPostDetail}
             />
+
           ))
         ) : (
           <div className='no-posts-message'>Chưa có bài đăng nào để hiển thị.</div>
@@ -103,7 +104,6 @@ const UserHomePage = () => {
             />
           )}
         </div>
-
         {selectedPost && (
           <PostDetailModal
             key={selectedPost.postId || selectedPost.eventId}

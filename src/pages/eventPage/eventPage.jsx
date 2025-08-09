@@ -67,8 +67,13 @@ const EventPage = () => {
     )
   }
 
+
   const handleCloseModal = () => {
     setSelectedPost(null)
+  }
+
+  if (isLoading) {
+    return <CircularProgress color='warning' />
   }
 
   return (
@@ -81,12 +86,9 @@ const EventPage = () => {
             <CircularProgress color='warning' />
           </div>
         ) : posts && posts.length > 0 ? (
-          posts.map((post) => (
-            <EventPostCard
-              key={post.postId || post.eventId}
-              post={post}
-              onViewDetail={handleViewPostDetail}
-            />
+
+          posts.map((post, index) => (
+            <EventPostCard key={post.id || index} post={post} onViewDetail={handleViewPostDetail} />
           ))
         ) : (
           <div className='no-posts-message'>Chưa có bài đăng nào để hiển thị.</div>

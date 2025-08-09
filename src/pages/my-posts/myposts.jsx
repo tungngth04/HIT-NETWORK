@@ -97,7 +97,6 @@ const Myposts = () => {
         ) : (
           <div className='no-posts-message'>Chưa có bài đăng nào để hiển thị.</div>
         )}
-
         <div className='pagination-wrapper'>
           {totalPosts > 0 && !isLoading && (
             <Pagination

@@ -8,6 +8,7 @@ import {
   getPostsdetail,
   getJobPostAPI,
   createCommentApi,
+
   deleteCommentApi,
 } from '../../apis/posts.api'
 import ImportCvModal from '../importcv/importcv'
@@ -27,6 +28,7 @@ const PostDetailModal = ({ post, onClose, onCommentAdded }) => {
   const [isCvModalOpen, setIsCvModalOpen] = useState(false)
   const [isLoadingApply, setIsLoadingApply] = useState(false)
   const [infoUser, setInfoUser] = useState()
+
 
   useEffect(() => {
     const fetchPostDetailsAndComments = async () => {
@@ -72,6 +74,7 @@ const PostDetailModal = ({ post, onClose, onCommentAdded }) => {
     }
   }, [currentUser])
 
+
   const handleFocusCommentInput = () => {
     commentInputRef.current?.focus()
   }
@@ -110,6 +113,7 @@ const PostDetailModal = ({ post, onClose, onCommentAdded }) => {
       toast.error('Xóa bình luận thất bại.')
     }
   }
+
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault()
@@ -218,6 +222,7 @@ const PostDetailModal = ({ post, onClose, onCommentAdded }) => {
                         <Trash />
                       </button>
                     )}
+
                   </div>
                 ))
               )}

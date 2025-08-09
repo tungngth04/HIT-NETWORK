@@ -6,7 +6,8 @@ import './DetailPost.scss'
 import avatarDefault from '../../../assets/images/avatarDefault.jpg'
 import { IoArrowBackSharp } from "react-icons/io5";
 import Delete from '../../../components/admin/delete/Delete'
-
+import CircularProgress from '@mui/joy/CircularProgress';
+import toast from 'react-hot-toast'
 const PostDetail = () => {
   const [action, setAction] = useState('like')
   const [post, setPost] = useState(null)
@@ -18,7 +19,7 @@ const PostDetail = () => {
       const res = await getDetailpost(id)
       setPost(res?.data)
     } catch (error) {
-      console.error('Lỗi khi lấy bài đăng:', error)
+      toast.error("Lấy dữ liệu bài đăng thất bại")
     }
   }
   useEffect(() => {
@@ -44,9 +45,16 @@ const PostDetail = () => {
     ).padStart(2, '0')}`
   }
 
-  if (!post) return <p>Đang tải dữ liệu bài đăng...</p>
+  if (!post)
+  return (
+    <div className="loading">
+      <CircularProgress />
+    </div>
+  );
+
 
   return (
+    
     <div className='post-h2'>
       <div className='title'>
         <IoArrowBackSharp className='title__icon' onClick={() => navigate('/admin/posts')}/>

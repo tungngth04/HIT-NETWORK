@@ -127,6 +127,7 @@ const MyPostDtails = ({ post, onClose, onCommentAdded }) => {
     }
   }
 
+
   const handleContentClick = (e) => e.stopPropagation()
 
   return (
@@ -208,6 +209,7 @@ const MyPostDtails = ({ post, onClose, onCommentAdded }) => {
                         <Trash />
                       </button>
                     )}
+
                   </div>
                 ))
               )}

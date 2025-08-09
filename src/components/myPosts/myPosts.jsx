@@ -33,6 +33,7 @@ const MyPosts = ({ post, onPostUpdated, onViewDetail }) => {
 
   const handleApply = () => setIsCvModalOpen(true)
   const handleUpdate = () => setIsUpdate(true)
+
   const handleOpenDetail = () => {
     if (onViewDetail) {
       onViewDetail(post)
@@ -61,7 +62,6 @@ const MyPosts = ({ post, onPostUpdated, onViewDetail }) => {
         </div>
       )}
       <div className='post-actions'>
-        {/* Nhóm các nút bên trái */}
         <div className='action-group'>
           <button onClick={handleLike} className={`action-button ${isLiked ? 'active' : ''}`}>
             {isLiked ? <HandThumbsUpFill /> : <HandThumbsUp />} <span>{likeCount}</span>
@@ -82,6 +82,7 @@ const MyPosts = ({ post, onPostUpdated, onViewDetail }) => {
           <button onClick={handleUpdate} className='post-edit-button'>
             Chỉnh sửa
           </button>
+
         </div>
       </div>
       {isCvModalOpen && (

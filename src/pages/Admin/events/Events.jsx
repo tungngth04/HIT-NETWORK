@@ -7,7 +7,7 @@ import { Pagination } from 'antd'
 import Import from '../../../components/admin/import/Import'
 import Delete from '../../../components/admin/delete/Delete'
 import { getAllEvents } from '../../../apis/events.api'
-import { current } from '@reduxjs/toolkit'
+import { IoMdAddCircle } from 'react-icons/io'
 import dayjs from 'dayjs'
 import toast from 'react-hot-toast'
 
@@ -181,8 +181,8 @@ function Events() {
               onClick={handleImport}
               style={{ marginLeft: '10px' }}>
               Import
-            </button>
-          </div>
+            </button> 
+           </div> 
         </div>
       </div>
       <Table

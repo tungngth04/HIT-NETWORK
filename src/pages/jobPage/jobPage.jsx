@@ -71,6 +71,9 @@ const JobPage = () => {
     setSelectedPost(null)
   }
 
+  if (isLoading) {
+    return <CircularProgress color='warning' />
+  }
   return (
     <div className='user-homepage-container'>
       <div className='main-content'>

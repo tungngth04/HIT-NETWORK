@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import toast from 'react-hot-toast'
+
 import { HandThumbsUp, Chat, HandThumbsUpFill, Handbag, Trash } from 'react-bootstrap-icons'
 import './jobDetails.scss'
 import {
@@ -9,6 +10,7 @@ import {
   createCommentApi,
   deleteCommentApi,
 } from '../../apis/posts.api'
+
 import ImportCvModal from '../importcv/importcv'
 import { useSelector } from 'react-redux'
 import { info } from '../../apis/userProfile.api'
@@ -58,6 +60,7 @@ const JobDetails = ({ post, onClose, onCommentAdded }) => {
       toast.error('Xóa bình luận thất bại.')
     }
   }
+
 
   useEffect(() => {
     const fetchPostDetailsAndComments = async () => {
@@ -213,6 +216,7 @@ const JobDetails = ({ post, onClose, onCommentAdded }) => {
                         <Trash />
                       </button>
                     )}
+
                   </div>
                 ))
               )}

@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import toast from 'react-hot-toast'
+
 import { HandThumbsUp, Chat, HandThumbsUpFill, Handbag, Trash } from 'react-bootstrap-icons'
+
 import './eventDetails.scss'
 import {
   dellikePostApi,
@@ -15,6 +17,7 @@ import { useSelector } from 'react-redux'
 const EventDetails = ({ post, onClose, onCommentAdded }) => {
   const authState = useSelector((state) => state.auth.auth)
   const currentUser = authState
+
   const [isLiked, setIsLiked] = useState(post?.checkReaction || false)
   const [likeCount, setLikeCount] = useState(post?.countReaction || 0)
   const commentInputRef = useRef(null)
@@ -202,6 +205,7 @@ const EventDetails = ({ post, onClose, onCommentAdded }) => {
                         <Trash />
                       </button>
                     )}
+
                   </div>
                 ))
               )}
