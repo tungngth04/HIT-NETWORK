@@ -7,7 +7,6 @@ import ImportCvModal from '../importcv/importcv'
 import { info } from '../../apis/userProfile.api'
 import { useSelector } from 'react-redux'
 
-
 const PostCard = ({ post, onViewDetail }) => {
   const authState = useSelector((state) => state.auth.auth)
   const currentUser = authState

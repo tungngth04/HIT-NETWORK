@@ -21,7 +21,6 @@ import { useEffect } from 'react'
 import Myposts from './pages/my-posts/myposts'
 import ScrollToTopButton from './components/ScrollToTopButton/ScrollToTopButton'
 
-
 function App() {
   const currentUser = useAuth()
   const role = currentUser.user?.role || []

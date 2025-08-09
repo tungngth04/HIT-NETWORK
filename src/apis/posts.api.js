@@ -37,7 +37,6 @@ const postApi = () => ({
     })
   },
   deleteCommentApi: async (id) => api.delete(ApiConstants.posts.createcomment, { params: { id } }),
-
 })
 export const {
   getPostsApi,
@@ -54,5 +53,4 @@ export const {
   getJobPostAPI,
   dowloadCvAPI,
   deleteCommentApi,
-
 } = postApi()

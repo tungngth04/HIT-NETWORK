@@ -67,7 +67,6 @@ const EventPage = () => {
     )
   }
 
-
   const handleCloseModal = () => {
     setSelectedPost(null)
   }
@@ -86,7 +85,6 @@ const EventPage = () => {
             <CircularProgress color='warning' />
           </div>
         ) : posts && posts.length > 0 ? (
-
           posts.map((post, index) => (
             <EventPostCard key={post.id || index} post={post} onViewDetail={handleViewPostDetail} />
           ))

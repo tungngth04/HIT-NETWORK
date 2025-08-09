@@ -220,9 +220,6 @@
   .ant-form-item-has-error {
     .ant-input-affix-wrapper {
       border-color: $primary-orange !important;
-      &:hover {
-        border-color: $primary-orange !important;
-      }
     }
 
     .ant-input-affix-wrapper-focused {
@@ -342,11 +339,4 @@
   .info-display .info-item p:last-child {
     word-break: break-all;
   }
-}
-.loading-container {
-  display: flex;
-  justify-content: center; // Căn giữa theo chiều ngang
-  align-items: center; // Căn giữa theo chiều dọc
-  width: 100%;
-  min-height: 60vh; // Chiều cao tối thiểu để spinner có không gian căn giữa
 }
