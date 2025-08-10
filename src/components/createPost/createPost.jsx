@@ -133,7 +133,7 @@ const CreatePost = ({ posts, onPostCreated }) => {
             </div>
 
             <div className='modal-add-ons'>
-              <span className='add-ons-title'>Thêm vào bài viết của bạn</span>
+              <span className='add-ons-title'>Add your Image</span>
               <div className='add-ons-icons'>
                 <label htmlFor='file-upload' className='icon-button'>
                   <Image size={24} />
@@ -151,12 +151,13 @@ const CreatePost = ({ posts, onPostCreated }) => {
             {error && <p className='modal-error'>{error}</p>}
 
             <div className='modal-footer'>
-              <div className='type-selector'>
-                <p>Type : </p>
-                <p className='type-posts' value='JOB'>
-                  Recruitment
-                </p>
-
+              <div className='modal-footer-left'>
+                <div className='type-selector'>
+                  <p>Type: </p>
+                  <p className='type-posts' value='JOB'>
+                    Recruitment
+                  </p>
+                </div>
               </div>
               <button
                 onClick={handleSubmit}

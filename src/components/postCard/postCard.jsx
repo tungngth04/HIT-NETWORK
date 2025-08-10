@@ -7,7 +7,7 @@ import ImportCvModal from '../importcv/importcv'
 import { info } from '../../apis/userProfile.api'
 import { useSelector } from 'react-redux'
 
-const PostCard = ({ post, onViewDetail }) => {
+const PostCard = ({ post, onViewDetail, onLikeToggled }) => {
   const authState = useSelector((state) => state.auth.auth)
   const currentUser = authState
   const [isLoadingApply, setIsLoadingApply] = useState(false)
@@ -31,6 +31,11 @@ const PostCard = ({ post, onViewDetail }) => {
     }
   }, [currentUser])
 
+  useEffect(() => {
+    setIsLiked(post.checkReaction)
+    setLikeCount(post.countReaction)
+  }, [post.checkReaction, post.countReaction])
+
   const handleOpenDetail = () => {
     if (onViewDetail) {
       onViewDetail(post)
@@ -39,11 +44,11 @@ const PostCard = ({ post, onViewDetail }) => {
 
   const handleLike = async () => {
     const originalLikedState = isLiked
-    const originalLikeCount = likeCount
+    const newLikedState = !originalLikedState
+    const targetId = post.postId || post.eventId
 
-    setIsLiked(!originalLikedState)
-    setLikeCount(originalLikedState ? likeCount - 1 : likeCount + 1)
-
+    setIsLiked(newLikedState)
+    setLikeCount((prev) => (newLikedState ? prev + 1 : prev - 1))
     try {
       if (originalLikedState) {
         await dellikePostApi({
@@ -56,10 +61,10 @@ const PostCard = ({ post, onViewDetail }) => {
           targetType: post.targetType,
           emotionType: 'LIKE',
         })
-
-        if (response?.data && onPostUpdate) {
-          onPostUpdate(response.data)
-        }
+      }
+      if (onLikeToggled) {
+        const newLikeCount = newLikedState ? likeCount + 1 : likeCount - 1
+        onLikeToggled(targetId, newLikedState, newLikeCount)
       }
     } catch (error) {
       toast.error('Đã có lỗi xảy ra khi thực hiện thao tác.')

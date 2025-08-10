@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { HandThumbsUpFill, HandThumbsUp, Chat, Handbag } from 'react-bootstrap-icons'
 import toast from 'react-hot-toast'
 import './myPosts.scss'
@@ -6,7 +6,7 @@ import { likePostApi, dellikePostApi } from '../../apis/posts.api'
 import UpdatePost from '../updatePost/updatePost'
 import DownloadCvModal from '../downloadCv/downloadCv'
 
-const MyPosts = ({ post, onPostUpdated, onViewDetail }) => {
+const MyPosts = ({ post, onPostUpdated, onViewDetail, onLikeToggled }) => {
   const [isLoadingApply, setIsLoadingApply] = useState(false)
   const [isLiked, setIsLiked] = useState(post?.checkReaction || false)
   const [likeCount, setLikeCount] = useState(post?.countReaction || 0)
@@ -15,14 +15,20 @@ const MyPosts = ({ post, onPostUpdated, onViewDetail }) => {
 
   const handleLike = async () => {
     const originalLikedState = isLiked
-    const originalLikeCount = likeCount
-    setIsLiked(!originalLikedState)
-    setLikeCount(originalLikedState ? likeCount - 1 : likeCount + 1)
+    const newLikedState = !originalLikedState
+    const targetId = post.postId || post.eventId
+
+    setIsLiked(newLikedState)
+    setLikeCount((prev) => (newLikedState ? prev + 1 : prev - 1))
     try {
       if (originalLikedState) {
         await dellikePostApi({ targetId: post.postId, targetType: 'JOB' })
       } else {
         await likePostApi({ targetId: post.postId, targetType: 'JOB', emotionType: 'LIKE' })
+      }
+      if (onLikeToggled) {
+        const newLikeCount = newLikedState ? likeCount + 1 : likeCount - 1
+        onLikeToggled(targetId, newLikedState, newLikeCount)
       }
     } catch (error) {
       toast.error('Đã có lỗi xảy ra khi thực hiện thao tác.')
@@ -30,6 +36,10 @@ const MyPosts = ({ post, onPostUpdated, onViewDetail }) => {
       setLikeCount(originalLikeCount)
     }
   }
+  useEffect(() => {
+    setIsLiked(post.checkReaction)
+    setLikeCount(post.countReaction)
+  }, [post.checkReaction, post.countReaction])
 
   const handleApply = () => setIsCvModalOpen(true)
   const handleUpdate = () => setIsUpdate(true)
@@ -77,12 +87,10 @@ const MyPosts = ({ post, onPostUpdated, onViewDetail }) => {
           </button>
         </div>
 
-        {/* Nút chỉnh sửa bên phải */}
         <div className='post-edit-action'>
           <button onClick={handleUpdate} className='post-edit-button'>
-            Chỉnh sửa
+            Edit
           </button>
-
         </div>
       </div>
       {isCvModalOpen && (

@@ -13,20 +13,32 @@ import {
 } from '../../apis/posts.api'
 import { info } from '../../apis/userProfile.api'
 import { useSelector } from 'react-redux'
+import DeleteComment from '../deleteComment/deleteComment'
 
-const EventDetails = ({ post, onClose, onCommentAdded }) => {
+const EventDetails = ({ post, onClose, onCommentAdded, onCommentDeleted, onLikeToggled }) => {
   const authState = useSelector((state) => state.auth.auth)
   const currentUser = authState
 
   const [isLiked, setIsLiked] = useState(post?.checkReaction || false)
   const [likeCount, setLikeCount] = useState(post?.countReaction || 0)
   const commentInputRef = useRef(null)
-
   const [comments, setComments] = useState([])
   const [isLoadingComments, setIsLoadingComments] = useState(true)
   const [newComment, setNewComment] = useState('')
   const [isSubmittingComment, setIsSubmittingComment] = useState(false)
   const [infoUser, setInfoUser] = useState()
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [commentToDeleteId, setCommentToDeleteId] = useState(null)
+
+  const handleOpenDeleteModal = (commentId) => {
+    setCommentToDeleteId(commentId)
+    setIsDeleteModalOpen(true)
+  }
+
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalOpen(false)
+    setCommentToDeleteId(null)
+  }
 
   const fetchUser = async () => {
     try {
@@ -43,20 +55,24 @@ const EventDetails = ({ post, onClose, onCommentAdded }) => {
       fetchUser()
     }
   }, [currentUser])
-  const handleDeleteComment = async (commentIdToDelete) => {
-    if (!window.confirm('Bạn có chắc chắn muốn xóa bình luận này không?')) {
-      return
-    }
+
+  const handleConfirmDelete = async () => {
+    if (!commentToDeleteId) return
+
     try {
-      await deleteCommentApi(commentIdToDelete)
+      await deleteCommentApi(commentToDeleteId)
 
       setComments((prevComments) =>
-        prevComments.filter((comment) => comment.commentId !== commentIdToDelete),
+        prevComments.filter((comment) => comment.commentId !== commentToDeleteId),
       )
-
+      if (onCommentDeleted) {
+        onCommentDeleted(post.postId || post.eventId)
+      }
       toast.success('Đã xóa bình luận.')
     } catch (error) {
       toast.error('Xóa bình luận thất bại.')
+    } finally {
+      handleCloseDeleteModal()
     }
   }
 
@@ -90,12 +106,20 @@ const EventDetails = ({ post, onClose, onCommentAdded }) => {
 
   const handleLike = async () => {
     const originalLikedState = isLiked
-    setIsLiked(!originalLikedState)
-    setLikeCount((prev) => (originalLikedState ? prev - 1 : prev + 1))
+    const newLikedState = !originalLikedState
+    const targetId = post.postId || post.eventId
+
+    setIsLiked(newLikedState)
+    setLikeCount((prev) => (newLikedState ? prev + 1 : prev - 1))
     try {
       const targetId = post.postId || post.eventId
       if (originalLikedState) await dellikePostApi({ targetId, targetType: 'EVENT' })
       else await likePostApi({ targetId, targetType: 'EVENT', emotionType: 'LIKE' })
+      if (onLikeToggled) {
+        // Tính toán lại likeCount để đảm bảo đồng bộ
+        const newLikeCount = newLikedState ? likeCount + 1 : likeCount - 1
+        onLikeToggled(targetId, newLikedState, newLikeCount)
+      }
     } catch (error) {
       toast.error('Thao tác không thành công.')
       setIsLiked(originalLikedState)
@@ -149,9 +173,10 @@ const EventDetails = ({ post, onClose, onCommentAdded }) => {
             </div>
             <p className='post-title'>{post.title}</p>
             <p className='post-content'>{post.description}</p>
-            {post.urlImage && (
+            {post.urlImage && post.urlImage.length > 0 && (
               <div className='post-media-container'>
-                <img src={post.urlImage} alt='Post media' className='post-media' />
+                {/* Nếu urlImage là một mảng, bạn cần lấy phần tử đầu tiên */}
+                <img src={post.urlImage[0]} alt='Post media' className='post-media' />
               </div>
             )}
             <div className='post-actions'>
@@ -200,17 +225,19 @@ const EventDetails = ({ post, onClose, onCommentAdded }) => {
                     </div>
                     {infoUser?.fullName === comment?.userPostResponseDTO?.fullName && (
                       <button
-                        onClick={() => handleDeleteComment(comment.commentId)}
+                        onClick={() => handleOpenDeleteModal(comment.commentId)}
                         className='delete-comment-btn'>
                         <Trash />
                       </button>
                     )}
-
                   </div>
                 ))
               )}
             </div>
           </div>
+          {isDeleteModalOpen && (
+            <DeleteComment onClose={handleCloseDeleteModal} onConfirm={handleConfirmDelete} />
+          )}
         </div>
       </div>
     </div>

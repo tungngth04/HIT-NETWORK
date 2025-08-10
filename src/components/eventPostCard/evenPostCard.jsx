@@ -1,41 +1,40 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { HandThumbsUpFill, HandThumbsUp, Chat } from 'react-bootstrap-icons'
 import toast from 'react-hot-toast'
 import './eventPostCard.scss'
 import { likePostApi, dellikePostApi } from '../../apis/posts.api'
 
-const EventPostCard = ({ post, onViewDetail }) => {
+const EventPostCard = ({ post, onViewDetail, onLikeToggled }) => {
   const [isLiked, setIsLiked] = useState(post?.checkReaction || false)
   const [likeCount, setLikeCount] = useState(post?.countReaction || 0)
 
   const handleLike = async () => {
     const originalLikedState = isLiked
-    const originalLikeCount = likeCount
+    const newLikedState = !originalLikedState
+    const targetId = post.postId || post.eventId
 
-    setIsLiked(!originalLikedState)
-    setLikeCount(originalLikedState ? likeCount - 1 : likeCount + 1)
+    setIsLiked(newLikedState)
+    setLikeCount((prev) => (newLikedState ? prev + 1 : prev - 1))
 
     try {
       if (originalLikedState) {
-        // Người dùng hủy like
         await dellikePostApi({
           targetId: post.eventId,
           targetType: 'EVENT',
         })
-        // Có thể gọi onPostUpdate ở đây nếu cần cập nhật lại danh sách
-        setIsLiked(false) // MỚI cập nhật UI
-        setLikeCount(likeCount - 1) // Điều này khiến UI bị phụ thuộc vào API
+
+        setIsLiked(false)
+        setLikeCount(likeCount - 1)
       } else {
-        // Người dùng nhấn like
-        // --- SỬA LỖI NGHIÊM TRỌNG: Gán kết quả API cho biến 'response' ---
         const response = await likePostApi({
           targetId: post.eventId,
           targetType: 'EVENT',
           emotionType: 'LIKE',
         })
 
-        if (response?.data && onPostUpdate) {
-          onPostUpdate(response.data)
+        if (onLikeToggled) {
+          const newLikeCount = newLikedState ? likeCount + 1 : likeCount - 1
+          onLikeToggled(targetId, newLikedState, newLikeCount)
         }
       }
     } catch (error) {
@@ -44,6 +43,10 @@ const EventPostCard = ({ post, onViewDetail }) => {
       setLikeCount(originalLikeCount)
     }
   }
+  useEffect(() => {
+    setIsLiked(post.checkReaction)
+    setLikeCount(post.countReaction)
+  }, [post.checkReaction, post.countReaction])
 
   const handleOpenDetail = () => {
     if (onViewDetail) {

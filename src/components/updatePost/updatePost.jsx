@@ -25,13 +25,9 @@ const UpdatePost = ({ post, onPostUpdated, onClose }) => {
     setIsLoading(true)
 
     try {
-      const updateData = {
-        title: title,
-        description: content,
-      }
+      const updateData = { title, description: content }
       const response = await updatePost(post.postId, updateData)
-
-      const updatedPostData = response?.data?.data || response?.data
+      const updatedPostData = response?.data || response
       if (typeof onPostUpdated === 'function' && updatedPostData) {
         onPostUpdated(updatedPostData)
       } else {
@@ -48,7 +44,7 @@ const UpdatePost = ({ post, onPostUpdated, onClose }) => {
     <div className='create-post-modal-overlay' onClick={onClose}>
       <div className='create-post-modal-content' onClick={(e) => e.stopPropagation()}>
         <div className='modal-header'>
-          <span className='modal-title-text'>Chỉnh sửa bài viết</span>
+          <span className='modal-title-text'>Update Your Post</span>
           <button onClick={onClose} className='close-button'>
             &times;
           </button>
@@ -81,7 +77,7 @@ const UpdatePost = ({ post, onPostUpdated, onClose }) => {
           {imagePreview && <img src={imagePreview} alt='Preview' className='image-preview' />}
         </div>
         <div className='modal-add-ons'>
-          <span className='add-ons-title'>Thêm vào bài viết của bạn</span>
+          <span className='add-ons-title'>Add your Image</span>
           <div className='add-ons-icons'>
             <label onClick={handleImageChange} htmlFor='edit-file-upload' className='icon-button'>
               <ImageIcon size={20} />
@@ -94,7 +90,7 @@ const UpdatePost = ({ post, onPostUpdated, onClose }) => {
             onClick={handleSubmit}
             className='modal-submit-button'
             disabled={isLoading || !title.trim() || !content.trim()}>
-            {isLoading ? 'Đang lưu...' : 'Lưu thay đổi'}
+            {isLoading ? 'Confirming...' : 'Confirm'}
           </button>
         </div>
       </div>

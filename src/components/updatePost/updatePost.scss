@@ -1,73 +1,133 @@
-// File này sử dụng chung các quy tắc style với CreatePost.scss
-// để đảm bảo giao diện nhất quán giữa việc tạo và sửa bài đăng.
+$primary-color: #ff8a00;
+$primary-color-dark: #e67a00;
 
-// Style cho Modal
+$text-primary: #1c1e21;
+$text-secondary: #65676b;
+$border-color: #dce0e6;
+$background-light: #f0f2f5;
+$background-hover: #e4e6e9;
+$background-white: #ffffff;
+$disabled-color: #bcc0c4;
+$disabled-text-color: #8a8d91;
+
+$space-xs: 4px;
+$space-sm: 8px;
+$space-md: 12px;
+$space-lg: 16px;
+$space-xl: 24px;
+
+$border-radius-sm: 8px;
+$border-radius-md: 16px;
+$box-shadow-modal: 0 8px 25px rgba(0, 0, 0, 0.15);
+$focus-ring-shadow: 0 0 0 3px rgba(255, 138, 0, 0.3);
+$transition-speed: 0.25s;
+$transition-ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+@mixin flex-center($gap: 0) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $gap;
+}
+
+@mixin transition($properties...) {
+  transition-property: $properties;
+  transition-duration: $transition-speed;
+  transition-timing-function: $transition-ease;
+}
+
+@mixin circle-icon-button {
+  background: $background-light;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  color: $text-secondary;
+  cursor: pointer;
+  @include flex-center;
+  @include transition(background-color, transform);
+
+  &:hover {
+    background-color: $background-hover;
+    transform: scale(1.05);
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleUp {
+  from {
+    transform: scale(0.95);
+  }
+  to {
+    transform: scale(1);
+  }
+}
 .create-post-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.75);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background-color: rgba(21, 21, 21, 0.6);
+  backdrop-filter: blur(4px);
+  @include flex-center;
   z-index: 1000;
-  padding: 20px;
+  padding: $space-lg;
+  animation: fadeIn $transition-speed $transition-ease;
 }
 
 .create-post-modal-content {
-  background-color: #fff;
-  border-radius: 16px;
+  background-color: $background-white;
+  border-radius: $border-radius-md;
   width: 100%;
   max-width: 550px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  box-shadow: $box-shadow-modal;
   display: flex;
   flex-direction: column;
   max-height: 90vh;
+  animation: scaleUp $transition-speed $transition-ease;
 }
 
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 24px;
-  border-bottom: 1px solid #e0e0e0;
+  padding: $space-lg $space-xl;
+  border-bottom: 1px solid $border-color;
+  flex-shrink: 0;
 
   .modal-title-text {
-    font-weight: 600;
+    font-weight: 700;
     font-size: 1.25rem;
+    color: $text-primary;
   }
 
   .close-button {
-    background: #e4e6eb;
-    border: none;
-    border-radius: 50%;
-    width: 36px;
-    height: 36px;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: #606770;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @include circle-icon-button;
+    font-size: 1.75rem;
     line-height: 1;
-    &:hover {
-      background: #d8dadf;
-    }
   }
 }
 
 .modal-user-info {
   display: flex;
   align-items: center;
-  padding: 16px 24px;
+  padding: $space-lg $space-xl;
+  flex-shrink: 0;
+  gap: $space-md;
 
   .modal-user-avatar {
-    width: 48px;
-    height: 48px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
-    margin-right: 12px;
+    object-fit: cover;
   }
 
   .user-details {
@@ -75,55 +135,75 @@
     flex-direction: column;
     .user-name {
       font-weight: 600;
+      color: $text-primary;
     }
-    .post-audience {
+    .post-audience,
+    .post-audience-text {
       font-size: 0.85rem;
-      color: #65676b;
+      color: $text-secondary;
+      background-color: $background-light;
+      padding: $space-xs $space-sm;
+      border-radius: $space-xs;
+      margin-top: $space-xs;
     }
   }
 }
 
 .modal-body {
-  padding: 0 24px 16px 24px;
+  padding: $space-xs $space-xl $space-lg;
   overflow-y: auto;
   flex-grow: 1;
 
-  .modal-title-input {
-    width: 100%;
-    border: none;
-    font-size: 1.25rem;
-    font-weight: 600;
-    padding: 0 0 16px 0;
-    box-sizing: border-box;
-    font-family: inherit;
-    &:focus {
-      outline: none;
-    }
+  &::-webkit-scrollbar {
+    width: $space-sm;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: $background-hover;
+    border-radius: $space-sm;
   }
 
+  .modal-title-input,
   .modal-textarea {
     width: 100%;
     border: none;
-    resize: none;
-    font-size: 1.1rem;
-    min-height: 150px;
-    box-sizing: border-box;
+    padding: $space-md 0;
     font-family: inherit;
+    background: transparent;
+    color: $text-primary;
+    border-radius: 0;
 
     &::placeholder {
-      color: #65676b;
+      color: $text-secondary;
     }
     &:focus {
       outline: none;
+      box-shadow: none;
     }
   }
 
+  .modal-title-input {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: $space-sm;
+  }
+
+  .modal-textarea {
+    resize: none;
+    font-size: 1.1rem;
+    min-height: 150px;
+    line-height: 1.6;
+  }
+
   .image-preview {
-    max-width: 100%;
+    width: 100%;
     max-height: 300px;
-    border-radius: 8px;
-    margin-top: 16px;
+    border-radius: $border-radius-sm;
+    margin-top: $space-lg;
     object-fit: cover;
+    border: 1px solid $border-color;
   }
 }
 
@@ -131,26 +211,25 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 24px;
-  border-top: 1px solid #e0e0e0;
+  padding: $space-md $space-xl;
+  border-top: 1px solid $border-color;
+  flex-shrink: 0;
+  gap: $space-sm;
 
   .add-ons-title {
     font-weight: 600;
-    color: #333;
+    color: $text-primary;
   }
 
   .add-ons-icons {
     display: flex;
-    gap: 8px;
     .icon-button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: #65676b;
-      padding: 8px;
-      border-radius: 50%;
+      @include circle-icon-button;
+      cursor: not-allowed;
+      background: transparent;
+
       &:hover {
-        background-color: #f0f2f5;
+        background: $background-light;
       }
     }
   }
@@ -158,29 +237,49 @@
 
 .modal-footer {
   display: flex;
-  justify-content: flex-end; // Đẩy nút về phía bên phải
+  justify-content: flex-end;
   align-items: center;
-  padding: 16px 24px;
-  border-top: 1px solid #e0e0e0;
+  padding: $space-lg $space-xl;
+  border-top: 1px solid $border-color;
+  background-color: $background-white;
+  flex-shrink: 0;
 
   .modal-submit-button {
-    background-color: #ff8a00;
-    color: #fff;
+    width: 100%;
+    background-color: $primary-color;
+    color: $background-white;
     border: none;
-    padding: 10px 32px;
-    border-radius: 8px;
+    padding: $space-md 0;
+    border-radius: $border-radius-sm;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    @include flex-center;
+    @include transition(background-color, transform);
 
-    &:hover {
-      background-color: #ff8a00;
+    &:hover:not(:disabled) {
+      background-color: $primary-color-dark;
+      transform: translateY(-2px);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
     }
 
     &:disabled {
-      background-color: #ccc;
+      background-color: $disabled-color;
+      color: $disabled-text-color;
       cursor: not-allowed;
     }
+  }
+}
+@media (max-width: 600px) {
+  .modal-header,
+  .modal-user-info,
+  .modal-body,
+  .modal-add-ons,
+  .modal-footer {
+    padding-left: $space-lg;
+    padding-right: $space-lg;
   }
 }

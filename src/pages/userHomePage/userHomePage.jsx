@@ -17,6 +17,7 @@ const UserHomePage = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [totalPosts, setTotalPosts] = useState(0)
   const [selectedPost, setSelectedPost] = useState(null)
+  const [isPaging, setIsPaging] = useState(false)
 
   const fetchPosts = async () => {
     try {
@@ -27,11 +28,18 @@ const UserHomePage = () => {
       setPosts(response?.data?.content)
       setTotalPosts(response?.data?.totalElements || 0)
       setIsLoading(false)
+      setIsPaging(false)
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      })
     } catch (error) {
       toast.error('Không thể tải bài đăng. Vui lòng thử lại sau.')
       setIsLoading(false)
+      setIsPaging(false)
     } finally {
       setIsLoading(false)
+      setIsPaging(false)
     }
   }
   useEffect(() => {
@@ -46,6 +54,8 @@ const UserHomePage = () => {
   }
 
   const handlePageChange = (pageCurrent, pageSize) => {
+    setIsPaging(true)
+
     setPagination((prev) => ({
       ...prev,
       current: pageCurrent - 1,
@@ -65,6 +75,26 @@ const UserHomePage = () => {
       }),
     )
   }
+  const handleLikeToggled = (targetPostId, newLikeState, newLikeCount) => {
+    setPosts((currentPosts) =>
+      currentPosts.map((p) => {
+        if (p.postId === targetPostId || p.eventId === targetPostId) {
+          return { ...p, checkReaction: newLikeState, countReaction: newLikeCount }
+        }
+        return p
+      }),
+    )
+  }
+  const handleCommentDeleted = (targetPostId) => {
+    setPosts((currentPosts) =>
+      currentPosts.map((p) => {
+        if (p.postId === targetPostId || p.eventId === targetPostId) {
+          return { ...p, countComment: Math.max(0, p.countComment - 1) }
+        }
+        return p
+      }),
+    )
+  }
 
   const handleCloseModal = () => {
     setSelectedPost(null)
@@ -77,7 +107,7 @@ const UserHomePage = () => {
 
         {isLoading ? (
           <div className='loading-container'>
-            <CircularProgress color='warning' />
+            <CircularProgress color='primary' />
           </div>
         ) : posts && posts.length > 0 ? (
           posts.map((post) => (
@@ -85,8 +115,8 @@ const UserHomePage = () => {
               key={post.postId || post.eventId}
               post={post}
               onViewDetail={handleViewPostDetail}
+              onLikeToggled={handleLikeToggled}
             />
-
           ))
         ) : (
           <div className='no-posts-message'>Chưa có bài đăng nào để hiển thị.</div>
@@ -94,14 +124,18 @@ const UserHomePage = () => {
 
         <div className='pagination-wrapper'>
           {!isLoading && totalPosts > 0 && (
-            <Pagination
-              current={pagination.current + 1}
-              total={totalPosts}
-              pageSize={pagination.size}
-              showSizeChanger
-              onChange={handlePageChange}
-              onShowSizeChange={handlePageChange}
-            />
+            <>
+              <Pagination
+                current={pagination.current + 1}
+                total={totalPosts}
+                pageSize={pagination.size}
+                showSizeChanger
+                onChange={handlePageChange}
+                onShowSizeChange={handlePageChange}
+                disabled={isPaging}
+              />
+              {isPaging && <CircularProgress size='sm' color='primary' />}
+            </>
           )}
         </div>
         {selectedPost && (
@@ -110,6 +144,8 @@ const UserHomePage = () => {
             post={selectedPost}
             onClose={handleCloseModal}
             onCommentAdded={handleCommentAdded}
+            onLikeToggled={handleLikeToggled}
+            onCommentDeleted={handleCommentDeleted}
           />
         )}
       </div>
