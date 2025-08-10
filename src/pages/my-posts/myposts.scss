@@ -45,9 +45,15 @@
 }
 .loading-container {
   display: flex;
-  justify-content: center; // Căn giữa theo chiều ngang
-  align-items: center; // Căn giữa theo chiều dọc
+  justify-content: center;
+  align-items: center;
   width: 100%;
-  min-height: 60vh; // Chiều cao tối thiểu để spinner có không gian căn giữa
+  min-height: 60vh;
 }
-
+.paging-loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 60vh;
+}

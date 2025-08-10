@@ -151,12 +151,13 @@ const CreatePost = ({ posts, onPostCreated }) => {
             {error && <p className='modal-error'>{error}</p>}
 
             <div className='modal-footer'>
-              <div className='type-selector'>
-                <p>Type : </p>
-                <p className='type-posts' value='JOB'>
-                  Recruitment
-                </p>
-
+              <div className='modal-footer-left'>
+                <div className='type-selector'>
+                  <p>Type : </p>
+                  <p className='type-posts' value='JOB'>
+                    Recruitment
+                  </p>
+                </div>
               </div>
               <button
                 onClick={handleSubmit}

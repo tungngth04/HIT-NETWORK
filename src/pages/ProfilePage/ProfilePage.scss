@@ -49,7 +49,6 @@
     font-size: 1.2rem;
     font-weight: 600;
     margin: 0;
-    // color: $text-color;
     padding-bottom: 4px;
     color: #333;
   }
@@ -81,7 +80,6 @@
   }
 }
 
-// --- Main Section ---
 .profile-main-section {
   display: grid;
   grid-template-columns: 280px 1fr;
@@ -89,7 +87,6 @@
   align-items: flex-start;
 }
 
-// --- Sidebar ---
 .profile-sidebar {
   background-color: $card-bg;
   border-radius: 16px;
@@ -122,7 +119,6 @@
   }
 }
 
-// --- Content Area ---
 .profile-content-area {
   background-color: $card-bg;
   border-radius: 16px;
@@ -139,7 +135,6 @@
   text-align: center;
 }
 
-// --- Info Display ---
 .info-display {
   display: flex;
   flex-direction: column;
@@ -150,7 +145,6 @@
     display: flex;
     gap: 16px;
     font-size: 1.1rem;
-    // width: 350px;
     background-color: #f8f9fa;
     padding: 12px 20px;
     width: 100%;
@@ -165,7 +159,6 @@
       margin: 0;
       font-size: 16px;
       color: #333;
-      // word-break: break-word;
     }
     p:first-child {
       font-weight: 500;
@@ -180,7 +173,6 @@
   }
 }
 
-// --- Edit Form ---
 .edit-form {
   max-width: 550px;
   margin: 0 auto;
@@ -291,9 +283,7 @@
   .profile-main-section {
     display: block;
   }
-  // .profile-sidebar {
-  //   display: none;
-  // }
+
   .profile-sidebar {
     padding: 12px;
     margin-bottom: 20px;
@@ -339,4 +329,11 @@
   .info-display .info-item p:last-child {
     word-break: break-all;
   }
+}
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 60vh;
 }

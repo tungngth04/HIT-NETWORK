@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 import { ChevronRight } from 'react-bootstrap-icons'
 import './sidebarWidget.scss'
+import CircularProgress from '@mui/joy/CircularProgress'
 
 const SidebarWidget = ({ title, items, type, onViewItemDetail }) => {
   const filteredItems = useMemo(() => items.slice(0, 3), [items])
@@ -40,8 +41,10 @@ const SidebarWidget = ({ title, items, type, onViewItemDetail }) => {
             )
           })
         ) : (
-          <li key='empty-item' className='widget-item-empty'>
-            Không có bài đăng nào.
+          <li className='loding-container'>
+            <div className='loading-spinner'>
+              <CircularProgress color='primary' />
+            </div>
           </li>
         )}
       </ul>

@@ -12,8 +12,9 @@ import {
 import { useSelector } from 'react-redux'
 import { info } from '../../apis/userProfile.api'
 import DownloadCvModal from '../downloadCv/downloadCv'
+import DeleteComment from '../deleteComment/deleteComment'
 
-const MyPostDtails = ({ post, onClose, onCommentAdded }) => {
+const MyPostDtails = ({ post, onClose, onCommentAdded, onCommentDeleted, onLikeToggled }) => {
   const authState = useSelector((state) => state.auth.auth)
   const currentUser = authState
   const [isLiked, setIsLiked] = useState(post?.checkReaction || false)
@@ -27,6 +28,8 @@ const MyPostDtails = ({ post, onClose, onCommentAdded }) => {
   const [isSubmittingComment, setIsSubmittingComment] = useState(false)
   const [isCvModalOpen, setIsCvModalOpen] = useState(false)
   const [isLoadingApply, setIsLoadingApply] = useState(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [commentToDeleteId, setCommentToDeleteId] = useState(null)
   const fetchUser = async () => {
     try {
       const response = await info()
@@ -36,12 +39,21 @@ const MyPostDtails = ({ post, onClose, onCommentAdded }) => {
       toast.error('Lỗi khi tải thông tin người dùng')
     }
   }
-
   useEffect(() => {
     if (currentUser) {
       fetchUser()
     }
   }, [currentUser])
+
+  const handleOpenDeleteModal = (commentId) => {
+    setCommentToDeleteId(commentId)
+    setIsDeleteModalOpen(true)
+  }
+
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalOpen(false)
+    setCommentToDeleteId(null)
+  }
 
   useEffect(() => {
     const fetchPostDetailsAndComments = async () => {
@@ -75,12 +87,21 @@ const MyPostDtails = ({ post, onClose, onCommentAdded }) => {
 
   const handleLike = async () => {
     const originalLikedState = isLiked
-    setIsLiked(!originalLikedState)
-    setLikeCount((prev) => (originalLikedState ? prev - 1 : prev + 1))
+    const newLikedState = !originalLikedState
+    const targetId = post.postId || post.eventId
+
+    setIsLiked(newLikedState)
+    setLikeCount((prev) => (newLikedState ? prev + 1 : prev - 1))
     try {
       const targetId = post.postId || post.eventId
       if (originalLikedState) await dellikePostApi({ targetId, targetType: 'JOB' })
-      else await likePostApi({ targetId, targetType: 'JOB', emotionType: 'LIKE' })
+      else {
+        await likePostApi({ targetId, targetType: 'JOB', emotionType: 'LIKE' })
+      }
+      if (onLikeToggled) {
+        const newLikeCount = newLikedState ? likeCount + 1 : likeCount - 1
+        onLikeToggled(targetId, newLikedState, newLikeCount)
+      }
     } catch (error) {
       toast.error('Thao tác không thành công.')
       setIsLiked(originalLikedState)
@@ -99,34 +120,36 @@ const MyPostDtails = ({ post, onClose, onCommentAdded }) => {
         targetType: 'JOB',
         content: newComment,
       })
-      setComments((prev) => [response.data, ...prev])
-      setNewComment('')
       if (onCommentAdded) {
         onCommentAdded(post.postId || post.eventId)
       }
+      setComments((prev) => [response.data, ...prev])
+      setNewComment('')
     } catch (error) {
       toast.error('Gửi bình luận thất bại.')
     } finally {
       setIsSubmittingComment(false)
     }
   }
-  const handleDeleteComment = async (commentIdToDelete) => {
-    if (!window.confirm('Bạn có chắc chắn muốn xóa bình luận này không?')) {
-      return
-    }
+  const handleConfirmDelete = async () => {
+    if (!commentToDeleteId) return
+
     try {
-      await deleteCommentApi(commentIdToDelete)
+      await deleteCommentApi(commentToDeleteId)
 
       setComments((prevComments) =>
-        prevComments.filter((comment) => comment.commentId !== commentIdToDelete),
+        prevComments.filter((comment) => comment.commentId !== commentToDeleteId),
       )
-
+      if (onCommentDeleted) {
+        onCommentDeleted(post.postId || post.eventId)
+      }
       toast.success('Đã xóa bình luận.')
     } catch (error) {
       toast.error('Xóa bình luận thất bại.')
+    } finally {
+      handleCloseDeleteModal()
     }
   }
-
 
   const handleContentClick = (e) => e.stopPropagation()
 
@@ -150,9 +173,9 @@ const MyPostDtails = ({ post, onClose, onCommentAdded }) => {
             </div>
             <p className='post-title'>{post.title}</p>
             <p className='post-content'>{post.description}</p>
-            {post.urlImage && (
+            {post.urlImage && post.urlImage.length > 0 && (
               <div className='post-media-container'>
-                <img src={post.urlImage} alt='Post media' className='post-media' />
+                <img src={post.urlImage[0]} alt='Post media' className='post-media' />
               </div>
             )}
             <div className='post-actions'>
@@ -204,12 +227,11 @@ const MyPostDtails = ({ post, onClose, onCommentAdded }) => {
                     </div>
                     {infoUser === comment?.userPostResponseDTO?.fullName && (
                       <button
-                        onClick={() => handleDeleteComment(comment.commentId)}
+                        onClick={() => handleOpenDeleteModal(comment.commentId)}
                         className='delete-comment-btn'>
                         <Trash />
                       </button>
                     )}
-
                   </div>
                 ))
               )}
@@ -217,6 +239,12 @@ const MyPostDtails = ({ post, onClose, onCommentAdded }) => {
           </div>
           {isCvModalOpen && (
             <DownloadCvModal postId={post.postId} onClose={() => setIsCvModalOpen(false)} />
+          )}
+          {isDeleteModalOpen && (
+            <DeleteComment
+              onClose={handleCloseDeleteModal} // Nếu Hủy, gọi hàm đóng
+              onConfirm={handleConfirmDelete} // Nếu OK, gọi hàm xác nhận xóa
+            />
           )}
         </div>
       </div>

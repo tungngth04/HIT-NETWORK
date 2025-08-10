@@ -1,13 +1,11 @@
-// Biến màu (bạn có thể thay đổi cho phù hợp với theme)
 $primary-color: #ff8a00;
 
 .scroll-button {
-  position: fixed; // Giữ nút cố định trên màn hình
+  position: fixed;
   bottom: 30px;
   right: 30px;
-  z-index: 1000; // Đảm bảo nút luôn nổi lên trên
+  z-index: 1000;
 
-  // Style cho nút bấm
   background-color: $primary-color;
   color: white;
   border: none;
@@ -17,17 +15,15 @@ $primary-color: #ff8a00;
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 
-  // Hiệu ứng
   opacity: 0.8;
   transition: opacity 0.3s ease, transform 0.3s ease;
 
-  // Căn giữa icon
   display: flex;
   justify-content: center;
   align-items: center;
 
   &:hover {
     opacity: 1;
-    transform: translateY(-3px); // Hiệu ứng nhấc lên khi hover
+    transform: translateY(-3px);
   }
 }

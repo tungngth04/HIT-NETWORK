@@ -17,6 +17,7 @@ const Myposts = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [totalPosts, setTotalPosts] = useState(0)
   const [selectedPost, setSelectedPost] = useState(null)
+  const [isPaging, setIsPaging] = useState(false)
 
   const fetchPosts = async () => {
     try {
@@ -27,16 +28,18 @@ const Myposts = () => {
       setPosts(response?.data?.content)
       setTotalPosts(response?.data?.totalElements || 0)
       setIsLoading(false)
+      setIsPaging(false)
     } catch (error) {
       toast.error('Không thể tải bài đăng. Vui lòng thử lại sau.')
       setIsLoading(false)
     } finally {
       setIsLoading(false)
+      setIsPaging(false)
     }
   }
   useEffect(() => {
     fetchPosts()
-  }, [pagination, posts])
+  }, [pagination])
   const handlePostCreated = () => {
     if (pagination.current === 0) {
       fetchPosts()
@@ -46,6 +49,8 @@ const Myposts = () => {
   }
 
   const handlePageChange = (pageCurrent, pageSize) => {
+    setIsPaging(true)
+
     setPagination((prev) => ({
       ...prev,
       current: pageCurrent - 1,
@@ -58,8 +63,28 @@ const Myposts = () => {
   const handleCommentAdded = (targetPostId) => {
     setPosts((currentPosts) =>
       currentPosts.map((p) => {
-        if ((p.postId === targetPostId) === targetPostId) {
+        if (p.postId === targetPostId) {
           return { ...p, countComment: p.countComment + 1 }
+        }
+        return p
+      }),
+    )
+  }
+  const handleLikeToggled = (targetPostId, newLikeState, newLikeCount) => {
+    setPosts((currentPosts) =>
+      currentPosts.map((p) => {
+        if (p.postId === targetPostId || p.eventId === targetPostId) {
+          return { ...p, checkReaction: newLikeState, countReaction: newLikeCount }
+        }
+        return p
+      }),
+    )
+  }
+  const handleCommentDeleted = (targetPostId) => {
+    setPosts((currentPosts) =>
+      currentPosts.map((p) => {
+        if (p.postId === targetPostId || p.eventId === targetPostId) {
+          return { ...p, countComment: Math.max(0, p.countComment - 1) }
         }
         return p
       }),
@@ -83,7 +108,7 @@ const Myposts = () => {
 
         {isLoading ? (
           <div className='loading-container'>
-            <CircularProgress color='warning' />
+            <CircularProgress color='primary' />
           </div>
         ) : posts && posts.length > 0 ? (
           posts.map((post) => (
@@ -92,6 +117,7 @@ const Myposts = () => {
               post={post}
               onPostUpdated={handlePostUpdated}
               onViewDetail={handleViewPostDetail}
+              onLikeToggled={handleLikeToggled}
             />
           ))
         ) : (
@@ -99,14 +125,17 @@ const Myposts = () => {
         )}
         <div className='pagination-wrapper'>
           {totalPosts > 0 && !isLoading && (
-            <Pagination
-              current={pagination.current + 1}
-              total={totalPosts}
-              pageSize={pagination.size}
-              showSizeChanger
-              onChange={handlePageChange}
-              onShowSizeChange={handlePageChange}
-            />
+            <>
+              <Pagination
+                current={pagination.current + 1}
+                total={totalPosts}
+                pageSize={pagination.size}
+                showSizeChanger
+                onChange={handlePageChange}
+                onShowSizeChange={handlePageChange}
+              />
+              {isPaging && <CircularProgress size='sm' color='primary' />}
+            </>
           )}
         </div>
         {selectedPost && (
@@ -115,6 +144,8 @@ const Myposts = () => {
             post={selectedPost}
             onClose={handleCloseModal}
             onCommentAdded={handleCommentAdded}
+            onLikeToggled={handleLikeToggled}
+            onCommentDeleted={handleCommentDeleted}
           />
         )}
       </div>

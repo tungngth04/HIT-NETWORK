@@ -42,7 +42,6 @@ function DeleteMember({
       }
       handleClose()
     } catch (error) {
-      console.error(error)
       toast.error(
         `Xóa ${
           deletePopup.type === 'event'

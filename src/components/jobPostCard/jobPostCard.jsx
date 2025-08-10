@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { HandThumbsUpFill, HandThumbsUp, Chat, Handbag } from 'react-bootstrap-icons'
 import toast from 'react-hot-toast'
-// import { likePostApi, applyToPostApi, bookmarkPostApi } from '../../apis/posts.api'
 import './jobPostCard.scss'
 import { likePostApi, dellikePostApi } from '../../apis/posts.api'
 import ImportCvModal from '../importcv/importcv'
 import { useSelector } from 'react-redux'
 import { info } from '../../apis/userProfile.api'
 
-const JobPostCard = ({ post, onViewDetail }) => {
+const JobPostCard = ({ post, onViewDetail, onLikeToggled }) => {
   const authState = useSelector((state) => state.auth.auth)
   const currentUser = authState
   const [isLoadingApply, setIsLoadingApply] = useState(false)
@@ -19,10 +18,11 @@ const JobPostCard = ({ post, onViewDetail }) => {
   const [infoUser, setInfoUser] = useState()
   const handleLike = async () => {
     const originalLikedState = isLiked
-    const originalLikeCount = likeCount
+    const newLikedState = !originalLikedState
+    const targetId = post.postId || post.eventId
 
-    setIsLiked(!originalLikedState)
-    setLikeCount(originalLikedState ? likeCount - 1 : likeCount + 1)
+    setIsLiked(newLikedState)
+    setLikeCount((prev) => (newLikedState ? prev + 1 : prev - 1))
 
     try {
       if (originalLikedState) {
@@ -39,8 +39,9 @@ const JobPostCard = ({ post, onViewDetail }) => {
           emotionType: 'LIKE',
         })
 
-        if (response?.data && onPostUpdate) {
-          onPostUpdate(response.data)
+        if (onLikeToggled) {
+          const newLikeCount = newLikedState ? likeCount + 1 : likeCount - 1
+          onLikeToggled(targetId, newLikedState, newLikeCount)
         }
       }
     } catch (error) {
@@ -49,6 +50,10 @@ const JobPostCard = ({ post, onViewDetail }) => {
       setLikeCount(originalLikeCount)
     }
   }
+  useEffect(() => {
+    setIsLiked(post.checkReaction)
+    setLikeCount(post.countReaction)
+  }, [post.checkReaction, post.countReaction])
   const fetchUser = async () => {
     try {
       const response = await info()

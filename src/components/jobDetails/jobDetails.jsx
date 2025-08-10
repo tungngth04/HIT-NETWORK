@@ -14,8 +14,9 @@ import {
 import ImportCvModal from '../importcv/importcv'
 import { useSelector } from 'react-redux'
 import { info } from '../../apis/userProfile.api'
+import DeleteComment from '../deleteComment/deleteComment'
 
-const JobDetails = ({ post, onClose, onCommentAdded }) => {
+const JobDetails = ({ post, onClose, onCommentAdded, onCommentDeleted, onLikeToggled }) => {
   const authState = useSelector((state) => state.auth.auth)
   const currentUser = authState
   const [isLiked, setIsLiked] = useState(post?.checkReaction || false)
@@ -29,6 +30,19 @@ const JobDetails = ({ post, onClose, onCommentAdded }) => {
   const [isSubmittingComment, setIsSubmittingComment] = useState(false)
   const [isCvModalOpen, setIsCvModalOpen] = useState(false)
   const [isLoadingApply, setIsLoadingApply] = useState(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [commentToDeleteId, setCommentToDeleteId] = useState(null)
+
+  const handleOpenDeleteModal = (commentId) => {
+    setCommentToDeleteId(commentId)
+    setIsDeleteModalOpen(true)
+  }
+
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalOpen(false)
+    setCommentToDeleteId(null)
+  }
+
   const fetchUser = async () => {
     try {
       const response = await info()
@@ -44,23 +58,26 @@ const JobDetails = ({ post, onClose, onCommentAdded }) => {
       fetchUser()
     }
   }, [currentUser])
-  const handleDeleteComment = async (commentIdToDelete) => {
-    if (!window.confirm('Bạn có chắc chắn muốn xóa bình luận này không?')) {
-      return
-    }
+
+  const handleConfirmDelete = async () => {
+    if (!commentToDeleteId) return
+
     try {
-      await deleteCommentApi(commentIdToDelete)
+      await deleteCommentApi(commentToDeleteId)
 
       setComments((prevComments) =>
-        prevComments.filter((comment) => comment.commentId !== commentIdToDelete),
+        prevComments.filter((comment) => comment.commentId !== commentToDeleteId),
       )
-
+      if (onCommentDeleted) {
+        onCommentDeleted(post.postId || post.eventId)
+      }
       toast.success('Đã xóa bình luận.')
     } catch (error) {
       toast.error('Xóa bình luận thất bại.')
+    } finally {
+      handleCloseDeleteModal()
     }
   }
-
 
   useEffect(() => {
     const fetchPostDetailsAndComments = async () => {
@@ -97,12 +114,19 @@ const JobDetails = ({ post, onClose, onCommentAdded }) => {
 
   const handleLike = async () => {
     const originalLikedState = isLiked
-    setIsLiked(!originalLikedState)
-    setLikeCount((prev) => (originalLikedState ? prev - 1 : prev + 1))
+    const newLikedState = !originalLikedState
+    const targetId = post.postId || post.eventId
+
+    setIsLiked(newLikedState)
+    setLikeCount((prev) => (newLikedState ? prev + 1 : prev - 1))
     try {
       const targetId = post.postId || post.eventId
       if (originalLikedState) await dellikePostApi({ targetId, targetType: 'JOB' })
       else await likePostApi({ targetId, targetType: 'JOB', emotionType: 'LIKE' })
+      if (onLikeToggled) {
+        const newLikeCount = newLikedState ? likeCount + 1 : likeCount - 1
+        onLikeToggled(targetId, newLikedState, newLikeCount)
+      }
     } catch (error) {
       toast.error('Thao tác không thành công.')
       setIsLiked(originalLikedState)
@@ -155,9 +179,9 @@ const JobDetails = ({ post, onClose, onCommentAdded }) => {
             </div>
             <p className='post-title'>{post.title}</p>
             <p className='post-content'>{post.description}</p>
-            {post.urlImage && (
+            {post.urlImage && post.urlImage.length > 0 && (
               <div className='post-media-container'>
-                <img src={post.urlImage} alt='Post media' className='post-media' />
+                <img src={post.urlImage[0]} alt='Post media' className='post-media' />
               </div>
             )}
             <div className='post-actions'>
@@ -211,12 +235,11 @@ const JobDetails = ({ post, onClose, onCommentAdded }) => {
                     </div>
                     {infoUser === comment?.userPostResponseDTO?.fullName && (
                       <button
-                        onClick={() => handleDeleteComment(comment.commentId)}
+                        onClick={() => handleOpenDeleteModal(comment.commentId)}
                         className='delete-comment-btn'>
                         <Trash />
                       </button>
                     )}
-
                   </div>
                 ))
               )}
@@ -225,6 +248,9 @@ const JobDetails = ({ post, onClose, onCommentAdded }) => {
 
           {isCvModalOpen && (
             <ImportCvModal postId={post.postId} onClose={() => setIsCvModalOpen(false)} />
+          )}
+          {isDeleteModalOpen && (
+            <DeleteComment onClose={handleCloseDeleteModal} onConfirm={handleConfirmDelete} />
           )}
         </div>
       </div>

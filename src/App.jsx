@@ -41,12 +41,12 @@ function App() {
       children: [
         {
           path: '',
-          element: <Dashboard />,
+          element: <Members />,
         },
-        {
-          path: 'dashboard',
-          element: <Dashboard />,
-        },
+        // {
+        //   path: 'dashboard',
+        //   element: <Dashboard />,
+        // },
         {
           path: 'members',
           element: <Members />,
