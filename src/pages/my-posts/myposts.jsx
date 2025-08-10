@@ -40,6 +40,7 @@ const Myposts = () => {
   useEffect(() => {
     fetchPosts()
   }, [pagination])
+
   const handlePostCreated = () => {
     if (pagination.current === 0) {
       fetchPosts()
@@ -94,9 +95,10 @@ const Myposts = () => {
   const handleCloseModal = () => {
     setSelectedPost(null)
   }
+
   const handlePostUpdated = (updatedPost) => {
     setPosts((currentPosts) =>
-      currentPosts.map((posts) => (posts.postId == updatedPost.postId ? updatedPost : posts)),
+      currentPosts.map((posts) => (posts.postId === updatedPost.postId ? updatedPost : posts)),
     )
     toast.success('Bài đăng đã được cập nhật!')
   }

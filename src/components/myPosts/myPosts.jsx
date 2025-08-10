@@ -89,7 +89,7 @@ const MyPosts = ({ post, onPostUpdated, onViewDetail, onLikeToggled }) => {
 
         <div className='post-edit-action'>
           <button onClick={handleUpdate} className='post-edit-button'>
-            Chỉnh sửa
+            Edit
           </button>
         </div>
       </div>
